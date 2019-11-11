@@ -5,7 +5,7 @@ library(Biostrings)
 seqSet = readDNAStringSet("cds/ena-sars.fasta")
 #seqSet = readDNAStringSet("cds/ena-herpes.fasta")
 #seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta")
-seq=seqSet[[1]]
+seq=seqSet[[2]]
 #print(paste("Original sequence:",seq))
 
 #set X of 20 trinucleotides
