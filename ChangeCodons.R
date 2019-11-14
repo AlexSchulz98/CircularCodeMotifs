@@ -5,14 +5,29 @@ library(Biostrings)
 seqSet = readDNAStringSet("cds/ena-sars.fasta")
 #seqSet = readDNAStringSet("cds/ena-herpes.fasta")
 #seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta")
-seq=seqSet[[2]]
+seq=seqSet[[11]]
 #print(paste("Original sequence:",seq))
 
-#set X of 20 trinucleotides
-setX=paste("AAC", "AAT", "ACC", "ATC", "ATT", "CAG", "CTC", "CTG", "GAA", "GAC",  "GAG", "GAT", "GCC", "GGC", "GGT", "GTA", "GTC", "GTT", "TAC", "TTC")
+#set X of max. 20 trinucleotides
+#setX=paste("AAC", "AAT", "ACC", "ATC", "ATT", "CAG", "CTC", "CTG", "GAA", "GAC",  "GAG", "GAT", "GCC", "GGC", "GGT", "GTA", "GTC", "GTT", "TAC", "TTC")
+
+source("ccmotif/R/codes.R")
+cCodes = ccmotif.readCodes("ccmotif/C3.txt")
+setX = cCodes[23]
+
+source("AminoDecoder.R")
+setXString = unlist(setX)
+setXString = strsplit(setXString, ",")
+prefix = setXString[1:2]
+setXString = setdiff(setXString,prefix)
+setXString = toString(setXString)
+setXString = gsub(", ","",setXString)
+setXString = DNAString(setXString)
 
 #9 Amino acids (AA) of interest (AAs coded by non-X codons which can be coded by codons from X))
 aaInt=paste("A","F","G","I","L","Q","T","V","Y")
+#aaInt = getCodesOfInterest(setX)
+
 
 #Codons of original sequence
 cd=codons(seq)
