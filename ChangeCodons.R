@@ -1,33 +1,28 @@
 library(Biostrings)
+#source("AminoDecoder.R")
 
-#Original RNA sequence
-#seq=DNAString("ATGGACCCCAAAGTCAACGTAGTGCCCCCCGCATTACATTTGGTGGACCCGCAGATTCAAATGACAATAACCAGGATGGAGGACGCAGTGGTGCACGGCCAAAACAGCGCCGGCCCCAAGGTTTACCCAATAATACTGCGTCTTGGTTCACAGCTCTCACTCAGCATGGCAAAGAGGAACTTAGATTCCCTCGAGGCCAGGGCGTTCCAATCAACACCAATAGTGGTAAAGATGACCAAATTGGCTACTACCGAAGAGCTACCCGACGAGTTCGTGGTGGTGACGGCAAAATGA")
+#RNA sequence
 seqSet = readDNAStringSet("cds/ena-sars.fasta")
 #seqSet = readDNAStringSet("cds/ena-herpes.fasta")
 #seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta")
 seq=seqSet[[11]]
-#print(paste("Original sequence:",seq))
 
-#set X of max. 20 trinucleotides
-#setX=paste("AAC", "AAT", "ACC", "ATC", "ATT", "CAG", "CTC", "CTG", "GAA", "GAC",  "GAG", "GAT", "GCC", "GGC", "GGT", "GTA", "GTC", "GTT", "TAC", "TTC")
-
+#Circular Codes
 source("ccmotif/R/codes.R")
 cCodes = ccmotif.readCodes("ccmotif/C3.txt")
 setX = cCodes[23]
 
-source("AminoDecoder.R")
 setXString = unlist(setX)
 setXString = strsplit(setXString, ",")
 prefix = setXString[1:2]
 setXString = setdiff(setXString,prefix)
 setXString = toString(setXString)
 setXString = gsub(", ","",setXString)
-setXString = DNAString(setXString)
+setXDNAString = DNAString(setXString)
 
-#9 Amino acids (AA) of interest (AAs coded by non-X codons which can be coded by codons from X))
+#Amino acids (AA) of interest (AAs coded by non-X codons which can be coded by codons from X))
 aaInt=paste("A","F","G","I","L","Q","T","V","Y")
 #aaInt = getCodesOfInterest(setX)
-
 
 #Codons of original sequence
 cd=codons(seq)
@@ -37,8 +32,7 @@ l=length(cd)
 aa=translate(seq)
 print(paste("coding for following amino acids:",aa))
 
-#String for sequence after change
-newSequenceString=""
+
 
 #Counter for statistics
 codonCount = l
@@ -48,6 +42,9 @@ mutations = 0
 noChangePossibleCount = 0
 
 checkCodon = function(cd){
+  
+  #String for sequence after change
+  tmpSequence=""
   
   for (i in 1:l) {
     #Get codon on position i
@@ -63,26 +60,29 @@ checkCodon = function(cd){
     if (!grepl(codonString, setX)) {
       #print(paste(codonString, "ist not part of X. This codon is coding for", aa1String))
       notPartOfX<<-notPartOfX+1
-      noChangePossibleCount<<-noChangePossibleCount+1
       
       #Check if amino acid (AA) is of interest
       if (aa1String == "*") {
         print("stop-codon")
+        noChangePossibleCount<<-noChangePossibleCount+1
       }else if (grepl(aa1String, aaInt)) {
         #print("Gotcha! This amino acid can also be produced by one of the 20 codons in set X")
-        noChangePossibleCount<<-noChangePossibleCount-1
         changedCodonsCount<<-changedCodonsCount+1
         mutations<<-mutations+1
         
         oldCodon = codonString
         codonString = changeCodon(aa1String,codonString)
         print(paste("Codon changed from",oldCodon, "to", codonString))
+        
+      }else {
+        noChangePossibleCount<<-noChangePossibleCount+1
       }
       
     }
     #build the new sequence
-    newSequenceString<<-paste(newSequenceString, codonString, sep="")
+    tmpSequence = paste(tmpSequence, codonString, sep="")
   }
+  return(tmpSequence)
 }
 
 #depending on the amino acid, replaces the codon with a codon part of X
@@ -119,7 +119,7 @@ changeCodon = function(aa,codonString){
   return(codonString)
 }
 
-checkCodon(cd)
+newSequenceString = checkCodon(cd)
 
 #new RNA sequence after change
 newSequence=DNAString(newSequenceString)

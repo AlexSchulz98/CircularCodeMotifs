@@ -1,0 +1,47 @@
+---
+title: "On Mutations in Circular Code Motifs"
+output: html_notebook
+---
+
+zuerst Bibliotheken laden
+```{r}
+library(Biostrings)
+```
+
+Untersucht wird die DNA des Sars-Virus
+```{r}
+seqSet = readDNAStringSet("cds/ena-sars.fasta")
+seq=seqSet[[11]]
+```
+
+Circular Codes werden aus einer Textdatei gelsen
+```{r}
+source("ccmotif/R/codes.R")
+cCodes = ccmotif.readCodes("ccmotif/C3.txt")
+setX = cCodes[23]
+```
+
+Für den späteren Vergleich wird die Aminosäuresequenz ermittelt, welche durch die RNA Sequenz codiert wird. 
+
+```{r}
+aa=translate(seq)
+print(aa)
+```
+Nun wird jedes Codon einzeln betrachtet: 
+- Ist das Codon Teil des Circular Codes muss keine Veränderung vorgenommen werden. 
+- Ist das Codon nicht Teil des Circular Codes wird es in die Aminosäure übersetzt, über welche eine Liste an Codons ermittelt wird, die für dieselbe Aminosäure codieren. Durch diese Liste wird iteriert:
+-- beinhaltet die Liste ein Codon des Circular Codes wird das ursprüchliche Codon durch das gefundene ersetzt
+-- ist vorheriges nicht der Fall, wird über eine Blossum Matrix eine ähnliche Aminosäure ermittelt. Für diese wird nun wieder eine Liste mit Codons zurückgegeben und das Spiel wiederholt sich.
+
+TODO: Punktesystem einführen:
+gute Wertung: einfache Punktmutation für selbe Aminosäure
+mittlere Wertung: Aminosäuretausch via Blossum Matrix
+schlechte Wertung: Aminosäuretausch mit weiter entfernter AS auf Blossum Matrix
+(evtl Scoring System der Blossum Matrix miteinbeziehen)
+
+```{r}
+source("AminoDecoder.R")
+newSequence = changeSequence(seq, setX)
+```
+
+
