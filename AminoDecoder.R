@@ -1,5 +1,6 @@
 library(Biostrings)
 
+#----
 #amino acids with all codes
 #ala = c("GCC","GCT","GCG","GCA")
 #arg = c("CGA","CGG","CGT","CGC","AGG","AGA")
@@ -21,6 +22,7 @@ library(Biostrings)
 #trp = c("TGG")
 #tyr = c("TAC","TAT")
 #val = c("GTA","GTT","GTG","GTC")
+#----
 
 getCodesForAA = function(aminoAcid){
   if (aminoAcid == AAString("A")) {
@@ -63,28 +65,43 @@ getCodesForAA = function(aminoAcid){
     return(c("TAC","TAT"))
   } else if (aminoAcid == AAString("V")) {
     return(c("GTA","GTT","GTG","GTC"))
-  } else if (aminoAcid == AAString("*")) {
-    return(c("*"))
+  } else {
+    return(c())
   }
 }
 
-seqSet = readDNAStringSet("cds/ena-sars.fasta")
-seq=seqSet[[11]]
-source("ccmotif/R/codes.R")
-cCodes = ccmotif.readCodes("ccmotif/C3.txt")
-setX = cCodes[23]
-setXString = unlist(setX)
-setXString = strsplit(setXString, ",")
-prefix = setXString[1:2]
-setXString = setdiff(setXString,prefix)
-setXString = toString(setXString)
+#----
+#seqSet = readDNAStringSet("cds/ena-sars.fasta")
+#seq=seqSet[[11]]
+#source("ccmotif/R/codes.R")
+#cCodes = ccmotif.readCodes("ccmotif/C3.txt")
+#setX = cCodes[23]
+#setXString = unlist(setX)
+#setXString = strsplit(setXString, ",")
+#prefix = setXString[1:2]
+#setXString = setdiff(setXString,prefix)
+#setXString = toString(setXString)
 #setXString = gsub(", ","",setXString)
 #setXDNAString = DNAString(setXString)
-aa=translate(seq)
+#aa=translate(seq)
+#----
+
+codonCount = 0
+notPartOfX = 0
+replaced = 0
+
+getStatistics = function(){
+  return(c(codonCount,notPartOfX,replaced))
+}
 
 
+replaceAminoAcid = function(codonString){
+  data("BLOSUM62")
+  
+}
 
-innerChange = function(codon, codonString){
+
+innerChange = function(codonString){
   
   codonSeq = DNAString(codonString)
   aminoAcid = translate(codonSeq)
@@ -92,15 +109,19 @@ innerChange = function(codon, codonString){
   codesForThisAA = getCodesForAA(aminoAcid)
   codesForThisAA_size = length(codesForThisAA)
   
-  for (j in 1:codesForThisAA_size) {
-    testCodon = codesForThisAA[j]
-    if (testCodon == codonString) {
-      #same codon
-    } else if (grepl(testCodon, setX)) {
-      return(testCodon)
-    }
-  }
+  if (codesForThisAA_size >0) {
   
+    for (j in 1:codesForThisAA_size) {
+      testCodon = codesForThisAA[j]
+    
+      if (grepl(testCodon, setX)) {
+        #testCodon = paste("[",testCodon,"]",sep = "")
+        replaced<<-replaced+1
+       return(testCodon)
+      }
+    }
+    
+  }
   
   return(codonString)
 }
@@ -110,6 +131,8 @@ changeSequence = function (sequence, setX) {
   
   cd=codons(seq) #codons in rna sequence 
   l=length(cd) #amount of codons
+  
+  codonCount<<-l
 
   tmpSequence="" #String for sequence after change
   
@@ -119,8 +142,10 @@ changeSequence = function (sequence, setX) {
     codonString = toString(codon)
     
     if (!grepl(codon, setX)) {
+      
+      notPartOfX<<-notPartOfX+1
 
-        codonString = innerChange(codon, codonString)
+      codonString = innerChange(codonString)
       
     }
     
@@ -132,9 +157,9 @@ changeSequence = function (sequence, setX) {
 
 
 
-print(toString(seq))
-newSequence = changeSequence(seq,setX)
-print(newSequence)
+#print(toString(seq))
+#newSequence = changeSequence(seq,setX)
+#print(newSequence)
 
 
 

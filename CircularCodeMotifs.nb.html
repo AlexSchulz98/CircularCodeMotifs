@@ -1769,10 +1769,10 @@ seq=seqSet[[11]]</code></pre>
 <p>Circular Codes werden aus einer Textdatei gelsen</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiY2Ntb3RpZi9SL2NvZGVzLlJcIilcbmNDb2RlcyA9IGNjbW90aWYucmVhZENvZGVzKFwiY2Ntb3RpZi9DMy50eHRcIilcbnNldFggPSBjQ29kZXNbMjNdXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiY2Ntb3RpZi9SL2NvZGVzLlJcIilcbmNDb2RlcyA9IGNjbW90aWYucmVhZENvZGVzKFwiY2Ntb3RpZi9DMy50eHRcIilcbnNldFggPSBjQ29kZXNbMjddXG5gYGAifQ== -->
 <pre class="r"><code>source(&quot;ccmotif/R/codes.R&quot;)
 cCodes = ccmotif.readCodes(&quot;ccmotif/C3.txt&quot;)
-setX = cCodes[23]</code></pre>
+setX = cCodes[27]</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1783,25 +1783,83 @@ setX = cCodes[23]</code></pre>
 <pre class="r"><code>aa=translate(seq)
 print(aa)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICA5OC1sZXR0ZXIgXCJBQVN0cmluZ1wiIGluc3RhbmNlXG5zZXE6IE1EUEtWTlZWUFBBTEhMVkRQUUlRTVRJVFJNRURBVlZIR1FOU0FHUC4uLkxEU0xFQVJBRlFTVFBJVlZLTVRLTEFUVEVFTFBERUZWVlZUQUsqXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiICA5OC1sZXR0ZXIgXCJBQVN0cmluZ1wiIGluc3RhbmNlXG5zZXE6IE1EUEtWTlZWUFBBTEhMVkRQUUlRTVRJVFJNRURBVlZIR1FOU0FHUEtWWVBJSUxSTEdTUUxTTFNNQUtSTkxEU0xFQVJBRlFTVFBJVlZLTVRLTEFUVEVFTFBERUZWVlZUQUsqXG4ifQ== -->
 <pre><code>  98-letter &quot;AAString&quot; instance
-seq: MDPKVNVVPPALHLVDPQIQMTITRMEDAVVHGQNSAGP...LDSLEARAFQSTPIVVKMTKLATTEELPDEFVVVTAK*</code></pre>
+seq: MDPKVNVVPPALHLVDPQIQMTITRMEDAVVHGQNSAGPKVYPIILRLGSQLSLSMAKRNLDSLEARAFQSTPIVVKMTKLATTEELPDEFVVVTAK*</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Nun wird jedes Codon einzeln betrachtet: - Ist das Codon Teil des Circular Codes muss keine Veränderung vorgenommen werden. - Ist das Codon nicht Teil des Circular Codes wird es in die Aminosäure übersetzt, über welche eine Liste an Codons ermittelt wird, die für dieselbe Aminosäure codieren. Durch diese Liste wird iteriert: – beinhaltet die Liste ein Codon des Circular Codes wird das ursprüchliche Codon durch das gefundene ersetzt – ist vorheriges nicht der Fall, wird über eine Blossum Matrix eine ähnliche Aminosäure ermittelt. Für diese wird nun wieder eine Liste mit Codons zurückgegeben und das Spiel wiederholt sich.</p>
+<p>Nun wird jedes Codon einzeln betrachtet: - Ist das Codon Teil des Circular Codes muss keine Veränderung vorgenommen werden. - Ist das Codon nicht Teil des Circular Codes wird es in die Aminosäure übersetzt, über welche eine Liste an Codons ermittelt wird, die für dieselbe Aminosäure codieren. Durch diese Liste wird iteriert: – beinhaltet die Liste ein Codon des Circular Codes wird das ursprüchliche Codon durch das gefundene ersetzt – ist vorheriges nicht der Fall, wird über eine Blossum/Pam Matrix eine ähnliche Aminosäure ermittelt. Für diese wird nun wieder eine Liste mit Codons zurückgegeben und das Spiel wiederholt sich.</p>
 <p>TODO: Punktesystem einführen: gute Wertung: einfache Punktmutation für selbe Aminosäure mittlere Wertung: Aminosäuretausch via Blossum Matrix schlechte Wertung: Aminosäuretausch mit weiter entfernter AS auf Blossum Matrix (evtl Scoring System der Blossum Matrix miteinbeziehen)</p>
+<p>TODO: Deltion beachten –&gt; manchmal am günstigsten</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiQW1pbm9EZWNvZGVyLlJcIilcbm5ld1NlcXVlbmNlID0gY2hhbmdlU2VxdWVuY2Uoc2VxLCBzZXRYKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiQW1pbm9EZWNvZGVyLlJcIilcbm5ld1NlcXVlbmNlID0gY2hhbmdlU2VxdWVuY2Uoc2VxLCBzZXRYKVxuXG5wcmludChzZXRYKSAjY2lyY3VsYXIgY29kZVxuYGBgIn0= -->
 <pre class="r"><code>source(&quot;AminoDecoder.R&quot;)
-newSequence = changeSequence(seq, setX)</code></pre>
+newSequence = changeSequence(seq, setX)
+
+print(setX) #circular code</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiW1sxXV1cblsxXSBcIjI3OiBYMjcsIEFBQywgQUFULCBBVEMsIEFUVCwgQ0FDLCBDQUcsIENURywgR0FBLCBHQUMsIEdBVCwgR0NDLCBHR0EsIEdHQywgR1RBLCBHVEMsIEdURywgR1RULCBUQUMsIFRDQywgVFRDXCJcbiJ9 -->
+<pre><code>[[1]]
+[1] &quot;27: X27, AAC, AAT, ATC, ATT, CAC, CAG, CTG, GAA, GAC, GAT, GCC, GGA, GGC, GTA, GTC, GTG, GTT, TAC, TCC, TTC&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQodG9TdHJpbmcoc2VxKSkgI29sZFNlcXVlbmNlXG5gYGAifQ== -->
+<pre class="r"><code>print(toString(seq)) #oldSequence</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQVRHR0FDQ0NDQUFBR1RDQUFDR1RBR1RHQ0NDQ0NDR0NBVFRBQ0FUVFRHR1RHR0FDQ0NHQ0FHQVRUQ0FBQVRHQUNBQVRBQUNDQUdHQVRHR0FHR0FDR0NBR1RHR1RHQ0FDR0dDQ0FBQUFDQUdDR0NDR0dDQ0NDQUFHR1RUVEFDQ0NBQVRBQVRBQ1RHQ0dUQ1RUR0dUVENBQ0FHQ1RDVENBQ1RDQUdDQVRHR0NBQUFHQUdHQUFDVFRBR0FUVENDQ1RDR0FHR0NDQUdHR0NHVFRDQ0FBVENBQUNBQ0NBQVRBR1RHR1RBQUFHQVRHQUNDQUFBVFRHR0NUQUNUQUNDR0FBR0FHQ1RBQ0NDR0FDR0FHVFRDR1RHR1RHR1RHQUNHR0NBQUFBVEdBXCJcbiJ9 -->
+<pre><code>[1] &quot;ATGGACCCCAAAGTCAACGTAGTGCCCCCCGCATTACATTTGGTGGACCCGCAGATTCAAATGACAATAACCAGGATGGAGGACGCAGTGGTGCACGGCCAAAACAGCGCCGGCCCCAAGGTTTACCCAATAATACTGCGTCTTGGTTCACAGCTCTCACTCAGCATGGCAAAGAGGAACTTAGATTCCCTCGAGGCCAGGGCGTTCCAATCAACACCAATAGTGGTAAAGATGACCAAATTGGCTACTACCGAAGAGCTACCCGACGAGTTCGTGGTGGTGACGGCAAAATGA&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQobmV3U2VxdWVuY2UpXG5gYGAifQ== -->
+<pre class="r"><code>print(newSequence)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQVRHR0FDQ0NDQUFBR1RDQUFDR1RBR1RHQ0NDQ0NDR0NDQ1RHQ0FDVFRHR1RHR0FDQ0NHQ0FHQVRUQ0FHQVRHQUNBQVRUQUNDQUdHQVRHR0FBR0FDR0NDR1RHR1RHQ0FDR0dDQ0FHQUFDVENDR0NDR0dDQ0NDQUFHR1RUVEFDQ0NBQVRUQVRUQ1RHQ0dUQ1RHR0dBVENDQ0FHQ1RHVENDQ1RHVENDQVRHR0NDQUFHQUdHQUFDQ1RHR0FUVENDQ1RHR0FBR0NDQUdHR0NDVFRDQ0FHVENDQUNBQ0NBQVRUR1RHR1RBQUFHQVRHQUNDQUFBVFRHR0NDQUNUQUNDR0FBR0FBQ1RHQ0NDR0FDR0FBVFRDR1RHR1RHR1RHQUNHR0NDQUFBVEdBXCJcbiJ9 -->
+<pre><code>[1] &quot;ATGGACCCCAAAGTCAACGTAGTGCCCCCCGCCCTGCACTTGGTGGACCCGCAGATTCAGATGACAATTACCAGGATGGAAGACGCCGTGGTGCACGGCCAGAACTCCGCCGGCCCCAAGGTTTACCCAATTATTCTGCGTCTGGGATCCCAGCTGTCCCTGTCCATGGCCAAGAGGAACCTGGATTCCCTGGAAGCCAGGGCCTTCCAGTCCACACCAATTGTGGTAAAGATGACCAAATTGGCCACTACCGAAGAACTGCCCGACGAATTCGTGGTGGTGACGGCCAAATGA&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY291bnRzID0gZ2V0U3RhdGlzdGljcygpXG5wcmludChwYXN0ZShcIkluc2dlc2FtdCBnYWIgZXNcIiwgY291bnRzWzFdLFwiQ29kb25zLlwiKSlcbmBgYCJ9 -->
+<pre class="r"><code>counts = getStatistics()
+print(paste(&quot;Insgesamt gab es&quot;, counts[1],&quot;Codons.&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiSW5zZ2VzYW10IGdhYiBlcyA5OCBDb2RvbnMuXCJcbiJ9 -->
+<pre><code>[1] &quot;Insgesamt gab es 98 Codons.&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocGFzdGUoY291bnRzWzJdLFwiV2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy5cIikpXG5gYGAifQ== -->
+<pre class="r"><code>print(paste(counts[2],&quot;Waren nicht bereits Teil des ciruclar Codes.&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiNjQgV2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy5cIlxuIn0= -->
+<pre><code>[1] &quot;64 Waren nicht bereits Teil des ciruclar Codes.&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocGFzdGUoXCJEYXZvbiB3dXJkZW5cIixjb3VudHNbM10sXCJlcnNldHp0IGR1cmNoIENvZG9ucywgd2VsY2hlIFRlaWwgZGVzIGNpcnVsYXIgQ29kZXMgc2luZCB1bmQgZsO8ciBkaWVzZWxiZSBBbWlub3PDtnVyZSBjb2RpZXJlbi5cIikpXG5gYGAifQ== -->
+<pre class="r"><code>print(paste(&quot;Davon wurden&quot;,counts[3],&quot;ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren.&quot;))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiRGF2b24gd3VyZGVuIDMxIGVyc2V0enQgZHVyY2ggQ29kb25zLCB3ZWxjaGUgVGVpbCBkZXMgY2lydWxhciBDb2RlcyBzaW5kIHVuZCBmw7xyIGRpZXNlbGJlIEFtaW5vc8O2dXJlIGNvZGllcmVuLlwiXG4ifQ== -->
+<pre><code>[1] &quot;Davon wurden 31 ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren.&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmlsZUNvbm4gPSBmaWxlKFwib3V0cHV0LnR4dFwiKSAjbmV3U2VxdWVuY2UgdG8gdHh0IGZpbGVcbndyaXRlTGluZXMobmV3U2VxdWVuY2UsIGZpbGVDb25uKSBcbmNsb3NlKGZpbGVDb25uKVxuYGBgIn0= -->
+<pre class="r"><code>fileConn = file(&quot;output.txt&quot;) #newSequence to txt file
+writeLines(newSequence, fileConn) 
+close(fileConn)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Da eine Aminosäure-Austausch noch nicht implementiert ist, sollte die Sequenz dieselbe sein.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxub2xkQUFzZXEgPSB0cmFuc2xhdGUoc2VxKVxubmV3U2VxdWVuY2VTdHJpbmcgPSB0b1N0cmluZyhuZXdTZXF1ZW5jZSlcbm5ld1NlcXVlbmNlRE5BID0gRE5BU3RyaW5nKG5ld1NlcXVlbmNlU3RyaW5nKVxubmV3QUFTZXEgPSB0cmFuc2xhdGUobmV3U2VxdWVuY2VETkEpXG5vbGRBQXNlcSA9PSBuZXdBQVNlcSAjY29tcGFyZSBhbWlubyBhY2lkIHNlcXVlbmNlc1xuYGBgIn0= -->
+<pre class="r"><code>oldAAseq = translate(seq)
+newSequenceString = toString(newSequence)
+newSequenceDNA = DNAString(newSequenceString)
+newAASeq = translate(newSequenceDNA)
+oldAAseq == newAASeq #compare amino acid sequences</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFRSVUVcbiJ9 -->
+<pre><code>[1] TRUE</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIk9uIE11dGF0aW9ucyBpbiBDaXJjdWxhciBDb2RlIE1vdGlmcyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCnp1ZXJzdCBCaWJsaW90aGVrZW4gbGFkZW4NCmBgYHtyfQ0KbGlicmFyeShCaW9zdHJpbmdzKQ0KYGBgDQoNClVudGVyc3VjaHQgd2lyZCBkaWUgRE5BIGRlcyBTYXJzLVZpcnVzDQpgYGB7cn0NCnNlcVNldCA9IHJlYWRETkFTdHJpbmdTZXQoImNkcy9lbmEtc2Fycy5mYXN0YSIpDQpzZXE9c2VxU2V0W1sxMV1dDQpgYGANCg0KQ2lyY3VsYXIgQ29kZXMgd2VyZGVuIGF1cyBlaW5lciBUZXh0ZGF0ZWkgZ2Vsc2VuDQpgYGB7cn0NCnNvdXJjZSgiY2Ntb3RpZi9SL2NvZGVzLlIiKQ0KY0NvZGVzID0gY2Ntb3RpZi5yZWFkQ29kZXMoImNjbW90aWYvQzMudHh0IikNCnNldFggPSBjQ29kZXNbMjNdDQpgYGANCg0KRsO8ciBkZW4gc3DDpHRlcmVuIFZlcmdsZWljaCB3aXJkIGRpZSBBbWlub3PDpHVyZXNlcXVlbnogZXJtaXR0ZWx0LCB3ZWxjaGUgZHVyY2ggZGllIFJOQSBTZXF1ZW56IGNvZGllcnQgd2lyZC4gDQoNCmBgYHtyfQ0KYWE9dHJhbnNsYXRlKHNlcSkNCnByaW50KGFhKQ0KYGBgDQpOdW4gd2lyZCBqZWRlcyBDb2RvbiBlaW56ZWxuIGJldHJhY2h0ZXQ6IA0KLSBJc3QgZGFzIENvZG9uIFRlaWwgZGVzIENpcmN1bGFyIENvZGVzIG11c3Mga2VpbmUgVmVyw6RuZGVydW5nIHZvcmdlbm9tbWVuIHdlcmRlbi4gDQotIElzdCBkYXMgQ29kb24gbmljaHQgVGVpbCBkZXMgQ2lyY3VsYXIgQ29kZXMgd2lyZCBlcyBpbiBkaWUgQW1pbm9zw6R1cmUgw7xiZXJzZXR6dCwgw7xiZXIgd2VsY2hlIGVpbmUgTGlzdGUgYW4gQ29kb25zIGVybWl0dGVsdCB3aXJkLCBkaWUgZsO8ciBkaWVzZWxiZSBBbWlub3PDpHVyZSBjb2RpZXJlbi4gRHVyY2ggZGllc2UgTGlzdGUgd2lyZCBpdGVyaWVydDoNCi0tIGJlaW5oYWx0ZXQgZGllIExpc3RlIGVpbiBDb2RvbiBkZXMgQ2lyY3VsYXIgQ29kZXMgd2lyZCBkYXMgdXJzcHLDvGNobGljaGUgQ29kb24gZHVyY2ggZGFzIGdlZnVuZGVuZSBlcnNldHp0DQotLSBpc3Qgdm9yaGVyaWdlcyBuaWNodCBkZXIgRmFsbCwgd2lyZCDDvGJlciBlaW5lIEJsb3NzdW0gTWF0cml4IGVpbmUgw6RobmxpY2hlIEFtaW5vc8OkdXJlIGVybWl0dGVsdC4gRsO8ciBkaWVzZSB3aXJkIG51biB3aWVkZXIgZWluZSBMaXN0ZSBtaXQgQ29kb25zIHp1csO8Y2tnZWdlYmVuIHVuZCBkYXMgU3BpZWwgd2llZGVyaG9sdCBzaWNoLg0KDQpUT0RPOiBQdW5rdGVzeXN0ZW0gZWluZsO8aHJlbjoNCmd1dGUgV2VydHVuZzogZWluZmFjaGUgUHVua3RtdXRhdGlvbiBmw7xyIHNlbGJlIEFtaW5vc8OkdXJlDQptaXR0bGVyZSBXZXJ0dW5nOiBBbWlub3PDpHVyZXRhdXNjaCB2aWEgQmxvc3N1bSBNYXRyaXgNCnNjaGxlY2h0ZSBXZXJ0dW5nOiBBbWlub3PDpHVyZXRhdXNjaCBtaXQgd2VpdGVyIGVudGZlcm50ZXIgQVMgYXVmIEJsb3NzdW0gTWF0cml4DQooZXZ0bCBTY29yaW5nIFN5c3RlbSBkZXIgQmxvc3N1bSBNYXRyaXggbWl0ZWluYmV6aWVoZW4pDQoNCmBgYHtyfQ0Kc291cmNlKCJBbWlub0RlY29kZXIuUiIpDQpuZXdTZXF1ZW5jZSA9IGNoYW5nZVNlcXVlbmNlKHNlcSwgc2V0WCkNCmBgYA0KDQoNCg==</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIk9uIE11dGF0aW9ucyBpbiBDaXJjdWxhciBDb2RlIE1vdGlmcyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCnp1ZXJzdCBCaWJsaW90aGVrZW4gbGFkZW4NCmBgYHtyfQ0KbGlicmFyeShCaW9zdHJpbmdzKQ0KYGBgDQoNClVudGVyc3VjaHQgd2lyZCBkaWUgRE5BIGRlcyBTYXJzLVZpcnVzDQpgYGB7cn0NCnNlcVNldCA9IHJlYWRETkFTdHJpbmdTZXQoImNkcy9lbmEtc2Fycy5mYXN0YSIpDQpzZXE9c2VxU2V0W1sxMV1dDQpgYGANCg0KQ2lyY3VsYXIgQ29kZXMgd2VyZGVuIGF1cyBlaW5lciBUZXh0ZGF0ZWkgZ2Vsc2VuDQpgYGB7cn0NCnNvdXJjZSgiY2Ntb3RpZi9SL2NvZGVzLlIiKQ0KY0NvZGVzID0gY2Ntb3RpZi5yZWFkQ29kZXMoImNjbW90aWYvQzMudHh0IikNCnNldFggPSBjQ29kZXNbMjddDQpgYGANCg0KRsO8ciBkZW4gc3DDpHRlcmVuIFZlcmdsZWljaCB3aXJkIGRpZSBBbWlub3PDpHVyZXNlcXVlbnogZXJtaXR0ZWx0LCB3ZWxjaGUgZHVyY2ggZGllIFJOQSBTZXF1ZW56IGNvZGllcnQgd2lyZC4gDQoNCmBgYHtyfQ0KYWE9dHJhbnNsYXRlKHNlcSkNCnByaW50KGFhKQ0KYGBgDQpOdW4gd2lyZCBqZWRlcyBDb2RvbiBlaW56ZWxuIGJldHJhY2h0ZXQ6IA0KLSBJc3QgZGFzIENvZG9uIFRlaWwgZGVzIENpcmN1bGFyIENvZGVzIG11c3Mga2VpbmUgVmVyw6RuZGVydW5nIHZvcmdlbm9tbWVuIHdlcmRlbi4gDQotIElzdCBkYXMgQ29kb24gbmljaHQgVGVpbCBkZXMgQ2lyY3VsYXIgQ29kZXMgd2lyZCBlcyBpbiBkaWUgQW1pbm9zw6R1cmUgw7xiZXJzZXR6dCwgw7xiZXIgd2VsY2hlIGVpbmUgTGlzdGUgYW4gQ29kb25zIGVybWl0dGVsdCB3aXJkLCBkaWUgZsO8ciBkaWVzZWxiZSBBbWlub3PDpHVyZSBjb2RpZXJlbi4gRHVyY2ggZGllc2UgTGlzdGUgd2lyZCBpdGVyaWVydDoNCi0tIGJlaW5oYWx0ZXQgZGllIExpc3RlIGVpbiBDb2RvbiBkZXMgQ2lyY3VsYXIgQ29kZXMgd2lyZCBkYXMgdXJzcHLDvGNobGljaGUgQ29kb24gZHVyY2ggZGFzIGdlZnVuZGVuZSBlcnNldHp0DQotLSBpc3Qgdm9yaGVyaWdlcyBuaWNodCBkZXIgRmFsbCwgd2lyZCDDvGJlciBlaW5lIEJsb3NzdW0vUGFtIE1hdHJpeCBlaW5lIMOkaG5saWNoZSBBbWlub3PDpHVyZSBlcm1pdHRlbHQuIEbDvHIgZGllc2Ugd2lyZCBudW4gd2llZGVyIGVpbmUgTGlzdGUgbWl0IENvZG9ucyB6dXLDvGNrZ2VnZWJlbiB1bmQgZGFzIFNwaWVsIHdpZWRlcmhvbHQgc2ljaC4NCg0KVE9ETzogUHVua3Rlc3lzdGVtIGVpbmbDvGhyZW46DQpndXRlIFdlcnR1bmc6IGVpbmZhY2hlIFB1bmt0bXV0YXRpb24gZsO8ciBzZWxiZSBBbWlub3PDpHVyZQ0KbWl0dGxlcmUgV2VydHVuZzogQW1pbm9zw6R1cmV0YXVzY2ggdmlhIEJsb3NzdW0gTWF0cml4DQpzY2hsZWNodGUgV2VydHVuZzogQW1pbm9zw6R1cmV0YXVzY2ggbWl0IHdlaXRlciBlbnRmZXJudGVyIEFTIGF1ZiBCbG9zc3VtIE1hdHJpeA0KKGV2dGwgU2NvcmluZyBTeXN0ZW0gZGVyIEJsb3NzdW0gTWF0cml4IG1pdGVpbmJlemllaGVuKQ0KDQpUT0RPOiBEZWx0aW9uIGJlYWNodGVuIC0tPiBtYW5jaG1hbCBhbSBnw7xuc3RpZ3N0ZW4NCg0KYGBge3J9DQpzb3VyY2UoIkFtaW5vRGVjb2Rlci5SIikNCm5ld1NlcXVlbmNlID0gY2hhbmdlU2VxdWVuY2Uoc2VxLCBzZXRYKQ0KDQpwcmludChzZXRYKSAjY2lyY3VsYXIgY29kZQ0KcHJpbnQodG9TdHJpbmcoc2VxKSkgI29sZFNlcXVlbmNlDQpwcmludChuZXdTZXF1ZW5jZSkNCg0KY291bnRzID0gZ2V0U3RhdGlzdGljcygpDQpwcmludChwYXN0ZSgiSW5zZ2VzYW10IGdhYiBlcyIsIGNvdW50c1sxXSwiQ29kb25zLiIpKQ0KcHJpbnQocGFzdGUoY291bnRzWzJdLCJXYXJlbiBuaWNodCBiZXJlaXRzIFRlaWwgZGVzIGNpcnVjbGFyIENvZGVzLiIpKQ0KcHJpbnQocGFzdGUoIkRhdm9uIHd1cmRlbiIsY291bnRzWzNdLCJlcnNldHp0IGR1cmNoIENvZG9ucywgd2VsY2hlIFRlaWwgZGVzIGNpcnVsYXIgQ29kZXMgc2luZCB1bmQgZsO8ciBkaWVzZWxiZSBBbWlub3PDtnVyZSBjb2RpZXJlbi4iKSkNCg0KZmlsZUNvbm4gPSBmaWxlKCJvdXRwdXQudHh0IikgI25ld1NlcXVlbmNlIHRvIHR4dCBmaWxlDQp3cml0ZUxpbmVzKG5ld1NlcXVlbmNlLCBmaWxlQ29ubikgDQpjbG9zZShmaWxlQ29ubikNCmBgYA0KDQpEYSBlaW5lIEFtaW5vc8OkdXJlLUF1c3RhdXNjaCBub2NoIG5pY2h0IGltcGxlbWVudGllcnQgaXN0LCBzb2xsdGUgZGllIFNlcXVlbnogZGllc2VsYmUgc2Vpbi4NCmBgYHtyfQ0Kb2xkQUFzZXEgPSB0cmFuc2xhdGUoc2VxKQ0KbmV3U2VxdWVuY2VTdHJpbmcgPSB0b1N0cmluZyhuZXdTZXF1ZW5jZSkNCm5ld1NlcXVlbmNlRE5BID0gRE5BU3RyaW5nKG5ld1NlcXVlbmNlU3RyaW5nKQ0KbmV3QUFTZXEgPSB0cmFuc2xhdGUobmV3U2VxdWVuY2VETkEpDQpvbGRBQXNlcSA9PSBuZXdBQVNlcSAjY29tcGFyZSBhbWlubyBhY2lkIHNlcXVlbmNlcw0KYGBgDQoNCg0K</div>
 
 
 
