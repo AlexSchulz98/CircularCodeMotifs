@@ -39,6 +39,7 @@ Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. Diese 
 ```{r}
 rna = DNAString("GGT")
 aa = translate(rna)
+aaString = toString(aa)
 print(aa)
 ```
 
@@ -78,9 +79,29 @@ setXaa = uniqueLetters(setXaa)
 print(setXaa)
 ```
 
+Nun vergleichen wir die Aminosäure des Codons mit dieser Liste. Die Aminosäure mit der höchsten Übereinstimmung wird als Ersatz übernommen. 
 
+TODO: Austausch werten
 
+```{r}
+data("BLOSUM62")
+setXaa_length = length(setXaa)
 
+#aaString = "P"
+
+newAA = aaString # sollte sich keine Aminosäure mit score > 0 finden, wird die alte beibehalten
+score = -5 # threshold
+
+for (i in 1:setXaa_length) {
+  tmp = BLOSUM62[aaString, setXaa[i]]
+  if (tmp >= score) {
+    score = tmp
+    newAA = setXaa[i]
+  }
+}
+print(paste(newAA, score))
+
+```
 
 Für die ganze Sequenz S ergibt sich folgendes: 
 
@@ -94,20 +115,12 @@ print(newSequence)
 counts = getStatistics()
 print(paste("Insgesamt gab es", counts[1],"Codons."))
 print(paste(counts[2],"waren nicht bereits Teil des ciruclar Codes."))
-print(paste("Davon wurden",counts[3],"ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren."))
+print(paste("Davon wurden",counts[3],"ersetzt durch Codons, welche Teil des cirular Codes sind."))
+print(paste(counts[4],"sind CC-Codons anderer als der ursprünglichen Aminosäure"))
 
 fileConn = file("output.txt") #newSequence to txt file
 writeLines(newSequence, fileConn) 
 close(fileConn)
-```
-
-Da eine Aminosäure-Austausch noch nicht implementiert ist, sollte die Sequenz dieselbe sein.
-```{r}
-oldAAseq = translate(seq)
-newSequenceString = toString(newSequence)
-newSequenceDNA = DNAString(newSequenceString)
-newAASeq = translate(newSequenceDNA)
-oldAAseq == newAASeq #compare amino acid sequences
 ```
 
 

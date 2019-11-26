@@ -26,6 +26,13 @@ library(ccmotif)
 #----
 
 getCodesForAA = function(aminoAcid){
+  workaround = DNAString("AAA")
+  workaround = translate(workaround)
+  type1 = typeof(aminoAcid)
+  type2 = typeof(workaround)
+  if (type1!=type2) {
+    aminoAcid = AAString(aminoAcid)
+  }
   if (aminoAcid == AAString("A")) {
     return(c("GCC","GCT","GCG","GCA"))
   } else if (aminoAcid == AAString("R")) {
@@ -72,50 +79,64 @@ getCodesForAA = function(aminoAcid){
 }
 
 #----
-seqSet = readDNAStringSet("cds/ena-sars.fasta")
-seq=seqSet[[11]]
-setX = codes.c3[[26]]
-setXString = unlist(setX)
-setXString = strsplit(setXString, ",")
-prefix = setXString[1]
-setXString = setdiff(setXString,prefix)
-setXString = toString(setXString)
-setXString = gsub(", ","",setXString)
-setXDNAString = DNAString(setXString)
-aa=translate(seq)
+# seqSet = readDNAStringSet("cds/ena-sars.fasta")
+# seq=seqSet[[11]]
+# setX = codes.c3[[26]]
+# setXString = unlist(setX)
+# setXString = strsplit(setXString, ",")
+# prefix = setXString[1]
+# setXString = setdiff(setXString,prefix)
+# setXString = toString(setXString)
+# setXString = gsub(", ","",setXString)
+# setXDNAString = DNAString(setXString)
+# aa=translate(seq)
 #----
 
 codonCount = 0
 notPartOfX = 0
-replaced = 0
+replacedCodons = 0
+replacedAAs = 0
 
 getStatistics = function(){
-  return(c(codonCount,notPartOfX,replaced))
+  return(c(codonCount,notPartOfX,replacedCodons, replacedAAs))
 }
 
 
-replaceAminoAcid = function(codonString){
+replaceAminoAcid = function(aaString, setXaa, setXString){
   data("BLOSUM62")
+  setXaa_length = length(setXaa)
   
+  newAA = aaString # sollte sich keine Aminosäure mit score > treshold finden, wird die alte beibehalten
+  score = -5 # threshold
+  
+  for (i in 1:setXaa_length) {
+    tmp = BLOSUM62[aaString, setXaa[i]]
+    if (tmp >= score) {
+      score = tmp
+      newAA = setXaa[i]
+    }
+  }
+  if (newAA != aaString) { #wegen treshold notwendig
+    replacedAAs<<-replacedAAs+1
+  }
+  newCodon = innerChange(newAA, setXString)
+  return(newCodon)
 }
 
 
-innerChange = function(codonString){
-  
-  codonSeq = DNAString(codonString)
-  aminoAcid = translate(codonSeq)
+innerChange = function(aminoAcid,setXString,codonString="EMPTY" ){
   
   codesForThisAA = getCodesForAA(aminoAcid)
   codesForThisAA_size = length(codesForThisAA)
   
   if (!is.null(codesForThisAA)) { #Bei eines Stopp Codon, wird eine leere Liste zurückgegeben
   
-    for (j in codesForThisAA_size) {
+    for (j in 1:codesForThisAA_size) {
       testCodon = codesForThisAA[j]
     
       if (grepl(testCodon, setXString)) {
         testCodon = paste("[",testCodon,"]",sep = "")
-        replaced<<-replaced+1
+        replacedCodons<<-replacedCodons+1
        return(testCodon)
       }
     }
@@ -131,6 +152,17 @@ changeSequence = function (sequence, setX) {
   cd=codons(seq) #codons in rna sequence 
   l=length(cd) #amount of codons
   
+  setXString = unlist(setX)
+  setXString = strsplit(setXString, ",")
+  prefix = setXString[1]
+  setXString = setdiff(setXString,prefix) #Präfix entfernen
+  setXString = toString(setXString)
+  setXStringPure = gsub(", ","",setXString) #Kommas entfernen
+  setXDNAString = DNAString(setXStringPure)
+  
+  setXaa = translate(setXDNAString)
+  setXaa = uniqueLetters(setXaa)
+  
   codonCount<<-l
 
   tmpSequence="" #String for sequence after change
@@ -143,8 +175,18 @@ changeSequence = function (sequence, setX) {
     if (!grepl(codon, setXString)) {
       
       notPartOfX<<-notPartOfX+1
+      
+      codonSeq = DNAString(codonString)
+      aminoAcid = translate(codonSeq)
 
-      codonString = innerChange(codonString)
+      tmp = codonString
+      codonString = innerChange(aminoAcid,setXString,codonString)
+      
+      if (codonString == tmp) {
+        codonDNA = DNAString(codonString)
+        aaString = toString(translate(codonDNA))
+        codonString = replaceAminoAcid(aaString, setXaa, setXString)
+      }
       
     }
     
@@ -157,7 +199,7 @@ changeSequence = function (sequence, setX) {
 
 
 #print(toString(seq))
-newSequence = changeSequence(seq,setX)
+#newSequence = changeSequence(seq,setX)
 #print(newSequence)
 
 
