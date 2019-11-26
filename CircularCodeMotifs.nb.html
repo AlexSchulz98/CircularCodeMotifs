@@ -1749,60 +1749,126 @@ summary {
 
 
 <!-- rnb-text-begin -->
-<p>zuerst Bibliotheken laden</p>
+<div id="bibliotheken" class="section level2">
+<h2>Bibliotheken</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShCaW9zdHJpbmdzKVxuYGBgIn0= -->
-<pre class="r"><code>library(Biostrings)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShCaW9zdHJpbmdzKVxubGlicmFyeShjY21vdGlmKVxuYGBgIn0= -->
+<pre class="r"><code>library(Biostrings)
+library(ccmotif)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Untersucht wird die DNA des Sars-Virus</p>
+</div>
+<div id="coding-sequence" class="section level2">
+<h2>Coding Sequence</h2>
+<p>Die Coding Sequenz (CDS) S ist eine RNA Sequenz mit Circular Code und Nicht-Circular-Code Motiven. In diesem Fall geht es um das Sars-Virus. Der Einfachhalt halber betrachen wir in diesem Beispiel die 11. CDS. Schauen wir uns zunächst die ersten 10 Codons an:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2VxU2V0ID0gcmVhZEROQVN0cmluZ1NldChcImNkcy9lbmEtc2Fycy5mYXN0YVwiKVxuc2VxPXNlcVNldFtbMTFdXVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2VxU2V0ID0gcmVhZEROQVN0cmluZ1NldChcImNkcy9lbmEtc2Fycy5mYXN0YVwiKVxuc2VxPXNlcVNldFtbMTFdXVxuI2NvZG9uc1NlcSA9IGNvZG9ucyhzZXEpXG5gYGAifQ== -->
 <pre class="r"><code>seqSet = readDNAStringSet(&quot;cds/ena-sars.fasta&quot;)
-seq=seqSet[[11]]</code></pre>
+seq=seqSet[[11]]
+#codonsSeq = codons(seq)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Circular Codes werden aus einer Textdatei gelsen</p>
+</div>
+<div id="circular-codes" class="section level2">
+<h2>Circular Codes</h2>
+<p>Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Für das Beispiel werden wir mit Nummer 26 arbeiten.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiY2Ntb3RpZi9SL2NvZGVzLlJcIilcbmNDb2RlcyA9IGNjbW90aWYucmVhZENvZGVzKFwiY2Ntb3RpZi9DMy50eHRcIilcbnNldFggPSBjQ29kZXNbMjddXG5gYGAifQ== -->
-<pre class="r"><code>source(&quot;ccmotif/R/codes.R&quot;)
-cCodes = ccmotif.readCodes(&quot;ccmotif/C3.txt&quot;)
-setX = cCodes[27]</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0WCA9IGNvZGVzLmMzW1syNl1dICNDb2RlcyBpbSBMaXN0IEZvcm1hdFxuc2V0WFN0cmluZyA9IHVubGlzdChzZXRYKVxuc2V0WFN0cmluZyA9IHN0cnNwbGl0KHNldFhTdHJpbmcsIFwiLFwiKVxucHJlZml4ID0gc2V0WFN0cmluZ1sxXVxuc2V0WFN0cmluZyA9IHNldGRpZmYoc2V0WFN0cmluZyxwcmVmaXgpICNQcsOkZml4IGVudGZlcm5lblxuc2V0WFN0cmluZyA9IHRvU3RyaW5nKHNldFhTdHJpbmcpXG5zZXRYU3RyaW5nUHVyZSA9IGdzdWIoXCIsIFwiLFwiXCIsc2V0WFN0cmluZykgI0tvbW1hcyBlbnRmZXJuZW5cbnNldFhETkFTdHJpbmcgPSBETkFTdHJpbmcoc2V0WFN0cmluZ1B1cmUpICNpbiBETkFTdHJpbmcgRm9ybWF0IHVtd2FuZGVsbi4gTnVyIHNvIGthbm4gdHJhbnNsYXRlKCkgYmVudXR6dCB3ZXJkZW5cblxucHJpbnQoc2V0WFN0cmluZylcbmBgYCJ9 -->
+<pre class="r"><code>setX = codes.c3[[26]] #Codes im List Format
+setXString = unlist(setX)
+setXString = strsplit(setXString, &quot;,&quot;)
+prefix = setXString[1]
+setXString = setdiff(setXString,prefix) #Präfix entfernen
+setXString = toString(setXString)
+setXStringPure = gsub(&quot;, &quot;,&quot;&quot;,setXString) #Kommas entfernen
+setXDNAString = DNAString(setXStringPure) #in DNAString Format umwandeln. Nur so kann translate() benutzt werden
+
+print(setXString)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Für den späteren Vergleich wird die Aminosäuresequenz ermittelt, welche durch die RNA Sequenz codiert wird.</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYWE9dHJhbnNsYXRlKHNlcSlcbnByaW50KGFhKVxuYGBgIn0= -->
-<pre class="r"><code>aa=translate(seq)
-print(aa)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICA5OC1sZXR0ZXIgXCJBQVN0cmluZ1wiIGluc3RhbmNlXG5zZXE6IE1EUEtWTlZWUFBBTEhMVkRQUUlRTVRJVFJNRURBVlZIR1FOU0FHUEtWWVBJSUxSTEdTUUxTTFNNQUtSTkxEU0xFQVJBRlFTVFBJVlZLTVRLTEFUVEVFTFBERUZWVlZUQUsqXG4ifQ== -->
-<pre><code>  98-letter &quot;AAString&quot; instance
-seq: MDPKVNVVPPALHLVDPQIQMTITRMEDAVVHGQNSAGPKVYPIILRLGSQLSLSMAKRNLDSLEARAFQSTPIVVKMTKLATTEELPDEFVVVTAK*</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQUFDLCBBQVQsIEFHQywgQVRDLCBBVFQsIENBQywgR0FBLCBHQUMsIEdBVCwgR0NDLCBHQ1QsIEdHQSwgR0dDLCBHVEEsIEdUQywgR1RHLCBHVFQsIFRBQywgVENDLCBUVENcIlxuIn0= -->
+<pre><code>[1] &quot;AAC, AAT, AGC, ATC, ATT, CAC, GAA, GAC, GAT, GCC, GCT, GGA, GGC, GTA, GTC, GTG, GTT, TAC, TCC, TTC&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Nun wird jedes Codon einzeln betrachtet: - Ist das Codon Teil des Circular Codes muss keine Veränderung vorgenommen werden. - Ist das Codon nicht Teil des Circular Codes wird es in die Aminosäure übersetzt, über welche eine Liste an Codons ermittelt wird, die für dieselbe Aminosäure codieren. Durch diese Liste wird iteriert: – beinhaltet die Liste ein Codon des Circular Codes wird das ursprüchliche Codon durch das gefundene ersetzt – ist vorheriges nicht der Fall, wird über eine Blossum/Pam Matrix eine ähnliche Aminosäure ermittelt. Für diese wird nun wieder eine Liste mit Codons zurückgegeben und das Spiel wiederholt sich.</p>
-<p>TODO: Punktesystem einführen: gute Wertung: einfache Punktmutation für selbe Aminosäure mittlere Wertung: Aminosäuretausch via Blossum Matrix schlechte Wertung: Aminosäuretausch mit weiter entfernter AS auf Blossum Matrix (evtl Scoring System der Blossum Matrix miteinbeziehen)</p>
-<p>TODO: Deltion beachten –&gt; manchmal am günstigsten</p>
+</div>
+<div id="methoden" class="section level2">
+<h2>Methoden</h2>
+<p>Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. Diese werden in die entsprechende Aminosäure übersetzt. Dazu dient die Funktion translate() aus dem Biostring Package. Beispiel:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiQW1pbm9EZWNvZGVyLlJcIilcbm5ld1NlcXVlbmNlID0gY2hhbmdlU2VxdWVuY2Uoc2VxLCBzZXRYKVxuXG5wcmludChzZXRYKSAjY2lyY3VsYXIgY29kZVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucm5hID0gRE5BU3RyaW5nKFwiR0dUXCIpXG5hYSA9IHRyYW5zbGF0ZShybmEpXG5wcmludChhYSlcbmBgYCJ9 -->
+<pre class="r"><code>rna = DNAString(&quot;GGT&quot;)
+aa = translate(rna)
+print(aa)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAxLWxldHRlciBcIkFBU3RyaW5nXCIgaW5zdGFuY2VcbnNlcTogR1xuIn0= -->
+<pre><code>  1-letter &quot;AAString&quot; instance
+seq: G</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Mit der gefundenen Aminosäure lässt sich eine Liste von Codons zurückgeben, welche ebenfalls für diese Aminosäure codieren.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc291cmNlKFwiQW1pbm9EZWNvZGVyLlJcIilcbmNvZGVzRm9yYWEgPSBnZXRDb2Rlc0ZvckFBKGFhKVxucHJpbnQoY29kZXNGb3JhYSlcbmBgYCJ9 -->
 <pre class="r"><code>source(&quot;AminoDecoder.R&quot;)
-newSequence = changeSequence(seq, setX)
+codesForaa = getCodesForAA(aa)
+print(codesForaa)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTlVMTFxuIn0= -->
+<pre><code>NULL</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Es wird das Codon gesucht, welches auch Teil des Circular Codes ist. Wird eines gefunden, wird das alte Codon, durch das neue circular code Codon ersetzt. TODO: Ersatz mit geringster Veränderung wählen. Dazu evtl Liste neuer Funktion übergeben</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29kZXNGb3JhYV9zaXplID0gbGVuZ3RoKGNvZGVzRm9yYWEpXG5cbmlmICghaXMubnVsbChjb2Rlc0ZvcmFhKSkgeyAjQmVpIGVpbmVzIFN0b3BwIENvZG9uLCB3aXJkIGVpbmUgbGVlcmUgTGlzdGUgenVyw7xja2dlZ2ViZW5cbiAgXG4gICAgZm9yIChqIGluIGNvZGVzRm9yYWFfc2l6ZSkge1xuICAgICAgdGVzdENvZG9uID0gY29kZXNGb3JhYVtqXVxuICAgIFxuICAgICAgaWYgKGdyZXBsKHRlc3RDb2Rvbiwgc2V0WFN0cmluZykpIHtcbiAgICAgICAgI0Vyc2F0eiBnZWZ1bmRlblxuICAgICAgICBwcmludChwYXN0ZShcIkVyc2F0eiBnZWZ1bmRlbjogXCIsIHRlc3RDb2RvbikpXG4gICAgICAgIGJyZWFrKClcbiAgICAgIH1cbiAgICB9XG4gIH1cbmBgYCJ9 -->
+<pre class="r"><code>codesForaa_size = length(codesForaa)
+
+if (!is.null(codesForaa)) { #Bei eines Stopp Codon, wird eine leere Liste zurückgegeben
+  
+    for (j in codesForaa_size) {
+      testCodon = codesForaa[j]
+    
+      if (grepl(testCodon, setXString)) {
+        #Ersatz gefunden
+        print(paste(&quot;Ersatz gefunden: &quot;, testCodon))
+        break()
+      }
+    }
+  }</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Sollte in der Liste kein Codon vorhanden sein, welches dem Kriterium entspricht, so suchen wir nach einer möglichst ähnlichen Aminosäure. Diese Aminosäure muss durch die Circular Codes codiert werden. Dazu lassen wir uns eine Liste dieser ausgeben:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2V0WGFhID0gdHJhbnNsYXRlKHNldFhETkFTdHJpbmcpXG5zZXRYYWEgPSB1bmlxdWVMZXR0ZXJzKHNldFhhYSlcbnByaW50KHNldFhhYSlcbmBgYCJ9 -->
+<pre class="r"><code>setXaa = translate(setXDNAString)
+setXaa = uniqueLetters(setXaa)
+print(setXaa)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiIFsxXSBcIkFcIiBcIk5cIiBcIkRcIiBcIkVcIiBcIkdcIiBcIkhcIiBcIklcIiBcIkZcIiBcIlNcIiBcIllcIiBcIlZcIlxuIn0= -->
+<pre><code> [1] &quot;A&quot; &quot;N&quot; &quot;D&quot; &quot;E&quot; &quot;G&quot; &quot;H&quot; &quot;I&quot; &quot;F&quot; &quot;S&quot; &quot;Y&quot; &quot;V&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Für die ganze Sequenz S ergibt sich folgendes:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmV3U2VxdWVuY2UgPSBjaGFuZ2VTZXF1ZW5jZShzZXEsIHNldFgpXG5cbnByaW50KHNldFgpICNjaXJjdWxhciBjb2RlXG5gYGAifQ== -->
+<pre class="r"><code>newSequence = changeSequence(seq, setX)
 
 print(setX) #circular code</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiW1sxXV1cblsxXSBcIjI3OiBYMjcsIEFBQywgQUFULCBBVEMsIEFUVCwgQ0FDLCBDQUcsIENURywgR0FBLCBHQUMsIEdBVCwgR0NDLCBHR0EsIEdHQywgR1RBLCBHVEMsIEdURywgR1RULCBUQUMsIFRDQywgVFRDXCJcbiJ9 -->
-<pre><code>[[1]]
-[1] &quot;27: X27, AAC, AAT, ATC, ATT, CAC, CAG, CTG, GAA, GAC, GAT, GCC, GGA, GGC, GTA, GTC, GTG, GTT, TAC, TCC, TTC&quot;</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiWDI2OiBBQUMsIEFBVCwgQUdDLCBBVEMsIEFUVCwgQ0FDLCBHQUEsIEdBQywgR0FULCBHQ0MsIEdDVCwgR0dBLCBHR0MsIEdUQSwgR1RDLCBHVEcsIEdUVCwgVEFDLCBUQ0MsIFRUQ1wiXG4ifQ== -->
+<pre><code>[1] &quot;X26: AAC, AAT, AGC, ATC, ATT, CAC, GAA, GAC, GAT, GCC, GCT, GGA, GGC, GTA, GTC, GTG, GTT, TAC, TCC, TTC&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQodG9TdHJpbmcoc2VxKSkgI29sZFNlcXVlbmNlXG5gYGAifQ== -->
 <pre class="r"><code>print(toString(seq)) #oldSequence</code></pre>
@@ -1813,8 +1879,8 @@ print(setX) #circular code</code></pre>
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQobmV3U2VxdWVuY2UpXG5gYGAifQ== -->
 <pre class="r"><code>print(newSequence)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQVRHR0FDQ0NDQUFBR1RDQUFDR1RBR1RHQ0NDQ0NDR0NDQ1RHQ0FDVFRHR1RHR0FDQ0NHQ0FHQVRUQ0FHQVRHQUNBQVRUQUNDQUdHQVRHR0FBR0FDR0NDR1RHR1RHQ0FDR0dDQ0FHQUFDVENDR0NDR0dDQ0NDQUFHR1RUVEFDQ0NBQVRUQVRUQ1RHQ0dUQ1RHR0dBVENDQ0FHQ1RHVENDQ1RHVENDQVRHR0NDQUFHQUdHQUFDQ1RHR0FUVENDQ1RHR0FBR0NDQUdHR0NDVFRDQ0FHVENDQUNBQ0NBQVRUR1RHR1RBQUFHQVRHQUNDQUFBVFRHR0NDQUNUQUNDR0FBR0FBQ1RHQ0NDR0FDR0FBVFRDR1RHR1RHR1RHQUNHR0NDQUFBVEdBXCJcbiJ9 -->
-<pre><code>[1] &quot;ATGGACCCCAAAGTCAACGTAGTGCCCCCCGCCCTGCACTTGGTGGACCCGCAGATTCAGATGACAATTACCAGGATGGAAGACGCCGTGGTGCACGGCCAGAACTCCGCCGGCCCCAAGGTTTACCCAATTATTCTGCGTCTGGGATCCCAGCTGTCCCTGTCCATGGCCAAGAGGAACCTGGATTCCCTGGAAGCCAGGGCCTTCCAGTCCACACCAATTGTGGTAAAGATGACCAAATTGGCCACTACCGAAGAACTGCCCGACGAATTCGTGGTGGTGACGGCCAAATGA&quot;</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiQVRHR0FDQ0NDW0FBR11HVENBQUNHVEFHVEdDQ0NDQ0NHQ0FUVEFDQVRbQVRHXUdUR0dBQ0NDR0NBR0FUVENBQUFUR0FDQUFUQVtBQ1RdQUdHQVRHR0FHR0FDR0NBR1RHR1RHQ0FDR0dDQ0FBQUFDQUdDR0NDR0dDQ0NDQUFHR1RUVEFDQ0NBQVRBQVRBQ1RHQ0dUQ1RUR0dUVENBQ0FHQ1RDVENBQ1RDQUdDQVRHR0NBQUFHQUdHQUFDVFRBR0FUVENDQ1RDR0FHR0NDQUdHR0NHVFRDQ0FBVENBQUNBQ0NBQVRBR1RHR1RBQUFHQVRHW0FDVF1bQUFHXVtBVEddR0NUQUNUW0FDVF1HQUFHQUdbQ1RDXUNDQ0dBQ0dBR1RUQ0dUR0dUR0dUR0FDR0dDQVtBQUddVEdBXCJcbiJ9 -->
+<pre><code>[1] &quot;ATGGACCCC[AAG]GTCAACGTAGTGCCCCCCGCATTACAT[ATG]GTGGACCCGCAGATTCAAATGACAATA[ACT]AGGATGGAGGACGCAGTGGTGCACGGCCAAAACAGCGCCGGCCCCAAGGTTTACCCAATAATACTGCGTCTTGGTTCACAGCTCTCACTCAGCATGGCAAAGAGGAACTTAGATTCCCTCGAGGCCAGGGCGTTCCAATCAACACCAATAGTGGTAAAGATG[ACT][AAG][ATG]GCTACT[ACT]GAAGAG[CTC]CCCGACGAGTTCGTGGTGGTGACGGCA[AAG]TGA&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY291bnRzID0gZ2V0U3RhdGlzdGljcygpXG5wcmludChwYXN0ZShcIkluc2dlc2FtdCBnYWIgZXNcIiwgY291bnRzWzFdLFwiQ29kb25zLlwiKSlcbmBgYCJ9 -->
 <pre class="r"><code>counts = getStatistics()
@@ -1823,17 +1889,17 @@ print(paste(&quot;Insgesamt gab es&quot;, counts[1],&quot;Codons.&quot;))</code>
 <!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiSW5zZ2VzYW10IGdhYiBlcyA5OCBDb2RvbnMuXCJcbiJ9 -->
 <pre><code>[1] &quot;Insgesamt gab es 98 Codons.&quot;</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocGFzdGUoY291bnRzWzJdLFwiV2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy5cIikpXG5gYGAifQ== -->
-<pre class="r"><code>print(paste(counts[2],&quot;Waren nicht bereits Teil des ciruclar Codes.&quot;))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocGFzdGUoY291bnRzWzJdLFwid2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy5cIikpXG5gYGAifQ== -->
+<pre class="r"><code>print(paste(counts[2],&quot;waren nicht bereits Teil des ciruclar Codes.&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiNjQgV2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy5cIlxuIn0= -->
-<pre><code>[1] &quot;64 Waren nicht bereits Teil des ciruclar Codes.&quot;</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiNTcgd2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy5cIlxuIn0= -->
+<pre><code>[1] &quot;57 waren nicht bereits Teil des ciruclar Codes.&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQocGFzdGUoXCJEYXZvbiB3dXJkZW5cIixjb3VudHNbM10sXCJlcnNldHp0IGR1cmNoIENvZG9ucywgd2VsY2hlIFRlaWwgZGVzIGNpcnVsYXIgQ29kZXMgc2luZCB1bmQgZsO8ciBkaWVzZWxiZSBBbWlub3PDtnVyZSBjb2RpZXJlbi5cIikpXG5gYGAifQ== -->
 <pre class="r"><code>print(paste(&quot;Davon wurden&quot;,counts[3],&quot;ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren.&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiRGF2b24gd3VyZGVuIDMxIGVyc2V0enQgZHVyY2ggQ29kb25zLCB3ZWxjaGUgVGVpbCBkZXMgY2lydWxhciBDb2RlcyBzaW5kIHVuZCBmw7xyIGRpZXNlbGJlIEFtaW5vc8O2dXJlIGNvZGllcmVuLlwiXG4ifQ== -->
-<pre><code>[1] &quot;Davon wurden 31 ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren.&quot;</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiRGF2b24gd3VyZGVuIDI3IGVyc2V0enQgZHVyY2ggQ29kb25zLCB3ZWxjaGUgVGVpbCBkZXMgY2lydWxhciBDb2RlcyBzaW5kIHVuZCBmw7xyIGRpZXNlbGJlIEFtaW5vc8O2dXJlIGNvZGllcmVuLlwiXG4ifQ== -->
+<pre><code>[1] &quot;Davon wurden 27 ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren.&quot;</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZmlsZUNvbm4gPSBmaWxlKFwib3V0cHV0LnR4dFwiKSAjbmV3U2VxdWVuY2UgdG8gdHh0IGZpbGVcbndyaXRlTGluZXMobmV3U2VxdWVuY2UsIGZpbGVDb25uKSBcbmNsb3NlKGZpbGVDb25uKVxuYGBgIn0= -->
 <pre class="r"><code>fileConn = file(&quot;output.txt&quot;) #newSequence to txt file
@@ -1858,8 +1924,9 @@ oldAAseq == newAASeq #compare amino acid sequences</code></pre>
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIk9uIE11dGF0aW9ucyBpbiBDaXJjdWxhciBDb2RlIE1vdGlmcyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCnp1ZXJzdCBCaWJsaW90aGVrZW4gbGFkZW4NCmBgYHtyfQ0KbGlicmFyeShCaW9zdHJpbmdzKQ0KYGBgDQoNClVudGVyc3VjaHQgd2lyZCBkaWUgRE5BIGRlcyBTYXJzLVZpcnVzDQpgYGB7cn0NCnNlcVNldCA9IHJlYWRETkFTdHJpbmdTZXQoImNkcy9lbmEtc2Fycy5mYXN0YSIpDQpzZXE9c2VxU2V0W1sxMV1dDQpgYGANCg0KQ2lyY3VsYXIgQ29kZXMgd2VyZGVuIGF1cyBlaW5lciBUZXh0ZGF0ZWkgZ2Vsc2VuDQpgYGB7cn0NCnNvdXJjZSgiY2Ntb3RpZi9SL2NvZGVzLlIiKQ0KY0NvZGVzID0gY2Ntb3RpZi5yZWFkQ29kZXMoImNjbW90aWYvQzMudHh0IikNCnNldFggPSBjQ29kZXNbMjddDQpgYGANCg0KRsO8ciBkZW4gc3DDpHRlcmVuIFZlcmdsZWljaCB3aXJkIGRpZSBBbWlub3PDpHVyZXNlcXVlbnogZXJtaXR0ZWx0LCB3ZWxjaGUgZHVyY2ggZGllIFJOQSBTZXF1ZW56IGNvZGllcnQgd2lyZC4gDQoNCmBgYHtyfQ0KYWE9dHJhbnNsYXRlKHNlcSkNCnByaW50KGFhKQ0KYGBgDQpOdW4gd2lyZCBqZWRlcyBDb2RvbiBlaW56ZWxuIGJldHJhY2h0ZXQ6IA0KLSBJc3QgZGFzIENvZG9uIFRlaWwgZGVzIENpcmN1bGFyIENvZGVzIG11c3Mga2VpbmUgVmVyw6RuZGVydW5nIHZvcmdlbm9tbWVuIHdlcmRlbi4gDQotIElzdCBkYXMgQ29kb24gbmljaHQgVGVpbCBkZXMgQ2lyY3VsYXIgQ29kZXMgd2lyZCBlcyBpbiBkaWUgQW1pbm9zw6R1cmUgw7xiZXJzZXR6dCwgw7xiZXIgd2VsY2hlIGVpbmUgTGlzdGUgYW4gQ29kb25zIGVybWl0dGVsdCB3aXJkLCBkaWUgZsO8ciBkaWVzZWxiZSBBbWlub3PDpHVyZSBjb2RpZXJlbi4gRHVyY2ggZGllc2UgTGlzdGUgd2lyZCBpdGVyaWVydDoNCi0tIGJlaW5oYWx0ZXQgZGllIExpc3RlIGVpbiBDb2RvbiBkZXMgQ2lyY3VsYXIgQ29kZXMgd2lyZCBkYXMgdXJzcHLDvGNobGljaGUgQ29kb24gZHVyY2ggZGFzIGdlZnVuZGVuZSBlcnNldHp0DQotLSBpc3Qgdm9yaGVyaWdlcyBuaWNodCBkZXIgRmFsbCwgd2lyZCDDvGJlciBlaW5lIEJsb3NzdW0vUGFtIE1hdHJpeCBlaW5lIMOkaG5saWNoZSBBbWlub3PDpHVyZSBlcm1pdHRlbHQuIEbDvHIgZGllc2Ugd2lyZCBudW4gd2llZGVyIGVpbmUgTGlzdGUgbWl0IENvZG9ucyB6dXLDvGNrZ2VnZWJlbiB1bmQgZGFzIFNwaWVsIHdpZWRlcmhvbHQgc2ljaC4NCg0KVE9ETzogUHVua3Rlc3lzdGVtIGVpbmbDvGhyZW46DQpndXRlIFdlcnR1bmc6IGVpbmZhY2hlIFB1bmt0bXV0YXRpb24gZsO8ciBzZWxiZSBBbWlub3PDpHVyZQ0KbWl0dGxlcmUgV2VydHVuZzogQW1pbm9zw6R1cmV0YXVzY2ggdmlhIEJsb3NzdW0gTWF0cml4DQpzY2hsZWNodGUgV2VydHVuZzogQW1pbm9zw6R1cmV0YXVzY2ggbWl0IHdlaXRlciBlbnRmZXJudGVyIEFTIGF1ZiBCbG9zc3VtIE1hdHJpeA0KKGV2dGwgU2NvcmluZyBTeXN0ZW0gZGVyIEJsb3NzdW0gTWF0cml4IG1pdGVpbmJlemllaGVuKQ0KDQpUT0RPOiBEZWx0aW9uIGJlYWNodGVuIC0tPiBtYW5jaG1hbCBhbSBnw7xuc3RpZ3N0ZW4NCg0KYGBge3J9DQpzb3VyY2UoIkFtaW5vRGVjb2Rlci5SIikNCm5ld1NlcXVlbmNlID0gY2hhbmdlU2VxdWVuY2Uoc2VxLCBzZXRYKQ0KDQpwcmludChzZXRYKSAjY2lyY3VsYXIgY29kZQ0KcHJpbnQodG9TdHJpbmcoc2VxKSkgI29sZFNlcXVlbmNlDQpwcmludChuZXdTZXF1ZW5jZSkNCg0KY291bnRzID0gZ2V0U3RhdGlzdGljcygpDQpwcmludChwYXN0ZSgiSW5zZ2VzYW10IGdhYiBlcyIsIGNvdW50c1sxXSwiQ29kb25zLiIpKQ0KcHJpbnQocGFzdGUoY291bnRzWzJdLCJXYXJlbiBuaWNodCBiZXJlaXRzIFRlaWwgZGVzIGNpcnVjbGFyIENvZGVzLiIpKQ0KcHJpbnQocGFzdGUoIkRhdm9uIHd1cmRlbiIsY291bnRzWzNdLCJlcnNldHp0IGR1cmNoIENvZG9ucywgd2VsY2hlIFRlaWwgZGVzIGNpcnVsYXIgQ29kZXMgc2luZCB1bmQgZsO8ciBkaWVzZWxiZSBBbWlub3PDtnVyZSBjb2RpZXJlbi4iKSkNCg0KZmlsZUNvbm4gPSBmaWxlKCJvdXRwdXQudHh0IikgI25ld1NlcXVlbmNlIHRvIHR4dCBmaWxlDQp3cml0ZUxpbmVzKG5ld1NlcXVlbmNlLCBmaWxlQ29ubikgDQpjbG9zZShmaWxlQ29ubikNCmBgYA0KDQpEYSBlaW5lIEFtaW5vc8OkdXJlLUF1c3RhdXNjaCBub2NoIG5pY2h0IGltcGxlbWVudGllcnQgaXN0LCBzb2xsdGUgZGllIFNlcXVlbnogZGllc2VsYmUgc2Vpbi4NCmBgYHtyfQ0Kb2xkQUFzZXEgPSB0cmFuc2xhdGUoc2VxKQ0KbmV3U2VxdWVuY2VTdHJpbmcgPSB0b1N0cmluZyhuZXdTZXF1ZW5jZSkNCm5ld1NlcXVlbmNlRE5BID0gRE5BU3RyaW5nKG5ld1NlcXVlbmNlU3RyaW5nKQ0KbmV3QUFTZXEgPSB0cmFuc2xhdGUobmV3U2VxdWVuY2VETkEpDQpvbGRBQXNlcSA9PSBuZXdBQVNlcSAjY29tcGFyZSBhbWlubyBhY2lkIHNlcXVlbmNlcw0KYGBgDQoNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIk9uIE11dGF0aW9ucyBpbiBDaXJjdWxhciBDb2RlIE1vdGlmcyINCm91dHB1dDogaHRtbF9ub3RlYm9vaw0KLS0tDQoNCiMjIEJpYmxpb3RoZWtlbg0KYGBge3J9DQpsaWJyYXJ5KEJpb3N0cmluZ3MpDQpsaWJyYXJ5KGNjbW90aWYpDQpgYGANCg0KIyMgQ29kaW5nIFNlcXVlbmNlDQpEaWUgQ29kaW5nIFNlcXVlbnogKENEUykgUyBpc3QgZWluZSBSTkEgU2VxdWVueiBtaXQgQ2lyY3VsYXIgQ29kZSB1bmQgTmljaHQtQ2lyY3VsYXItQ29kZSBNb3RpdmVuLiBJbiBkaWVzZW0gRmFsbCBnZWh0IGVzIHVtIGRhcyBTYXJzLVZpcnVzLiBEZXIgRWluZmFjaGhhbHQgaGFsYmVyIGJldHJhY2hlbiB3aXIgaW4gZGllc2VtIEJlaXNwaWVsIGRpZSAxMS4gQ0RTLiBTY2hhdWVuIHdpciB1bnMgenVuw6RjaHN0IGRpZSBlcnN0ZW4gMTAgQ29kb25zIGFuOg0KYGBge3J9DQpzZXFTZXQgPSByZWFkRE5BU3RyaW5nU2V0KCJjZHMvZW5hLXNhcnMuZmFzdGEiKQ0Kc2VxPXNlcVNldFtbMTFdXQ0KI2NvZG9uc1NlcSA9IGNvZG9ucyhzZXEpDQpgYGANCg0KIyMgQ2lyY3VsYXIgQ29kZXMNCkNvZGVzLmMzIHVtZmFzc3QgMjE2IHNlbGJzdC1rb21wbGVtZW50w6RyZSBDMyBDb2Rlcywgd2VsY2hlIGFscyB2aWVsdmVyc3ByZWNoZW5kIGdlbHRlbi4gRsO8ciBkYXMgQmVpc3BpZWwgd2VyZGVuIHdpciBtaXQgTnVtbWVyIDI2IGFyYmVpdGVuLg0KYGBge3J9DQpzZXRYID0gY29kZXMuYzNbWzI2XV0gI0NvZGVzIGltIExpc3QgRm9ybWF0DQpzZXRYU3RyaW5nID0gdW5saXN0KHNldFgpDQpzZXRYU3RyaW5nID0gc3Ryc3BsaXQoc2V0WFN0cmluZywgIiwiKQ0KcHJlZml4ID0gc2V0WFN0cmluZ1sxXQ0Kc2V0WFN0cmluZyA9IHNldGRpZmYoc2V0WFN0cmluZyxwcmVmaXgpICNQcsOkZml4IGVudGZlcm5lbg0Kc2V0WFN0cmluZyA9IHRvU3RyaW5nKHNldFhTdHJpbmcpDQpzZXRYU3RyaW5nUHVyZSA9IGdzdWIoIiwgIiwiIixzZXRYU3RyaW5nKSAjS29tbWFzIGVudGZlcm5lbg0Kc2V0WEROQVN0cmluZyA9IEROQVN0cmluZyhzZXRYU3RyaW5nUHVyZSkgI2luIEROQVN0cmluZyBGb3JtYXQgdW13YW5kZWxuLiBOdXIgc28ga2FubiB0cmFuc2xhdGUoKSBiZW51dHp0IHdlcmRlbg0KDQpwcmludChzZXRYU3RyaW5nKQ0KYGBgDQoNCiMjIE1ldGhvZGVuDQoNClZvbiBJbnRlcmVzc2Ugc2luZCBudXIgQ29kb25zLCB3ZWxjaGUgbmljaHQgVGVpbCBkZXMgY2lyY3VsYXIgY29kZXMgc2luZC4gRGllc2Ugd2VyZGVuIGluIGRpZSBlbnRzcHJlY2hlbmRlIEFtaW5vc8OkdXJlIMO8YmVyc2V0enQuIERhenUgZGllbnQgZGllIEZ1bmt0aW9uIHRyYW5zbGF0ZSgpIGF1cyBkZW0gQmlvc3RyaW5nIFBhY2thZ2UuIEJlaXNwaWVsOg0KDQpgYGB7cn0NCnJuYSA9IEROQVN0cmluZygiR0dUIikNCmFhID0gdHJhbnNsYXRlKHJuYSkNCnByaW50KGFhKQ0KYGBgDQoNCk1pdCBkZXIgZ2VmdW5kZW5lbiBBbWlub3PDpHVyZSBsw6Rzc3Qgc2ljaCBlaW5lIExpc3RlIHZvbiBDb2RvbnMgenVyw7xja2dlYmVuLCB3ZWxjaGUgZWJlbmZhbGxzIGbDvHIgZGllc2UgQW1pbm9zw6R1cmUgY29kaWVyZW4uDQoNCmBgYHtyfQ0Kc291cmNlKCJBbWlub0RlY29kZXIuUiIpDQpjb2Rlc0ZvcmFhID0gZ2V0Q29kZXNGb3JBQShhYSkNCnByaW50KGNvZGVzRm9yYWEpDQpgYGANCg0KRXMgd2lyZCBkYXMgQ29kb24gZ2VzdWNodCwgd2VsY2hlcyBhdWNoIFRlaWwgZGVzIENpcmN1bGFyIENvZGVzIGlzdC4gV2lyZCBlaW5lcyBnZWZ1bmRlbiwgd2lyZCBkYXMgYWx0ZSBDb2RvbiwgZHVyY2ggZGFzIG5ldWUgY2lyY3VsYXIgY29kZSBDb2RvbiBlcnNldHp0Lg0KVE9ETzogRXJzYXR6IG1pdCBnZXJpbmdzdGVyIFZlcsOkbmRlcnVuZyB3w6RobGVuLiBEYXp1IGV2dGwgTGlzdGUgbmV1ZXIgRnVua3Rpb24gw7xiZXJnZWJlbg0KDQpgYGB7cn0NCmNvZGVzRm9yYWFfc2l6ZSA9IGxlbmd0aChjb2Rlc0ZvcmFhKQ0KDQppZiAoIWlzLm51bGwoY29kZXNGb3JhYSkpIHsgI0JlaSBlaW5lcyBTdG9wcCBDb2Rvbiwgd2lyZCBlaW5lIGxlZXJlIExpc3RlIHp1csO8Y2tnZWdlYmVuDQogIA0KICAgIGZvciAoaiBpbiBjb2Rlc0ZvcmFhX3NpemUpIHsNCiAgICAgIHRlc3RDb2RvbiA9IGNvZGVzRm9yYWFbal0NCiAgICANCiAgICAgIGlmIChncmVwbCh0ZXN0Q29kb24sIHNldFhTdHJpbmcpKSB7DQogICAgICAgICNFcnNhdHogZ2VmdW5kZW4NCiAgICAgICAgcHJpbnQocGFzdGUoIkVyc2F0eiBnZWZ1bmRlbjogIiwgdGVzdENvZG9uKSkNCiAgICAgICAgYnJlYWsoKQ0KICAgICAgfQ0KICAgIH0NCiAgfQ0KYGBgDQoNClNvbGx0ZSBpbiBkZXIgTGlzdGUga2VpbiBDb2RvbiB2b3JoYW5kZW4gc2Vpbiwgd2VsY2hlcyBkZW0gS3JpdGVyaXVtIGVudHNwcmljaHQsIHNvIHN1Y2hlbiB3aXIgbmFjaCBlaW5lciBtw7ZnbGljaHN0IMOkaG5saWNoZW4gQW1pbm9zw6R1cmUuIERpZXNlIEFtaW5vc8OkdXJlIG11c3MgZHVyY2ggZGllIENpcmN1bGFyIENvZGVzIGNvZGllcnQgd2VyZGVuLiBEYXp1IGxhc3NlbiB3aXIgdW5zIGVpbmUgTGlzdGUgZGllc2VyIGF1c2dlYmVuOg0KDQpgYGB7cn0NCnNldFhhYSA9IHRyYW5zbGF0ZShzZXRYRE5BU3RyaW5nKQ0Kc2V0WGFhID0gdW5pcXVlTGV0dGVycyhzZXRYYWEpDQpwcmludChzZXRYYWEpDQpgYGANCg0KDQoNCg0KDQpGw7xyIGRpZSBnYW56ZSBTZXF1ZW56IFMgZXJnaWJ0IHNpY2ggZm9sZ2VuZGVzOiANCg0KYGBge3J9DQpuZXdTZXF1ZW5jZSA9IGNoYW5nZVNlcXVlbmNlKHNlcSwgc2V0WCkNCg0KcHJpbnQoc2V0WCkgI2NpcmN1bGFyIGNvZGUNCnByaW50KHRvU3RyaW5nKHNlcSkpICNvbGRTZXF1ZW5jZQ0KcHJpbnQobmV3U2VxdWVuY2UpDQoNCmNvdW50cyA9IGdldFN0YXRpc3RpY3MoKQ0KcHJpbnQocGFzdGUoIkluc2dlc2FtdCBnYWIgZXMiLCBjb3VudHNbMV0sIkNvZG9ucy4iKSkNCnByaW50KHBhc3RlKGNvdW50c1syXSwid2FyZW4gbmljaHQgYmVyZWl0cyBUZWlsIGRlcyBjaXJ1Y2xhciBDb2Rlcy4iKSkNCnByaW50KHBhc3RlKCJEYXZvbiB3dXJkZW4iLGNvdW50c1szXSwiZXJzZXR6dCBkdXJjaCBDb2RvbnMsIHdlbGNoZSBUZWlsIGRlcyBjaXJ1bGFyIENvZGVzIHNpbmQgdW5kIGbDvHIgZGllc2VsYmUgQW1pbm9zw7Z1cmUgY29kaWVyZW4uIikpDQoNCmZpbGVDb25uID0gZmlsZSgib3V0cHV0LnR4dCIpICNuZXdTZXF1ZW5jZSB0byB0eHQgZmlsZQ0Kd3JpdGVMaW5lcyhuZXdTZXF1ZW5jZSwgZmlsZUNvbm4pIA0KY2xvc2UoZmlsZUNvbm4pDQpgYGANCg0KRGEgZWluZSBBbWlub3PDpHVyZS1BdXN0YXVzY2ggbm9jaCBuaWNodCBpbXBsZW1lbnRpZXJ0IGlzdCwgc29sbHRlIGRpZSBTZXF1ZW56IGRpZXNlbGJlIHNlaW4uDQpgYGB7cn0NCm9sZEFBc2VxID0gdHJhbnNsYXRlKHNlcSkNCm5ld1NlcXVlbmNlU3RyaW5nID0gdG9TdHJpbmcobmV3U2VxdWVuY2UpDQpuZXdTZXF1ZW5jZUROQSA9IEROQVN0cmluZyhuZXdTZXF1ZW5jZVN0cmluZykNCm5ld0FBU2VxID0gdHJhbnNsYXRlKG5ld1NlcXVlbmNlRE5BKQ0Kb2xkQUFzZXEgPT0gbmV3QUFTZXEgI2NvbXBhcmUgYW1pbm8gYWNpZCBzZXF1ZW5jZXMNCmBgYA0KDQoNCg==</div>
 
 
 

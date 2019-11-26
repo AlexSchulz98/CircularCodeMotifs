@@ -1,4 +1,5 @@
 library(Biostrings)
+library(ccmotif)
 
 #----
 #amino acids with all codes
@@ -71,19 +72,17 @@ getCodesForAA = function(aminoAcid){
 }
 
 #----
-#seqSet = readDNAStringSet("cds/ena-sars.fasta")
-#seq=seqSet[[11]]
-#source("ccmotif/R/codes.R")
-#cCodes = ccmotif.readCodes("ccmotif/C3.txt")
-#setX = cCodes[23]
-#setXString = unlist(setX)
-#setXString = strsplit(setXString, ",")
-#prefix = setXString[1:2]
-#setXString = setdiff(setXString,prefix)
-#setXString = toString(setXString)
-#setXString = gsub(", ","",setXString)
-#setXDNAString = DNAString(setXString)
-#aa=translate(seq)
+seqSet = readDNAStringSet("cds/ena-sars.fasta")
+seq=seqSet[[11]]
+setX = codes.c3[[26]]
+setXString = unlist(setX)
+setXString = strsplit(setXString, ",")
+prefix = setXString[1]
+setXString = setdiff(setXString,prefix)
+setXString = toString(setXString)
+setXString = gsub(", ","",setXString)
+setXDNAString = DNAString(setXString)
+aa=translate(seq)
 #----
 
 codonCount = 0
@@ -109,13 +108,13 @@ innerChange = function(codonString){
   codesForThisAA = getCodesForAA(aminoAcid)
   codesForThisAA_size = length(codesForThisAA)
   
-  if (codesForThisAA_size >0) {
+  if (!is.null(codesForThisAA)) { #Bei eines Stopp Codon, wird eine leere Liste zurückgegeben
   
-    for (j in 1:codesForThisAA_size) {
+    for (j in codesForThisAA_size) {
       testCodon = codesForThisAA[j]
     
-      if (grepl(testCodon, setX)) {
-        #testCodon = paste("[",testCodon,"]",sep = "")
+      if (grepl(testCodon, setXString)) {
+        testCodon = paste("[",testCodon,"]",sep = "")
         replaced<<-replaced+1
        return(testCodon)
       }
@@ -141,7 +140,7 @@ changeSequence = function (sequence, setX) {
     codon = cd[i]
     codonString = toString(codon)
     
-    if (!grepl(codon, setX)) {
+    if (!grepl(codon, setXString)) {
       
       notPartOfX<<-notPartOfX+1
 
@@ -158,7 +157,7 @@ changeSequence = function (sequence, setX) {
 
 
 #print(toString(seq))
-#newSequence = changeSequence(seq,setX)
+newSequence = changeSequence(seq,setX)
 #print(newSequence)
 
 

@@ -3,46 +3,88 @@ title: "On Mutations in Circular Code Motifs"
 output: html_notebook
 ---
 
-zuerst Bibliotheken laden
+## Bibliotheken
 ```{r}
 library(Biostrings)
+library(ccmotif)
 ```
 
-Untersucht wird die DNA des Sars-Virus
+## Coding Sequence
+Die Coding Sequenz (CDS) S ist eine RNA Sequenz mit Circular Code und Nicht-Circular-Code Motiven. In diesem Fall geht es um das Sars-Virus. Der Einfachhalt halber betrachen wir in diesem Beispiel die 11. CDS. Schauen wir uns zunächst die ersten 10 Codons an:
 ```{r}
 seqSet = readDNAStringSet("cds/ena-sars.fasta")
 seq=seqSet[[11]]
+#codonsSeq = codons(seq)
 ```
 
-Circular Codes werden aus einer Textdatei gelsen
+## Circular Codes
+Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Für das Beispiel werden wir mit Nummer 26 arbeiten.
 ```{r}
-source("ccmotif/R/codes.R")
-cCodes = ccmotif.readCodes("ccmotif/C3.txt")
-setX = cCodes[27]
+setX = codes.c3[[26]] #Codes im List Format
+setXString = unlist(setX)
+setXString = strsplit(setXString, ",")
+prefix = setXString[1]
+setXString = setdiff(setXString,prefix) #Präfix entfernen
+setXString = toString(setXString)
+setXStringPure = gsub(", ","",setXString) #Kommas entfernen
+setXDNAString = DNAString(setXStringPure) #in DNAString Format umwandeln. Nur so kann translate() benutzt werden
+
+print(setXString)
 ```
 
-Für den späteren Vergleich wird die Aminosäuresequenz ermittelt, welche durch die RNA Sequenz codiert wird. 
+## Methoden
+
+Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. Diese werden in die entsprechende Aminosäure übersetzt. Dazu dient die Funktion translate() aus dem Biostring Package. Beispiel:
 
 ```{r}
-aa=translate(seq)
+rna = DNAString("GGT")
+aa = translate(rna)
 print(aa)
 ```
-Nun wird jedes Codon einzeln betrachtet: 
-- Ist das Codon Teil des Circular Codes muss keine Veränderung vorgenommen werden. 
-- Ist das Codon nicht Teil des Circular Codes wird es in die Aminosäure übersetzt, über welche eine Liste an Codons ermittelt wird, die für dieselbe Aminosäure codieren. Durch diese Liste wird iteriert:
--- beinhaltet die Liste ein Codon des Circular Codes wird das ursprüchliche Codon durch das gefundene ersetzt
--- ist vorheriges nicht der Fall, wird über eine Blossum/Pam Matrix eine ähnliche Aminosäure ermittelt. Für diese wird nun wieder eine Liste mit Codons zurückgegeben und das Spiel wiederholt sich.
 
-TODO: Punktesystem einführen:
-gute Wertung: einfache Punktmutation für selbe Aminosäure
-mittlere Wertung: Aminosäuretausch via Blossum Matrix
-schlechte Wertung: Aminosäuretausch mit weiter entfernter AS auf Blossum Matrix
-(evtl Scoring System der Blossum Matrix miteinbeziehen)
-
-TODO: Deltion beachten --> manchmal am günstigsten
+Mit der gefundenen Aminosäure lässt sich eine Liste von Codons zurückgeben, welche ebenfalls für diese Aminosäure codieren.
 
 ```{r}
 source("AminoDecoder.R")
+codesForaa = getCodesForAA(aa)
+print(codesForaa)
+```
+
+Es wird das Codon gesucht, welches auch Teil des Circular Codes ist. Wird eines gefunden, wird das alte Codon, durch das neue circular code Codon ersetzt.
+TODO: Ersatz mit geringster Veränderung wählen. Dazu evtl Liste neuer Funktion übergeben
+
+```{r}
+codesForaa_size = length(codesForaa)
+
+if (!is.null(codesForaa)) { #Bei eines Stopp Codon, wird eine leere Liste zurückgegeben
+  
+    for (j in codesForaa_size) {
+      testCodon = codesForaa[j]
+    
+      if (grepl(testCodon, setXString)) {
+        #Ersatz gefunden
+        print(paste("Ersatz gefunden: ", testCodon))
+        break()
+      }
+    }
+  }
+```
+
+Sollte in der Liste kein Codon vorhanden sein, welches dem Kriterium entspricht, so suchen wir nach einer möglichst ähnlichen Aminosäure. Diese Aminosäure muss durch die Circular Codes codiert werden. Dazu lassen wir uns eine Liste dieser ausgeben:
+
+```{r}
+setXaa = translate(setXDNAString)
+setXaa = uniqueLetters(setXaa)
+print(setXaa)
+```
+
+
+
+
+
+Für die ganze Sequenz S ergibt sich folgendes: 
+
+```{r}
 newSequence = changeSequence(seq, setX)
 
 print(setX) #circular code
@@ -51,7 +93,7 @@ print(newSequence)
 
 counts = getStatistics()
 print(paste("Insgesamt gab es", counts[1],"Codons."))
-print(paste(counts[2],"Waren nicht bereits Teil des ciruclar Codes."))
+print(paste(counts[2],"waren nicht bereits Teil des ciruclar Codes."))
 print(paste("Davon wurden",counts[3],"ersetzt durch Codons, welche Teil des cirular Codes sind und für dieselbe Aminosöure codieren."))
 
 fileConn = file("output.txt") #newSequence to txt file
