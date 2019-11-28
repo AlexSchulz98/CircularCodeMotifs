@@ -10,7 +10,7 @@ library(ccmotif)
 ```
 
 ## Coding Sequence
-Die Coding Sequenz (CDS) S ist eine RNA Sequenz mit Circular Code und Nicht-Circular-Code Motiven. In diesem Fall geht es um das Sars-Virus. Der Einfachhalt halber betrachen wir in diesem Beispiel die 11. CDS. Schauen wir uns zunächst die ersten 10 Codons an:
+Die Coding Sequenz (CDS) S ist eine RNA Sequenz mit Circular Code und Nicht-Circular-Code Motiven. Die Länge der Circular-Code-Motive soll maximiert werden.
 ```{r}
 seqSet = readDNAStringSet("cds/ena-sars.fasta")
 seq=seqSet[[11]]
@@ -18,7 +18,7 @@ seq=seqSet[[11]]
 ```
 
 ## Circular Codes
-Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Für das Beispiel werden wir mit Nummer 26 arbeiten.
+Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Unter diesen 216 Codes sind auch solche, welche Stopp-Codons enthalten, welche zu einem Abbruch beim Lesen des RNA Strangs führen. Mathematisch gesehen sind diese Codes gleichzusetzten mit den Stopp-Codon freien Codes, biologisch gesehen sind diese aber nicht sinnvoll zu verwenden, weshalb wir nur mit Stopp-Codon freien Codes arbeiten werden. 
 ```{r}
 setX = codes.c3[[26]] #Codes im List Format
 setXString = unlist(setX)
@@ -34,6 +34,18 @@ print(setXString)
 
 ## Methoden
 
+### Randbedingungen
+
+Es wird stets versucht die gleiche Aminosäure zu erhalten. Wenn dies nicht möglich ist, wird diese durch die an den biochemischen Eigenschaften gemessen ähnlichste Aminosäure ersetzt. 
+
+Die Anzahl an Veränderungen bei einer Mutation soll in jedem Fall möglichst gering sein. 
+
+### Richtung
+Zunächst wird betrachtet wie viele Schritte von biologischen zu einer zirkulären Sequenz gebraucht werden.
+
+Von zirkulären zu biologischen Sequenzen folgt .... #TODO
+
+### Vorgehen
 Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. Diese werden in die entsprechende Aminosäure übersetzt. Dazu dient die Funktion translate() aus dem Biostring Package. Beispiel:
 
 ```{r}
