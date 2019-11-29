@@ -1,0 +1,66 @@
+### 1. Algorithmus zum Laufen bringen ###
+
+- Purin mit Purin tauschen (z.B A mit G (über C))
+
+- Anzahl an Mutationen zählen
+
+- Mutation an verschiedenen stellen messen --> wie oft an welcher Position (Wooble- Hypothese?)
+
+- GCM matrix (Doolitlle 1981) als Ergänzung zur BLOSUM Matrix
+
+- MetriK überlegen, um Mutationen zu werten, gute/schlechte Sequenzen zu kategorisieren
+
+### 2. Text ###
+
+-Anfangen zu schreiben (LaTeX oder Lynx)
+
+
+#### 3. mehrere Sequenzen testen und auswerten ###
+
+- 216 Codes
+- Mensch, Fliege, Bakterium, virus, Alge etc..
+
+
+### 4. Später / Am Ende / Nie ###
+
+-Danach betrachten wir die Veränderung von zirküläre in biologische Sequenzen.
+--> Regeln für entwickleln (später, experimentell) --> zufällige Mutationen
+
+- mit 3-4 verschiedenen Matrixen testen (PAM250)
+- PAM mit BLOSUM comparen --> erstmal auf Halde
+
+- 216 Codes ausdünnen nach Codes, die kein Stopp-Codon enthalten (Biologisch nicht identisch)
+--> ÜBERLEGEN: doch alle 216? --> Begründen wenn nicht
+wenn rauslöschen: Nummerierung beibehalten
+
+- analyse frame 0 (frame 1 und 2 experimentell)
+
+- analyse random sequences --> Gegenprobe (mit Zufall oder nicht coding)
+--> Länge beachten (Stücke oder Gesamtlänge)
+--> Erwartungen (z.B mehr Mutationen nötig, da nicht vermehrt X-Code)
+--> Genom Download --> (auf jeden fall gleicher Organismus) welches Chromosom? (per Zufallszahl --> in Datei speichern)
+
+- Unit Tests --> Austausch checken (später)
+Package: TestThat
+--> Verzeichnisstruktur erstellen -> test package
+
+
+### 5. Sontige Tipps / Ideen ###
+
+- Mit Bakterium starten (Viren ungüstig)
+
+- GCM matrix (Doolitlle 1981) vs BLOSUM matrix (oder maybe mixed if score is equals)
+
+- BLOSUM Matrix checken (Gibt es verschiendene?)
+
+
+
+
+
+
+
+
+
+
+
+
