@@ -124,7 +124,7 @@ replaceAminoAcid = function(aaString, setXaa, setXString){
 }
 
 
-innerChange = function(aminoAcid,setXString,codonString="EMPTY" ){
+innerChange = function(aminoAcid,setXString,codonString="EMPTY" ){ #TODO: EMPTY
   
   codesForThisAA = getCodesForAA(aminoAcid)
   codesForThisAA_size = length(codesForThisAA)

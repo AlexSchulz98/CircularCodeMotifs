@@ -18,7 +18,7 @@ seq=seqSet[[11]]
 ```
 
 ## Circular Codes
-Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Unter diesen 216 Codes sind auch solche, welche Stopp-Codons enthalten, welche zu einem Abbruch beim Lesen des RNA Strangs führen. Mathematisch gesehen sind diese Codes gleichzusetzten mit den Stopp-Codon freien Codes, biologisch gesehen sind diese aber nicht sinnvoll zu verwenden, weshalb wir nur mit Stopp-Codon freien Codes arbeiten werden. 
+Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Unter diesen 216 Codes sind auch solche, welche Stopp-Codons enthalten, welche zu einem Abbruch beim Lesen des RNA Strangs führen. Mathematisch gesehen sind diese Codes gleichzusetzten mit den Stopp-Codon freien Codes, biologisch gesehen sind diese aber nicht sinnvoll zu verwenden, weshalb wir nur Stopp-Codon freie Codes verwenden.
 ```{r}
 setX = codes.c3[[26]] #Codes im List Format
 setXString = unlist(setX)
@@ -36,14 +36,16 @@ print(setXString)
 
 ### Randbedingungen
 
-Es wird stets versucht die gleiche Aminosäure zu erhalten. Wenn dies nicht möglich ist, wird diese durch die an den biochemischen Eigenschaften gemessen ähnlichste Aminosäure ersetzt. 
+Es wird stets versucht die gleiche Aminosäure zu erhalten. Wenn dies nicht möglich ist, wird diese durch die an den biochemischen Eigenschaften gemessen ähnlichste Aminosäure ersetzt. Dazu dient die BLOSUM 62 Matrix.
 
 Die Anzahl an Veränderungen bei einer Mutation soll in jedem Fall möglichst gering sein. 
+Gibt es bei einer Punktmutation meherere Möglichkeiten wird auf die Eigenschafte der Base geachtet. Damit ist gemeint, dass eine Base des gleichen Typs, in Bezug auf Purin (A,G) oder Pyrimidin (C, T) soll bevorzugt diese für die Substitution genutzt werden.
+Bei einem gleichen Score beim Austausch von Aminosäuren wird über die GCM Matrix von Doolitle aus dem Jahr 1981, diejenige ausgesucht, dessen Wert (in diesem Falls dessen Anzahl der Punktmutationen) geringer ist.
 
 ### Richtung
 Zunächst wird betrachtet wie viele Schritte von biologischen zu einer zirkulären Sequenz gebraucht werden.
 
-Von zirkulären zu biologischen Sequenzen folgt .... #TODO
+Danach betrachten wir die Veränderung von zirküläre in biologische Sequenzen.
 
 ### Vorgehen
 Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. Diese werden in die entsprechende Aminosäure übersetzt. Dazu dient die Funktion translate() aus dem Biostring Package. Beispiel:
