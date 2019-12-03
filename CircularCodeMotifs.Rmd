@@ -3,34 +3,12 @@ title: "On Mutations in Circular Code Motifs"
 output: html_notebook
 ---
 
-## Bibliotheken
-```{r}
-library(Biostrings)
-library(ccmotif)
-```
 
 ## Coding Sequence
 Die Coding Sequenz (CDS) S ist eine RNA Sequenz mit Circular Code und Nicht-Circular-Code Motiven. Die Länge der Circular-Code-Motive soll maximiert werden.
-```{r}
-seqSet = readDNAStringSet("cds/ena-sars.fasta")
-seq=seqSet[[11]]
-#codonsSeq = codons(seq)
-```
 
 ## Circular Codes
 Codes.c3 umfasst 216 selbst-komplementäre C3 Codes, welche als vielversprechend gelten. Unter diesen 216 Codes sind auch solche, welche Stopp-Codons enthalten, welche zu einem Abbruch beim Lesen des RNA Strangs führen. Mathematisch gesehen sind diese Codes gleichzusetzten mit den Stopp-Codon freien Codes, biologisch gesehen sind diese aber nicht sinnvoll zu verwenden, weshalb wir nur Stopp-Codon freie Codes verwenden.
-```{r}
-setX = codes.c3[[26]] #Codes im List Format
-setXString = unlist(setX)
-setXString = strsplit(setXString, ",")
-prefix = setXString[1]
-setXString = setdiff(setXString,prefix) #Präfix entfernen
-setXString = toString(setXString)
-setXStringPure = gsub(", ","",setXString) #Kommas entfernen
-setXDNAString = DNAString(setXStringPure) #in DNAString Format umwandeln. Nur so kann translate() benutzt werden
-
-print(setXString)
-```
 
 ## Methoden
 
@@ -48,19 +26,35 @@ Zunächst wird betrachtet wie viele Schritte von biologischen zu einer zirkulär
 Danach betrachten wir die Veränderung von zirküläre in biologische Sequenzen.
 
 ### Vorgehen
-Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. Diese werden in die entsprechende Aminosäure übersetzt. Dazu dient die Funktion translate() aus dem Biostring Package. Beispiel:
+Von Interesse sind nur Codons, welche nicht Teil des circular codes sind. 
 
 ```{r}
-rna = DNAString("GGT")
-aa = translate(rna)
-aaString = toString(aa)
-print(aa)
-```
+library(Biostrings)
+library(ccmotif)
+source("ChangeCodons.R")
 
+seqSet = readDNAStringSet("cds/ena-sars.fasta") # RNA sequence set
+seq=seqSet[[11]] #Single RNA sequence
+codons = codons(seq) # List of codons in rnaseq
+
+setX = codes.c3[[26]] #Circular Code
+setX
+
+for (entry in 1:length(codons)) {
+  if (!partOfCircularCode(codons[[entry]],setX)) {
+    translate(codons[[entry]])
+    codonsForAminoAcid = getCodesForAA()
+    }
+
+
+  
+}
+```
+Diese werden in die entsprechende Aminosäure übersetzt.
 Mit der gefundenen Aminosäure lässt sich eine Liste von Codons zurückgeben, welche ebenfalls für diese Aminosäure codieren.
 
 ```{r}
-source("AminoDecoder.R")
+
 codesForaa = getCodesForAA(aa)
 print(codesForaa)
 ```
@@ -136,5 +130,4 @@ fileConn = file("output.txt") #newSequence to txt file
 writeLines(newSequence, fileConn) 
 close(fileConn)
 ```
-
 
