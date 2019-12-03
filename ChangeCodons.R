@@ -21,13 +21,39 @@ partOfCircularCode = function(codon, codes){
 }
 
 #' Dient dazu ein Codon auszutauschen
-#' @param test nutzlos
-#' Beachten: Purin vs Pyridin
-#' Möglichst wenig mutationen
+#' @param oldCodon old Codon which should be replaced
+#' @param newCodons List of candidates
+#' change purin with purin and pyrimidin with pyrimidin
+#' use as few mutations as possible
+#' mutations at the 3rd base are scored better (Wobble Hypothesis)
 
-codonSubstitution = function(codon){
-  
-  
+codonSubstitution = function(oldCodon, newCodons){
+  score = -1
+  oldBases = unlist(strsplit(oldCodon,""))
+  for (i in 1:length(newCodons)) {
+    tmpscore = 0
+    newBases = unlist(strsplit(newCodons[i],""))
+    if (oldBases[1] == newBases[1]) { 
+      tmpscore = tmpscore+3
+    }
+    if (oldBases[2] == newBases[2]) { 
+      tmpscore = tmpscore+3
+    }
+    if (oldBases[3]==newBases[3]) {
+      tmpscore = tmpscore+2
+    }
+    #change Purin with Purin and Pyrimidin with Pyrimidin 
+    if((oldBases[3] == "G"|| oldBases[3] == "C") && (newBases[3] == "G" || newBases[3] == "C")){
+      tmpscore = tmpscore+1 #pyrimidin replaced with pyrimidin
+    } else if ((oldBases[3] == "A"|| oldBases[3] == "T") && (newBases[3] == "A" || newBases[3] == "T")) {
+      tmpscore = tmpscore+1 #purin replaced with purin
+    }
+    if (tmpscore > score) {
+      score = tmpscore
+      newCodon = newCodons[i]
+    }
+  }
+
   return(newCodon)
 }
 
@@ -38,14 +64,23 @@ baseSubstitution = function(kommtmorgen){
   
 }
 
+#' Dient dazu eine Aminosäure auszutauschen
 
-
-
-
-getCodesForAA = function(){
+aminoAcidSubstitution = function(kommtmorgen){
   
 }
 
+
+#' takes a list of cc- and non cc-codons and return s only those which are part of the Circular Code
+#' @param codons list of cc- and non cc-codons
+#' @return list of circular code Codons
+getCircularCodes = function(codons, setX){
+  x = c() #boolean vector to delete non-cc codes from codons
+  for (i in 1:length(codons)) {
+    x[i] = partOfCircularCode(codons[i], setX)
+  }
+  return(codons[x])
+}
 
 getCodesForAA = function(aminoAcid){
   if (aminoAcid == AAString("A")) {

@@ -40,14 +40,15 @@ codons = codons(seq) # List of codons in rnaseq
 setX = codes.c3[[26]] #Circular Code
 setX
 
-for (entry in 1:length(codons)) {
-  if (!partOfCircularCode(codons[[entry]],setX)) {
-    translate(codons[[entry]])
-    codonsForAminoAcid = getCodesForAA()
+for (i in 1:length(codons)) {
+  if (!partOfCircularCode(codons[[i]],setX)) {
+    aminoAcid = translate(codons[[i]])
+    codonsForAA = getCodesForAA(aminoAcid)
+    
+    ccCodonsForAA = getCircularCodes(codonsForAA, setX)
+    print(ccCodonsForAA) #FEHLER? character(0)
+    
     }
-
-
-  
 }
 ```
 Diese werden in die entsprechende Aminosäure übersetzt.
