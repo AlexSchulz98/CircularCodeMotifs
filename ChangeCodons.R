@@ -1,13 +1,8 @@
 library(Biostrings)
 
-#' Was ich habe:
-#' Codes.C3[[i]] --> Liste mit 2 elementen: in [1] Beschreibung und in [2] die Codes
-#' seq --> DNAString
-
-
 #' Check if codon is part of the circular codes
-#' @param codon single codon as xStringViews or as String
-#' @param codes Circular code as single list (Format: codes.c3[[i]])
+#' @param codon xStringViews or String codon, single
+#' @param codes format codes.c3[[i]]) circular code
 #' codes[1]: code number
 #' codes[2]: List of Codons
 partOfCircularCode = function(codon, codes){
@@ -20,13 +15,14 @@ partOfCircularCode = function(codon, codes){
   }
 }
 
-#' Dient dazu ein Codon auszutauschen
-#' @param oldCodon old Codon which should be replaced
-#' @param newCodons List of candidates
+#' replace a single codon
+#' @param oldCodon String codon
+#' @param newCodons concat with String entries
 #' change purin with purin and pyrimidin with pyrimidin
 #' use as few mutations as possible
 #' mutations at the 3rd base are scored better (Wobble Hypothesis)
-
+#' TODO: Score überarbeiten
+#' @return String codon
 codonSubstitution = function(oldCodon, newCodons){
   score = -1
   oldBases = unlist(strsplit(oldCodon,""))
@@ -43,9 +39,9 @@ codonSubstitution = function(oldCodon, newCodons){
       tmpscore = tmpscore+2
     }
     #change Purin with Purin and Pyrimidin with Pyrimidin 
-    if((oldBases[3] == "G"|| oldBases[3] == "C") && (newBases[3] == "G" || newBases[3] == "C")){
+    if((oldBases[3] == "G"|| oldBases[3] == "A") && (newBases[3] == "G" || newBases[3] == "A")){
       tmpscore = tmpscore+1 #pyrimidin replaced with pyrimidin
-    } else if ((oldBases[3] == "A"|| oldBases[3] == "T") && (newBases[3] == "A" || newBases[3] == "T")) {
+    } else if ((oldBases[3] == "C"|| oldBases[3] == "T") && (newBases[3] == "C" || newBases[3] == "T")) {
       tmpscore = tmpscore+1 #purin replaced with purin
     }
     if (tmpscore > score) {
@@ -57,19 +53,46 @@ codonSubstitution = function(oldCodon, newCodons){
   return(newCodon)
 }
 
-
-#' Dient dazu eine einzlene Base auszutauschen
-
-baseSubstitution = function(kommtmorgen){
+#' Replace amino acid based on substitution matrix
+#' TODO: @param subMatrix matrix. Datenbank wird nicht gefunden, wenn man sie einer variablen übergibt
+#' @param codon codon in old sequence
+#' @param setX circular code
+#' @param threshold lowest possible score in matrix for eligible replacement
+#' @return AAString amino acid
+aminoAcidSubstitution = function(codon, setX, threshold){
   
+  data("BLOSUM62")
+  xCodeAminoAcids = getAminoAcidsCodedByX(setX)
+  
+  aminoAcid = translate(codon)
+  
+  newAminoAcid = AAString("")
+  
+  for (i in 1:length(xCodeAminoAcids)) {
+    score = BLOSUM62[toString(aminoAcid),toString(xCodeAminoAcids[[i]])]
+    
+    if (score >= threshold) {
+      newAminoAcid = xCodeAminoAcids[[i]]
+      threshold=score
+    }
+  }
+  return(newAminoAcid)
 }
 
-#' Dient dazu eine Aminosäure auszutauschen
-
-aminoAcidSubstitution = function(kommtmorgen){
+#' returns a list of amino acids which are coded by codons part of X
+#' @param setX circular code
+#' @return AAStringSet, unique
+getAminoAcidsCodedByX = function(setX) {
+  xCodes = strsplit(setX[[2]], split=" ")
+  xCodeAminoAcids = vector("list", length(xCodes))
   
+  for (i in 1:length(xCodes)) {
+    xCodeDNA = DNAString(xCodes[[i]])
+    xCodeAminoAcids[[i]] = translate(xCodeDNA)
+  }
+  xCodeAminoAcids = unique(AAStringSet(xCodeAminoAcids))
+  return(xCodeAminoAcids)
 }
-
 
 #' takes a list of cc- and non cc-codons and return s only those which are part of the Circular Code
 #' @param codons list of cc- and non cc-codons
@@ -82,6 +105,9 @@ getCircularCodes = function(codons, setX){
   return(codons[x])
 }
 
+#' all possible codons fpr each amino acid or stop codon
+#' @param aminoAcid AAString amino acid
+#' @return concat with String entries
 getCodesForAA = function(aminoAcid){
   if (aminoAcid == AAString("A")) {
     return(c("GCC","GCT","GCG","GCA"))
