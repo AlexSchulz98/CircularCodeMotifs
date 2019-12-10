@@ -16,12 +16,15 @@ partOfCircularCode = function(codon, codes){
 }
 
 #' replace a single codon
+#' Base 1 the same +3
+#' Base 2 the same +3
+#' Base 3 the same +2
+#' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
 #' @param oldCodon String codon
 #' @param newCodons concat with String entries
 #' change purin with purin and pyrimidin with pyrimidin
 #' use as few mutations as possible
 #' mutations at the 3rd base are scored better (Wobble Hypothesis)
-#' TODO: Score überarbeiten
 #' @return String codon
 codonSubstitution = function(oldCodon, newCodons){
   score = -1
@@ -31,19 +34,23 @@ codonSubstitution = function(oldCodon, newCodons){
     newBases = unlist(strsplit(newCodons[i],""))
     if (oldBases[1] == newBases[1]) { 
       tmpscore = tmpscore+3
+    } else {
+      amineCheckScore = amineChange(oldBases[1], newBases[1])
+      tmpscore = tmpscore+amineCheckScore
     }
     if (oldBases[2] == newBases[2]) { 
       tmpscore = tmpscore+3
+    } else {
+      amineCheckScore = amineChange(oldBases[2], newBases[2])
+      tmpscore = tmpscore+amineCheckScore
     }
     if (oldBases[3]==newBases[3]) {
       tmpscore = tmpscore+2
+    } else {
+      amineCheckScore = amineChange(oldBases[3], newBases[3])
+      tmpscore = tmpscore+amineCheckScore
     }
-    #change Purin with Purin and Pyrimidin with Pyrimidin 
-    if((oldBases[3] == "G"|| oldBases[3] == "A") && (newBases[3] == "G" || newBases[3] == "A")){
-      tmpscore = tmpscore+1 #pyrimidin replaced with pyrimidin
-    } else if ((oldBases[3] == "C"|| oldBases[3] == "T") && (newBases[3] == "C" || newBases[3] == "T")) {
-      tmpscore = tmpscore+1 #purin replaced with purin
-    }
+    
     if (tmpscore > score) {
       score = tmpscore
       newCodon = newCodons[i]
@@ -52,6 +59,21 @@ codonSubstitution = function(oldCodon, newCodons){
 
   return(newCodon)
 }
+
+#' checks if 2 given bases are purin or pyrimidin (from the same amine type)
+#' @param oldBase String base
+#' @param newBase String base
+#' @return 0 or 1
+amineChange = function(oldBase, newBase){
+  if ((oldBase == "G"|| oldBase == "A") && (newBase == "G" || newBase == "A")) {
+    return(1) #pyrimidin replaced with pyrimidin
+  } else if((oldBase == "C"|| oldBase == "T") && (newBase == "C" || newBase == "T")) {
+    return(1)
+  } else {
+    return(0)
+  }
+}
+
 
 #' Replace amino acid based on substitution matrix
 #' TODO: @param subMatrix matrix. Datenbank wird nicht gefunden, wenn man sie einer variablen übergibt

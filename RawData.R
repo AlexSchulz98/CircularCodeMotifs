@@ -4,14 +4,43 @@ CODONS = c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC",
 
 
 ar = array(data = 0,
-           dim = c(64,64,11),
+           dim = c(64,64),
            dimnames = list(CODONS,
-                           CODONS,
-                           1:11))
+                           CODONS))
 
 #' fills table by counting how often codon A has been replaced with codon B
-#' @param codonA codon from biological sequence
-#' @param codonB codon from modified sequence
-countChanges = function(ar, codonA, codonB){
+#' @param codonA DNAString from biological sequence
+#' @param codonB DNAString from modified sequence
+codonCount = function(ar, seqA, seqB){
+  codonsA = codons(seqA)
+  codonsB = codons(seqB)
+  print(length(codonsA))
+  
+  for (i in 1:length(codonsA)) {
+    tmpArray =  array(data = 0,dim = c(64,64),dimnames = list(CODONS,CODONS))
+    print(toString(codonsA[[i]]))
+    print(toString(codonsB[[i]]))
+    tmpArray[toString(codonsA[[i]]),toString(codonsB[[i]])] = 1
+    ar = ar+tmpArray
+  }
+  return(ar)
+}
+
+#' Anzahl einzelener Mutationen
+baseCount = function(codonB){
   
 }
+
+#' Durch Aminosäuren nach Anzahl Austauschen suchen
+aminoAcidCount = function(codonA, codonB){
+  
+}
+
+#' Motiflängen mit 1 und 0
+motifLenght = function(codonA, codonB){
+  
+}
+
+
+
+#' Anzahl ausgetauschter Codons --> Matrix?
