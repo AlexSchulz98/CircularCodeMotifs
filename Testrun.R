@@ -5,9 +5,10 @@ source("ChangeCodons.R")
 source("RawData.R")
 
 
-#' main function
+#' writes new sequence into fasta file
 #' @param seq single DNA sequence from sequence set, Format: seqSet[[i]]
 #' @param setX circular code from codes.c3, Format: codes.c3[[i]]
+#' @return new modified sequence
 main = function(seq, setX) {
 
 start_time <- Sys.time()
@@ -69,13 +70,15 @@ newSeq = DNAString(newSeqString)
 
 #write DNA Sequence into file
 #a = append, w = new file
-write.fasta(sequences = newSeq, names = names(newSeq), file.out = "outputSarsCode26.fasta", open = "a", nbchar = 60, as.string = FALSE)
+
 
 #write codon count into file
 #saveRDS(object = outputMatrix, file = "outputMatrixSars.RDS")
 
 end_time <- Sys.time()
 print(end_time - start_time)
+
+return(newSeq)
 
 }
 
@@ -85,11 +88,26 @@ print(end_time - start_time)
 seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
 setX = codes.c3[[26]] #Circular Code
 
+ar = array(data = 0,
+           dim = c(64,64,length(seqSet)),
+           dimnames = list(CODONS,
+                           CODONS,1:length(seqSet)))
+
 start_time_global <- Sys.time()
+
 for (z in 1:length(seqSet)) {
-  main(seqSet[[z]],setX)
+  
+  newSeq= main(seqSet[[z]],setX)
+  write.fasta(sequences = newSeq, names = paste("SARS VIRUS CDS NUMBER",z), file.out = "output_SarsVirus_CircularCode26.fasta", open = "a", nbchar = 60, as.string = FALSE)
+  
+  outputMatrix = codonCount(ar,length(seqSet), seqSet[[z]],newSeq, z)
+  ar = outputMatrix
+  
   print(paste("Done with set",z,"/",length(seqSet)))
 }
+
+saveRDS(object = outputMatrix, file = "outputMatrix_SarsVirus_CircularCode26.RDS")
+
 end_time_global <- Sys.time()
 print(end_time_global - start_time_global)
 
