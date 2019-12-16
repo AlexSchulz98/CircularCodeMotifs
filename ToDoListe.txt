@@ -1,23 +1,28 @@
 ### 1. Algorithmus zum Laufen bringen ###
 
-- Purin mit Purin tauschen (z.B A mit G (über C))
-
 - Anzahl an Mutationen zählen
 
 - Mutation an verschiedenen stellen messen --> wie oft an welcher Position (Wooble- Hypothese?)
 
-- GCM matrix (Doolitlle 1981) als Ergänzung zur BLOSUM Matrix
-
 - MetriK überlegen, um Mutationen zu werten, gute/schlechte Sequenzen zu kategorisieren
+
+- Prozent der nicht austauschbaren
+
+- Motiflängen!
+
+- frame shift? --> motiflängen dort
 
 ### 2. Text ###
 
--Anfangen zu schreiben (LaTeX oder Lynx)
+Grundlagen
+- kodierende Sequenzen
+- zirkuläre Codes
+- BLOSUM
 
 
 #### 3. mehrere Sequenzen testen und auswerten ###
 
-- 216 Codes
+- 216 Codes --> Auswahl, Top 5 ?
 - Mensch, Fliege, Bakterium, virus, Alge etc..
 
 

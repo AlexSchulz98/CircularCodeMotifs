@@ -1,7 +1,19 @@
 library(Biostrings)
 
-CODONS = c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TAA", "TAG", "TGT", "TGC", "TGA", "TGG", "CTT","CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC" ,"GTA" ,"GTG", "GCT" ,"GCC" ,"GCA" ,"GCG" ,"GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG")
-
+#' generates 3D matrix with zeros
+#' @param dim1 number
+#' @param dim2 number
+#' @param dim3 number of different sequences
+#' @param dimnamesXY string names of axis x and y
+#' @return 3darray
+generateEmptyTable= function(dim1,dim2,dim3,dimnamesXY){
+  
+  ar = array(data = 0,
+             dim = c(dim1,dim2,dim3),
+             dimnames = list(dimnamesXY,
+                             dimnamesXY,1:dim3))
+return(ar)
+}
 
 #' fills table by counting how often codon A has been replaced with codon B
 #' @param ar matrix
