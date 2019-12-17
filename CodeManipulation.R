@@ -16,8 +16,8 @@ partOfCircularCode = function(codon, codes){
 }
 
 #' replace a single codon
-#' Base 1 the same +3
-#' Base 2 the same +3
+#' Base 1 the same +4
+#' Base 2 the same +4
 #' Base 3 the same +2
 #' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
 #' @param oldCodon String codon
@@ -33,13 +33,13 @@ codonSubstitution = function(oldCodon, newCodons){
     tmpscore = 0
     newBases = unlist(strsplit(newCodons[i],""))
     if (oldBases[1] == newBases[1]) { 
-      tmpscore = tmpscore+3
+      tmpscore = tmpscore+4
     } else {
       amineCheckScore = amineChange(oldBases[1], newBases[1])
       tmpscore = tmpscore+amineCheckScore
     }
     if (oldBases[2] == newBases[2]) { 
-      tmpscore = tmpscore+3
+      tmpscore = tmpscore+4
     } else {
       amineCheckScore = amineChange(oldBases[2], newBases[2])
       tmpscore = tmpscore+amineCheckScore
