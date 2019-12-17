@@ -46,7 +46,6 @@ aminoCount = function(ar, dim3, seqA, seqB, z){
   aminoB = translate(seqB)
   
   for (i in 1:length(aminoA)) {
-    print(i)
     
     tmpArray =  array(data = 0,dim = c(21,21,dim3),dimnames = list(AMINOACIDS,AMINOACIDS,1:dim3))
     tmpArray[toString(aminoA[i]),toString(aminoB[i]),z] = 1
