@@ -21,6 +21,7 @@ return(ar)
 #' @param codonA DNAString from biological sequence
 #' @param codonB DNAString from modified sequence
 #' @param z current depth
+#' @return array of values
 codonCount = function(ar, dim3, seqA, seqB, z){
   
   codonsA = codons(seqA)
@@ -40,6 +41,7 @@ codonCount = function(ar, dim3, seqA, seqB, z){
 #' @param codonA DNAString from biological sequence
 #' @param codonB DNAString from modified sequence
 #' @param z current depth
+#' @return array of values
 aminoCount = function(ar, dim3, seqA, seqB, z){
   
   aminoA = translate(seqA)
@@ -54,21 +56,55 @@ aminoCount = function(ar, dim3, seqA, seqB, z){
   return(ar)
 }
 
-#' Anzahl einzelener Mutationen
-baseCount = function(codonB){
+#' Amount of changed bases in a sequence compared to another
+#' @param seqA original sequence
+#' @param seqB modified sequence
+baseCount = function(seqA, seqB){
   
+  sum = 0
+  
+  for (i in 1:length(seqA)) {
+    if (seqA[i] != seqB[i]) {
+      sum = sum +1
+    }
+  }
+  return(sum)
 }
 
-#' Durch Aminosäuren nach Anzahl Austauschen suchen
-aminoAcidCount = function(codonA, codonB){
+#' creates a binary sequence depending on motif (=1) and non-motif(=0) codons
+#' @param seq dna sequence
+#' @param setX circular codes
+#' @return array cosisting of zeros and ones
+sequenceToBinary = function(seq, setX){
   
+  binSeq = array()
+  
+  codon = codons(seq)
+  for (i in 1:length(codon)) {
+    if (partOfCircularCode(codon[[i]],setX)) {
+      binSeq[i] = 1
+    } else {
+      binSeq[i] = 0
+    }
+  }
+  return(binSeq)
 }
 
-#' Motiflängen mit 1 und 0
-motifLenght = function(codonA, codonB){
+#'
+#' @param binSeq array 
+plotBinarySequence = function(binSeq){
   
+  motifs = factor(binSeq)
+  print(length(motifs))
+  position_in_sequence = length(binSeq)
+  print(position_in_sequence)
+  
+  cdplot(motifs ~ position_in_sequence) #TODO: Error
 }
 
 
 
-#' Anzahl ausgetauschter Codons --> Matrix?
+
+
+
+

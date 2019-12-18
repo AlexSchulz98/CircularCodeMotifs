@@ -88,7 +88,8 @@ aminoAcidSubstitution = function(codon, setX, threshold){
   
   aminoAcid = translate(codon)
   
-  newAminoAcid = AAString("")
+  #newAminoAcid = AAString("") TODO
+  newAminoAcid = aminoAcid
   
   for (i in 1:length(xCodeAminoAcids)) {
     score = BLOSUM62[toString(aminoAcid),toString(xCodeAminoAcids[[i]])]

@@ -32,11 +32,12 @@ main = function(seq, setX) {
         #print(paste("andere Codons gefunden, das hier ist es geworden:", newCodon))
       } 
       else { # there are no other codons part of X coding for the same amino acid, try to replace amino acid
+        oldAminoAcid = translate(codonsOfSequence[[i]])
         newAminoAcid = aminoAcidSubstitution(codonsOfSequence[[i]], setX, 0)
         
         #print("keine anderen Codons gefunden, Aminosäure wird ersetzt")
         
-        if (newAminoAcid != AAString("")) { # there are >0 amino acids above threshold
+        if (newAminoAcid != oldAminoAcid) { # new amino acid found
           codonsFornewAA = getCodesForAA(newAminoAcid) #get codons for this amino acid
           ccCodonsFornewAA = getCircularCodes(codonsFornewAA, setX) #get cc codons for this amino acid
           newCodon <<- codonSubstitution(toString(codonsOfSequence[[i]]), ccCodonsFornewAA)

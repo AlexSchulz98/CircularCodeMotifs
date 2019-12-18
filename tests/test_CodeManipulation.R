@@ -1,4 +1,5 @@
 source("CodeManipulation.R")
+#source("tests/test_CodeManipulation.R")
 
 library(testthat)
 library(Biostrings)
@@ -78,11 +79,25 @@ test_that(
   })
 
 test_that(
-  "amino acid substitution function", 
+  "amino acid substitution function - low threshold for change", 
   {
-    expect_equal(amineChange("T","G"),0)
-    expect_equal(amineChange("T","A"),0)
-    expect_equal(amineChange("T","C"),1)
+    expect_equal(toString(aminoAcidSubstitution(codon = DNAString("AAA"),setX = codes.c3[[26]],threshold = 0)), "E")
+  })
+
+test_that(
+  "amino acid substitution function - high treshold for no change", 
+  {
+    expect_equal(toString(aminoAcidSubstitution(codon = DNAString("AAA"),setX = codes.c3[[26]],threshold = 2)), "K")
+  })
+
+test_that(
+  "get amino acids coded by X function", 
+  {
+    ranCode = sample(1:216,1)
+    setX = codes.c3[[ranCode]]
+    ispartof = unlist(setX[2])
+    
+    expect_equal(getAminoAcidsCodedByX(setX = codes.c3[[26]]), ERGWESad)
   })
 
 
