@@ -18,8 +18,8 @@ return(ar)
 #' fills table by counting how often codon A has been replaced with codon B
 #' @param ar matrix
 #' @param dim3 3D depth of array
-#' @param codonA DNAString from biological sequence
-#' @param codonB DNAString from modified sequence
+#' @param seqA DNAString from biological sequence
+#' @param seqB DNAString from modified sequence
 #' @param z current depth
 #' @return array of values
 codonCount = function(ar, dim3, seqA, seqB, z){
@@ -38,8 +38,8 @@ codonCount = function(ar, dim3, seqA, seqB, z){
 #' fills table by counting how often codon A has been replaced with codon B
 #' @param ar matrix
 #' @param dim3 3D depth of array
-#' @param codonA DNAString from biological sequence
-#' @param codonB DNAString from modified sequence
+#' @param seqA DNAString from biological sequence
+#' @param seqB DNAString from modified sequence
 #' @param z current depth
 #' @return array of values
 aminoCount = function(ar, dim3, seqA, seqB, z){
