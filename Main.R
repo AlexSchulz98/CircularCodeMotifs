@@ -40,8 +40,10 @@ main = function(seq, setX) {
         if (newAminoAcid != oldAminoAcid) { # new amino acid found
           codonsFornewAA = getCodesForAA(newAminoAcid) #get codons for this amino acid
           ccCodonsFornewAA = getCircularCodes(codonsFornewAA, setX) #get cc codons for this amino acid
-          newCodon <<- codonSubstitution(toString(codonsOfSequence[[i]]), ccCodonsFornewAA)
-          #print(paste("Ersetzung erfolgreich:", newCodon, "Coded für:", newAminoAcid, "(vorher", translate(codonsOfSequence[[i]]), ")"))
+          if (!isEmpty(ccCodonsFornewAA)) {
+            newCodon <<- codonSubstitution(toString(codonsOfSequence[[i]]), ccCodonsFornewAA)
+            #print(paste("Ersetzung erfolgreich:", newCodon, "Coded für:", newAminoAcid, "(vorher", translate(codonsOfSequence[[i]]), ")"))
+          }
         }
       }
     }

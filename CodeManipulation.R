@@ -15,16 +15,16 @@ partOfCircularCode = function(codon, codes){
   }
 }
 
-#' replace a single codon
+#' scores all possible new codons and chooses the codon with the highest score
 #' Base 1 the same +4
 #' Base 2 the same +4
 #' Base 3 the same +2
-#' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
+#' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1 (amineChange function)
 #' @param oldCodon String codon
 #' @param newCodons concat with String entries
 #' change purin with purin and pyrimidin with pyrimidin
 #' use as few mutations as possible
-#' mutations at the 3rd base are scored better (Wobble Hypothesis)
+#' mutations at the 3rd base are not that important (Wobble Hypothesis)
 #' @return String codon
 codonSubstitution = function(oldCodon, newCodons){
   score = -1
