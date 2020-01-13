@@ -9,7 +9,7 @@ for (i in 0:2) {
   
   start_time_code <- Sys.time()
   
-  for (z in 1:pmin(length(seqSet),1000)) { # first 1000 sequences are examinated
+  for (z in 1:pmin(length(seqSet),1000)) { # first 1000 sequences are examined
     
     start_time_change <- Sys.time()
     

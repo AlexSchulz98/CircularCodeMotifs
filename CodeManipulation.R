@@ -86,19 +86,17 @@ aminoAcidSubstitution = function(codon, setX, threshold){
   xCodeAminoAcids = getAminoAcidsCodedByX(setX)
   
   aminoAcid = translate(codon)
-  
-  #newAminoAcid = AAString("") TODO
-  newAminoAcid = aminoAcid
+  bestAminoAcid = aminoAcid #best match is old aa until a better match is found
   
   for (i in 1:length(xCodeAminoAcids)) {
     score = BLOSUM62[toString(aminoAcid),toString(xCodeAminoAcids[[i]])]
     
     if (score >= threshold) {
-      newAminoAcid = xCodeAminoAcids[[i]]
+      bestAminoAcid = xCodeAminoAcids[[i]]
       threshold=score
     }
   }
-  return(newAminoAcid)
+  return(bestAminoAcid)
 }
 
 #' returns a list of amino acids which are coded by codons part of X
