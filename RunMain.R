@@ -1,14 +1,15 @@
 source("Parameter.R")
 
+ccNumber = as.integer(readline(prompt = "Enter circular code number: "))
+setX = codes.c3[[ccNumber]]
+
 start_time_global <- Sys.time()
 
-for (i in 1:length(codes.c3)) {
+for (i in 0:2) {
   
   start_time_code <- Sys.time()
   
-  setX = codes.c3[[i]]
-  
-  for (z in 1:length(seqSet)) {
+  for (z in 1:pmin(length(seqSet),1000)) { # first 1000 sequences are examinated
     
     start_time_change <- Sys.time()
     
@@ -17,25 +18,19 @@ for (i in 1:length(codes.c3)) {
     write.fasta(
       sequences = newSeq,
       names = paste("modified", names(seqSet[z])),
-      file.out = paste("output_sequences/output_",seqName,"_", setX[[1]], ".fasta", sep = ""),
+      file.out = paste("output_sequences/output_",seqName,"_", setX[[1]],"_frame_",i, ".fasta", sep = ""),
       open = "a",
       nbchar = 60,
       as.string = FALSE
     )
     
-    # outputMatrix_codons = codonCount(codon_table, length(codes.c3), seqSet[[z]], newSeq, i)
-    # codon_table = outputMatrix_codons
-    # 
-    # outputMatrix_amino = aminoCount(amino_table, length(codes.c3), seqSet[[z]], newSeq, i)
-    # amino_table = outputMatrix_amino
-    
     end_time_change <- Sys.time()
-    print(paste("Done with set", z, "/", length(seqSet),"in"))
+    print(paste("Done with set", z, "/", pmin(length(seqSet),1000),"in"))
     print(end_time_change - start_time_change)
   }
   
   end_time_code <- Sys.time()
-  print(paste("Done with circular code", i, "/", length(codes.c3)))
+  print(paste("Done with frame", i))
   print(end_time_code - start_time_code)
   
 }

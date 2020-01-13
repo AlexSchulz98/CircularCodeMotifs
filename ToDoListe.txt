@@ -1,3 +1,30 @@
+
+TODO-List und Ideen:
+
+- Code auf Reading Frame verschiebung anpassen --> done
+
+- Code schneller machen
+
+- Unit Tests erweitern
+
+- Top 3 zirkuläre Codes laufen lassen für Reading Frame 0/1/2 für: 
+-- Sars (siehe CUDA)
+-- Fliege
+-- Wurm
+-- Hefe
+-- Alge
+-- Bakterium
+-- Virus
+
+
+
+
+
+
+
+
+
+
 ### 1. Algorithmus zum Laufen bringen ###
 
 - Anzahl an Mutationen zählen
@@ -60,6 +87,14 @@ Package: TestThat
 
 
 
+
+
+
+
+Zeiten:
+
+- Austausch der Aminosäure: 0.2
+- kein Austausch der Aminoäsure: 0.01
 
 
 

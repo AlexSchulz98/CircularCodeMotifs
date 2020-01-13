@@ -76,3 +76,11 @@ end_time_files <- Sys.time()
 print("Done")
 print(end_time_files - start_time_files)
 
+
+
+#Nützliche CCMotif Funktionen:
+# ccmotif.scan.fasta --> Analysis of motif lengths in a list of fasta sequences (spuckt 3 datein aus)
+
+
+
+

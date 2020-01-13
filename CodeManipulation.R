@@ -75,8 +75,7 @@ amineChange = function(oldBase, newBase){
 }
 
 
-#' Replace amino acid based on substitution matrix
-#' TODO: @param subMatrix matrix. Datenbank wird nicht gefunden, wenn man sie einer variablen übergibt
+#' Replace amino acid based on BLOSUM62 substitution matrix
 #' @param codon codon in old sequence
 #' @param setX circular code
 #' @param threshold lowest possible score in matrix for eligible replacement
