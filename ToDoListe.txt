@@ -1,9 +1,9 @@
-
+﻿
 TODO-List und Ideen:
 
 - Code auf Reading Frame verschiebung anpassen --> done
 
-- Code schneller machen
+- Code schneller machen --> schwierig, also besser Seq parallel laufne lassen
 
 - Unit Tests erweitern
 
@@ -16,6 +16,9 @@ TODO-List und Ideen:
 -- Bakterium
 -- Virus
 
+- erhaltene Frequenzen auswerten
+--meine Matrix
+--Motiflängen ccmotif package
 
 
 
@@ -24,6 +27,7 @@ TODO-List und Ideen:
 
 
 
+alt:
 
 ### 1. Algorithmus zum Laufen bringen ###
 

@@ -116,6 +116,7 @@ getAminoAcidsCodedByX = function(setX) {
 
 #' takes a list of cc- and non cc-codons and return s only those which are part of the Circular Code
 #' @param codons list of cc- and non cc-codons
+#' @param setX circular code
 #' @return list of circular code Codons
 getCircularCodes = function(codons, setX){
   x = c() #boolean vector to delete non-cc codes from codons
@@ -173,3 +174,13 @@ getCodesForAA = function(aminoAcid){
     return(c("TAA","TAG","TGA"))
   }
 }
+
+#' delete the first x bases of an DNAString to change the reading frame
+#' CAUTION! the sequence will be shorter with each use!
+#' @param targetFrame frame you want to sequence to be in, (0 for no change)
+#' @param seqSet DNAString
+changeReadingFrame = function(targetFrame, seq){
+  
+    return(subseq(seqSet[[1]],start=targetFrame+1))
+}
+

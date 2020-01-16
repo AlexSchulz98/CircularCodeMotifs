@@ -9,6 +9,12 @@ for (i in 0:2) {
   
   start_time_code <- Sys.time()
   
+  if (i > 1) { #change reading frame
+    for (j in 1:pmin(length(seqSet),1000)) {
+      seqSet[[j]] = changeReadingFrame(i,seqSet[[j]])
+    }
+  }
+  
   for (z in 1:pmin(length(seqSet),1000)) { # first 1000 sequences are examined
     
     start_time_change <- Sys.time()

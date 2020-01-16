@@ -39,15 +39,12 @@ seqName = "Human" #for naming generated files
 # seqSet = readDNAStringSet("cds/orf_genomic_yeast.fasta") # DNA (RNA) sequence set
 # seqName = "Yeast" #for naming generated files
 
-
-# # keine fasta:
-
 # 23,20,22
-# seqSet = readDNAStringSet("cds/Escherichia_coli.HUSEC2011CHR1.cds.all.fa")
+# seqSet = readDNAStringSet("cds/Escherichia_coli.HUSEC2011CHR1.cds.all.fasta")
 # seqName = "EscherichiaColi"
 
-# 
-# seqSet = readDNAStringSet("cds/CCDS_nucleotide.mouse.current.fna") 
+# ???
+# seqSet = readDNAStringSet("cds/CCDS_nucleotide.mouse.current.fasta") 
 # seqName = "Mouse" 
 
 
