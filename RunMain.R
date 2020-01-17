@@ -1,43 +1,64 @@
 source("Parameter.R")
 
-ccNumber = as.integer(readline(prompt = "Enter circular code number: "))
-setX = codes.c3[[ccNumber]]
-
 start_time_global <- Sys.time()
 
 for (i in 0:2) {
+  start_time_frame <- Sys.time()
   
-  start_time_code <- Sys.time()
-  
-  if (i > 1) { #change reading frame
-    for (j in 1:pmin(length(seqSet),1000)) {
-      seqSet[[j]] = changeReadingFrame(i,seqSet[[j]])
+  if (i > 1) {
+    #change reading frame
+    for (j in 1:pmin(length(seqSet), 1000)) {
+      seqSet[[j]] = changeReadingFrame(i, seqSet[[j]])
     }
   }
   
-  for (z in 1:pmin(length(seqSet),1000)) { # first 1000 sequences are examined
+  for (h in 1:length(circularCodes)) {
     
-    start_time_change <- Sys.time()
+    start_time_code <- Sys.time()
     
-    newSeq = main(seqSet[[z]], setX)
+    ccNumber = circularCodes[h] #circular codes for each organism specified in Parameter.R
+    setX = codes.c3[[ccNumber]]
     
-    write.fasta(
-      sequences = newSeq,
-      names = paste("modified", names(seqSet[z])),
-      file.out = paste("output_sequences/output_",seqName,"_", setX[[1]],"_frame_",i, ".fasta", sep = ""),
-      open = "a",
-      nbchar = 60,
-      as.string = FALSE
-    )
     
-    end_time_change <- Sys.time()
-    print(paste("Done with set", z, "/", pmin(length(seqSet),1000),"in"))
-    print(end_time_change - start_time_change)
+    for (z in 1:pmin(length(seqSet), 1000)) {
+      # first 1000 sequences are examined
+      
+      start_time_change <- Sys.time()
+      
+      newSeq = main(seqSet[[z]], setX)
+
+      write.fasta(
+        sequences = newSeq,
+        names = paste("modified", names(seqSet[z])),
+        file.out = paste(
+          "output_sequences/output_",
+          seqName,
+          "_",
+          setX[[1]],
+          "_frame_",
+          i,
+          ".fasta",
+          sep = ""
+        ),
+        open = "a",
+        nbchar = 60,
+        as.string = FALSE
+      )
+      
+      end_time_change <- Sys.time()
+      print(paste("Done with set", z, "/", pmin(length(seqSet), 1000), "in"))
+      print(end_time_change - start_time_change)
+    }
+    
+    end_time_code <- Sys.time()
+    print(paste("fasta file generated:", seqName,"code",setX[[1]],"frame",i))
+    print(end_time_code - start_time_code)
+    
   }
   
-  end_time_code <- Sys.time()
+  end_time_frame <- Sys.time()
   print(paste("Done with frame", i))
-  print(end_time_code - start_time_code)
+  print(end_time_frame - start_time_frame)
   
 }
 

@@ -15,37 +15,33 @@ AMINOACIDS = c("A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","
 #----
 
 
-#161,41,3
-# seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
-# seqName = "SarsVirus" #for naming generated files
+seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
+seqName = "SarsVirus" #for naming generated files
+circularCodes = c(3,23,41,161)
 
-#25,173,117
-seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta") # DNA (RNA) sequence set
-seqName = "Human" #for naming generated files
+# seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta") # DNA (RNA) sequence set
+# seqName = "Human" #for naming generated files
+# circularCodes = c(23,25,117,173)
 
-#122,24,171
 # seqSet = readDNAStringSet("cds/celegans.fasta") # DNA (RNA) sequence set
 # seqName = "Celegans" #for naming generated files
+# circularCodes = c(23,24,122,171)
 
-#166,173,10
 # seqSet = readDNAStringSet("cds/ena-ch-reinhardtii.fasta") # DNA (RNA) sequence set
 # seqName = "Reinhardtii" #for naming generated files
+# circularCodes = c(10,23,166,173)
 
-# 173,172,23
 # seqSet = readDNAStringSet("cds/ena-herpes.fasta") # DNA (RNA) sequence set
 # seqName = "Herpes" #for naming generated files
+# circularCodes = c(23,172,173)
 
-# 122,171,20
 # seqSet = readDNAStringSet("cds/orf_genomic_yeast.fasta") # DNA (RNA) sequence set
 # seqName = "Yeast" #for naming generated files
+# circularCodes = c(20,23,122,171)
 
-# 23,20,22
 # seqSet = readDNAStringSet("cds/Escherichia_coli.HUSEC2011CHR1.cds.all.fasta")
 # seqName = "EscherichiaColi"
-
-# ???
-# seqSet = readDNAStringSet("cds/CCDS_nucleotide.mouse.current.fasta") 
-# seqName = "Mouse" 
+# circularCodes = c(20,22,23)
 
 
 codon_table = generateEmptyTable(64,64,length(codes.c3), CODONS) #empty table for codons
