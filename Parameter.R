@@ -14,15 +14,15 @@ AMINOACIDS = c("A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","
 
 #----
 
-
-seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
-seqName = "SarsVirus" #for naming generated files
-circularCodes = c(3,23,41,161)
+# seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
+# seqName = "SarsVirus" #for naming generated files
+# circularCodes = c(3,23,41,161)
 
 # seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta") # DNA (RNA) sequence set
 # seqName = "Human" #for naming generated files
 # circularCodes = c(23,25,117,173)
 
+# WARNING beim Einlesen (vielleicht datei kaputt?)
 # seqSet = readDNAStringSet("cds/celegans.fasta") # DNA (RNA) sequence set
 # seqName = "Celegans" #for naming generated files
 # circularCodes = c(23,24,122,171)
