@@ -2,7 +2,11 @@ source("Parameter.R")
 
 start_time_global <- Sys.time()
 
-for (i in 0:2) {
+seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
+seqName = "SarsVirus" #for naming generated files
+circularCodes = c(3,23,41,161)
+
+for (i in 0) {
   start_time_frame <- Sys.time()
   
   if (i > 0) {

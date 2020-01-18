@@ -2,7 +2,11 @@ source("Parameter.R")
 
 start_time_global <- Sys.time()
 
-for (i in 0:2) {
+seqSet = readDNAStringSet("cds/Escherichia_coli.HUSEC2011CHR1.cds.all.fasta")
+seqName = "EscherichiaColi"
+circularCodes = c(86,90,87,23)
+
+for (i in 1) {
   start_time_frame <- Sys.time()
   
   if (i > 0) {

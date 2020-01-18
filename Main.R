@@ -10,6 +10,7 @@
 main = function(seq, setX) {
 
   codonsOfSequence = suppressWarnings(codons(seq))# List of codons in rnaseq
+  #TODO: handle IUPAC codons
   newSeqString = ""
   
   for (i in 1:length(codonsOfSequence)) {

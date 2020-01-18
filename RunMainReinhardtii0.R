@@ -2,7 +2,11 @@ source("Parameter.R")
 
 start_time_global <- Sys.time()
 
-for (i in 0:2) {
+seqSet = readDNAStringSet("cds/ena-ch-reinhardtii.fasta") # DNA (RNA) sequence set
+seqName = "Reinhardtii" #for naming generated files
+circularCodes = c(10,23,166,173)
+
+for (i in 0) {
   start_time_frame <- Sys.time()
   
   if (i > 0) {

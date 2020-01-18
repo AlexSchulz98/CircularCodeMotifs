@@ -113,104 +113,13 @@ Time difference of 18.2711 secs
 Time difference of 9.85952 secs
 [1] "Done with set 6 / 1000 in"
 Time difference of 15.50143 secs
-[1] "Done with set 7 / 1000 in"
-Time difference of 28.69543 secs
-[1] "Done with set 8 / 1000 in"
-Time difference of 23.14008 secs
-[1] "Done with set 9 / 1000 in"
-Time difference of 18.27059 secs
-[1] "Done with set 10 / 1000 in"
-Time difference of 21.57591 secs
-[1] "Done with set 11 / 1000 in"
-Time difference of 22.60254 secs
-[1] "Done with set 12 / 1000 in"
-Time difference of 22.31318 secs
-[1] "Done with set 13 / 1000 in"
-Time difference of 16.81842 secs
-[1] "Done with set 14 / 1000 in"
-Time difference of 18.60741 secs
-[1] "Done with set 15 / 1000 in"
-Time difference of 12.48836 secs
-[1] "Done with set 16 / 1000 in"
-Time difference of 53.85095 secs
-[1] "Done with set 17 / 1000 in"
-Time difference of 19.88721 secs
-[1] "Done with set 18 / 1000 in"
-Time difference of 38.09609 secs
-[1] "Done with set 19 / 1000 in"
-Time difference of 49.28169 secs
-[1] "Done with set 20 / 1000 in"
-Time difference of 28.36141 secs
-[1] "Done with set 21 / 1000 in"
-Time difference of 16.1864 secs
-[1] "Done with set 22 / 1000 in"
-Time difference of 10.79747 secs
-[1] "Done with set 23 / 1000 in"
-Time difference of 28.21265 secs
-[1] "Done with set 24 / 1000 in"
-Time difference of 5.940781 secs
-[1] "Done with set 25 / 1000 in"
-Time difference of 42.20153 secs
-[1] "Done with set 26 / 1000 in"
-Time difference of 37.35799 secs
-[1] "Done with set 27 / 1000 in"
-Time difference of 11.50183 secs
-[1] "Done with set 28 / 1000 in"
-Time difference of 18.55981 secs
-[1] "Done with set 29 / 1000 in"
-Time difference of 19.74494 secs
-[1] "Done with set 30 / 1000 in"
-Time difference of 15.57075 secs
-[1] "Done with set 31 / 1000 in"
-Time difference of 25.31033 secs
-[1] "Done with set 32 / 1000 in"
-Time difference of 36.8562 secs
-[1] "Done with set 33 / 1000 in"
-Time difference of 14.30255 secs
-[1] "Done with set 34 / 1000 in"
-Time difference of 51.24256 secs
-[1] "Done with set 35 / 1000 in"
-Time difference of 32.41188 secs
-[1] "Done with set 36 / 1000 in"
-Time difference of 23.75239 secs
-[1] "Done with set 37 / 1000 in"
-Time difference of 43.48422 secs
-[1] "Done with set 38 / 1000 in"
-Time difference of 12.98395 secs
-[1] "Done with set 39 / 1000 in"
-Time difference of 22.05787 secs
-[1] "Done with set 40 / 1000 in"
-Time difference of 45.30827 secs
-[1] "Done with set 41 / 1000 in"
-Time difference of 15.55011 secs
-[1] "Done with set 42 / 1000 in"
-Time difference of 30.33102 secs
-[1] "Done with set 43 / 1000 in"
-Time difference of 43.11621 secs
-[1] "Done with set 44 / 1000 in"
-Time difference of 45.28488 secs
-[1] "Done with set 45 / 1000 in"
-Time difference of 36.23085 secs
-[1] "Done with set 46 / 1000 in"
-Time difference of 23.3792 secs
-[1] "Done with set 47 / 1000 in"
-Time difference of 19.4253 secs
-[1] "Done with set 48 / 1000 in"
-Time difference of 29.32749 secs
-[1] "Done with set 49 / 1000 in"
-Time difference of 23.23657 secs
-[1] "Done with set 50 / 1000 in"
-Time difference of 21.8572 secs
-[1] "Done with set 51 / 1000 in"
-Time difference of 2.114754 mins
-[1] "Done with set 52 / 1000 in"
-Time difference of 8.353293 secs
 
 
 
 
-
-
-
+Fehler:
+>ENA|AAA20079|AAA20079.1 Caenorhabditis elegans unknown --> "M" und "R" im Code
+>ENA|AAA21347|AAA21347.1 Caenorhabditis elegans hypothetical protein --> "N" im Code
+>ENA|AAA50224|AAA50224.1 Caenorhabditis elegans partial RNA polymerase II, second largest subunit --> "N","Y","H" usw. im Code
 
 

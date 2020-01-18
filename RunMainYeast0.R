@@ -2,7 +2,11 @@ source("Parameter.R")
 
 start_time_global <- Sys.time()
 
-for (i in 0:2) {
+seqSet = readDNAStringSet("cds/orf_genomic_yeast.fasta") # DNA (RNA) sequence set
+seqName = "Yeast" #for naming generated files
+circularCodes = c(20,23,122,171)
+
+for (i in 0) {
   start_time_frame <- Sys.time()
   
   if (i > 0) {

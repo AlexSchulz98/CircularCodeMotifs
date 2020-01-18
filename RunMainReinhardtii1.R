@@ -2,14 +2,14 @@ source("Parameter.R")
 
 start_time_global <- Sys.time()
 
-seqSet = readDNAStringSet("cds/ena-herpes.fasta") # DNA (RNA) sequence set
-seqName = "Herpes" #for naming generated files
-circularCodes = c(23,172,173)
+seqSet = readDNAStringSet("cds/ena-ch-reinhardtii.fasta") # DNA (RNA) sequence set
+seqName = "Reinhardtii" #for naming generated files
+circularCodes = c(191,187,194,23)
 
-for (i in 0:2) {
+for (i in 1) {
   start_time_frame <- Sys.time()
   
-  if (i > 1) {
+  if (i > 0) {
     #change reading frame
     for (j in 1:pmin(length(seqSet), 1000)) {
       seqSet[[j]] = changeReadingFrame(i, seqSet[[j]])

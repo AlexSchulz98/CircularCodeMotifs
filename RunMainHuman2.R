@@ -4,12 +4,12 @@ start_time_global <- Sys.time()
 
 seqSet = readDNAStringSet("cds/CCDS_nucleotide-human.fasta") # DNA (RNA) sequence set
 seqName = "Human" #for naming generated files
-circularCodes = c(23,25,117,173)
+circularCodes = c(59,88,69,23)
 
-for (i in 0:2) {
+for (i in 2) {
   start_time_frame <- Sys.time()
   
-  if (i > 1) {
+  if (i > 0) {
     #change reading frame
     for (j in 1:pmin(length(seqSet), 1000)) {
       seqSet[[j]] = changeReadingFrame(i, seqSet[[j]])
