@@ -59,5 +59,5 @@ AMINOACIDS = c("A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","
 # circularCodes2 = c(189,193,61,23)
 
 
-codon_table = generateEmptyTable(64,64,length(codes.c3), CODONS) #empty table for codons
-amino_table = generateEmptyTable(21,21,length(codes.c3), AMINOACIDS) #empty table for amino acisd
+codon_table = generateEmptyTable(64,64, CODONS) #empty table for codons
+amino_table = generateEmptyTable(21,21, AMINOACIDS) #empty table for amino acisd

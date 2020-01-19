@@ -181,6 +181,6 @@ getCodesForAA = function(aminoAcid){
 #' @param seqSet DNAString
 changeReadingFrame = function(targetFrame, seq){
   
-    return(subseq(seqSet[[1]],start=targetFrame+1))
+    return(subseq(seq,start=targetFrame+1))
 }
 

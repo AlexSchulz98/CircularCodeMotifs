@@ -5,11 +5,22 @@ start_time_global <- Sys.time()
 for (i in 0:2) {
   start_time_frame <- Sys.time()
   
+  seqSet = readDNAStringSet("cds/ena-sars.fasta") # DNA (RNA) sequence set
+  seqSet = seqSet[11]
+  seqName = "SarsVirus" #for naming generated files
+  circularCodes = c(3)
+  
+  print(i)
+  
+  print(seqSet[[1]])
+  
   if (i > 0) {
     #change reading frame
     for (j in 1:pmin(length(seqSet), 1000)) {
       seqSet[[j]] = changeReadingFrame(i, seqSet[[j]])
     }
+    print("change made")
+    print(seqSet[[1]])
   }
   
   for (h in 1:length(circularCodes)) {
@@ -26,6 +37,8 @@ for (i in 0:2) {
       start_time_change <- Sys.time()
       
       newSeq = main(seqSet[[z]], setX)
+      
+      print(newSeq)
 
       write.fasta(
         sequences = newSeq,
