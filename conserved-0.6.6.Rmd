@@ -1,0 +1,112 @@
+---
+title: "Conserved CDS and motif lengths"
+output: html_notebook
+---
+
+```{r include=FALSE}
+library("seqinr")
+library("ggplot2")
+library("ccmotif") # Version 0.6.6
+```
+
+```{r echo=FALSE}
+cid0 = 111 # code ID
+cid1 = 117 # code ID
+cid2 = 22 # code ID
+#file = "../../../data/Human_conserved.fasta"
+file0 = "output_sequences/old/output_SarsVirus_X111.fasta"
+file1 = "output_sequences/old/output_SarsVirus_X117.fasta"
+file2 = "output_sequences/old/output_SarsVirus_X22.fasta"
+# seqLabel = "Human"
+seqLabel = paste("Sars161", cid, sep = "/")
+ff0 = read.fasta(file0, as.string = TRUE, forceDNAtolower = FALSE)
+ff1 = read.fasta(file1, as.string = TRUE, forceDNAtolower = FALSE)
+ff2 = read.fasta(file2, as.string = TRUE, forceDNAtolower = FALSE)
+```
+
+These sequences contain the following number of bases:
+```{r echo=FALSE}
+sum(sapply(ff0, nchar))
+sum(sapply(ff1, nchar))
+sum(sapply(ff2, nchar))
+```
+
+This is the codon distribution:
+```{r echo=FALSE}
+codons0 = codon.splitlist(ff0)
+cu0 = codon.usage(codons0)
+plot(cu0, species = seqLabel)
+
+codons1 = codon.splitlist(ff1)
+cu1 = codon.usage(codons1)
+plot(cu1, species = seqLabel)
+
+codons2 = codon.splitlist(ff2)
+cu2 = codon.usage(codons2)
+plot(cu2, species = seqLabel)
+```
+
+The code usage for code `r cid` is (expected 20/64 which is about 0.31):
+```{r echo=FALSE}
+code0 = codes.c3[[cid0]]
+code1 = codes.c3[[cid1]]
+code2 = codes.c3[[cid2]]
+
+p0 = codes.usage(cu0, code0)
+round(p0, 2)
+
+p1 = codes.usage(cu1, code1)
+round(p1, 2)
+
+p2 = codes.usage(cu2, code2)
+round(p2, 2)
+```
+
+Average motif length:
+```{r echo=FALSE}
+ml0 = ccmotif.lengthslist(ff0, code0)
+summary(ml0$incode)
+
+ml1 = ccmotif.lengthslist(ff1, code1)
+summary(ml1$incode)
+
+ml2 = ccmotif.lengthslist(ff2, code2)
+summary(ml2$incode)
+```
+Average non-motif length:
+```{r echo=FALSE}
+summary(ml0$outcode)
+summary(ml1$outcode)
+summary(ml2$outcode)
+```
+
+Next we plot the motif length distribution and compare the theoretical distribution (red) with the sample (blue):
+```{r echo=FALSE}
+r0 = ccmotif.classes(ml0$incode, p0, K = 18)
+ccmotif.barplotDiff(r0$sample, r0$geom, codeid = seqLabel)
+
+r1 = ccmotif.classes(ml1$incode, p1, K = 18)
+ccmotif.barplotDiff(r1$sample, r1$geom, codeid = seqLabel)
+
+r2 = ccmotif.classes(ml2$incode, p2, K = 18)
+ccmotif.barplotDiff(r2$sample, r2$geom, codeid = seqLabel)
+```
+
+Now we compare the expected mean value of the motif length to the real mean value:
+```{r echo=FALSE}
+E0 = function(p0) 1 / (1 - p0)
+mmt0 = E0(p0)
+mm0 = mean(ml0$incode)
+round(c(sample = mm0, expected = mmt0), digits = 2)
+
+E1 = function(p1) 1 / (1 - p1)
+mmt1 = E1(p1)
+mm1 = mean(ml1$incode)
+round(c(sample = mm1, expected = mmt1), digits = 2)
+
+E2 = function(p2) 1 / (1 - p2)
+mmt2 = E2(p2)
+mm2 = mean(ml2$incode)
+round(c(sample = mm2, expected = mmt2), digits = 2)
+```
+

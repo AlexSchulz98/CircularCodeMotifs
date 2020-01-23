@@ -17,7 +17,7 @@ for (i in 0:2) {
   if (i > 0) {
     #change reading frame
     for (j in 1:pmin(length(seqSet), 1000)) {
-      seqSet[[j]] = changeReadingFrame(i, seqSet[[j]])
+      seqSet[[j]] = changeReadingFrame(1, seqSet[[j]])
     }
     print("change made")
     print(seqSet[[1]])

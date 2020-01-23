@@ -1,0 +1,79 @@
+---
+title: "SarsVirus_Frame0_AllCodes_Analysis"
+output: html_document
+---
+
+```{r include=FALSE}
+library("seqinr")
+library("ggplot2")
+library("xlsx")
+library("ccmotif") # Version 0.6.6
+```
+
+For the SarsVirus I applied my algorithm with every circular code and generated 216 modified sequence sets. Now we'll calculate codon usage and motif length for each file:
+```{r echo=FALSE}
+
+ar = array(data = 0,
+            dim = c(length(codes.c3),7),
+            dimnames = list(1:length(codes.c3),c("Min.","1st Qu.","Median","Mean","3rd Qu.","Max.","Cu")))
+
+for (i in 1:length(codes.c3)) {
+  fileName = paste("output_sequences/old/output_SarsVirus_X",i,".fasta",sep = "")
+  seqLabel = paste("Sars161", i, sep = "/")
+  ff = read.fasta(fileName, as.string = TRUE, forceDNAtolower = FALSE)
+  
+  # codon usage
+  codons = codon.splitlist(ff)
+  cu = codon.usage(codons)
+
+  code = codes.c3[[i]]
+  p = codes.usage(cu, code)
+  ar[i,7] = round(p, 2)
+  
+  # Average motif length:
+  ml = ccmotif.lengthslist(ff, code)
+  sum = summary(ml$incode)
+  
+  for (z in 1:length(sum)) {
+    ar[i, z] = sum[[z]]
+  }
+}
+```
+
+Excel file to view the data and sort columns from highest to lowest 
+```{r echo=FALSE}
+write.xlsx(ar, file = "motif_lengths_SarsVirus_AllCodes.xlsx")
+```
+
+Top 5 Codes regarding...Codon-Usage (original):
+```{r echo=FALSE}
+codes.c3[[161]] 
+codes.c3[[41]]
+codes.c3[[3]]
+codes.c3[[171]]
+codes.c3[[110]]
+```
+Top 5 Codes regarding...Codon-Usage (modified):
+```{r echo=FALSE}
+codes.c3[[22]] 
+codes.c3[[29]]
+codes.c3[[117]]
+codes.c3[[124]]
+codes.c3[[109]]
+```
+Top 5 Codes regarding...Max. motif length:
+```{r echo=FALSE}
+codes.c3[[117]] 
+codes.c3[[111]]
+codes.c3[[109]]
+codes.c3[[106]]
+codes.c3[[46]]
+```
+Top 5 Codes regarding...Mean motif length:
+```{r echo=FALSE}
+codes.c3[[22]] 
+codes.c3[[29]]
+codes.c3[[124]]
+codes.c3[[117]]
+codes.c3[[109]]
+```

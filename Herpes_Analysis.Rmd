@@ -1,0 +1,224 @@
+---
+title: "Herpes_Analysis"
+output: html_document
+---
+
+```{r include=FALSE}
+library("seqinr")
+library("ggplot2")
+library("ccmotif") # Version 0.6.6
+```
+
+For Herpes following circular codes showed a high code usage in the unmodified sequence and have therefore been chosen to further look into:
+
+circular codes for frame 0 = 172,173,23 #X23 part of Top 3
+circular codes for frame 1 = 191,42,126,23
+circular codes for frame 2 = 210,89,88,23
+
+Note that circular code 23 is not part of the Top 3 in frame 1 and 2. But because of an overall good result regarding code usage in all tested organisms, it's part of the selection.
+```{r echo=FALSE}
+# cid23 = 23 # code ID
+# cid1 = 117 # code ID
+# cid2 = 22 # code ID
+
+file ="cds/ena-herpes.fasta"
+
+file172_0 = "output_sequences/output_Herpes_X172_frame_0.fasta"
+file173_0 = "output_sequences/output_Herpes_X173_frame_0.fasta"
+file23_0 = "output_sequences/output_Herpes_X23_frame_0.fasta"
+
+file191_1 = "output_sequences/output_Herpes_X191_frame_1.fasta"
+file42_1 = "output_sequences/output_Herpes_X42_frame_1.fasta"
+file126_1 = "output_sequences/output_Herpes_X126_frame_1.fasta"
+file23_1 = "output_sequences/output_Herpes_X23_frame_1.fasta"
+
+file210_2 = "output_sequences/output_Herpes_X210_frame_2.fasta"
+file89_2 = "output_sequences/output_Herpes_X89_frame_2.fasta"
+file88_2 = "output_sequences/output_Herpes_X88_frame_2.fasta"
+file23_2 = "output_sequences/output_Herpes_X23_frame_2.fasta"
+
+seqLabel = "Herpes"
+#seqLabel = paste("Herpes", cid, sep = "/")
+ff = read.fasta(file, as.string = TRUE, forceDNAtolower = FALSE)
+
+ff172_0 = read.fasta(file172_0, as.string = TRUE, forceDNAtolower = FALSE)
+ff173_0 = read.fasta(file173_0, as.string = TRUE, forceDNAtolower = FALSE)
+ff23_0= read.fasta(file23_0, as.string = TRUE, forceDNAtolower = FALSE)
+
+ff191_1 = read.fasta(file191_1, as.string = TRUE, forceDNAtolower = FALSE)
+ff42_1 = read.fasta(file42_1, as.string = TRUE, forceDNAtolower = FALSE)
+ff126_1 = read.fasta(file126_1, as.string = TRUE, forceDNAtolower = FALSE)
+ff23_1 = read.fasta(file23_1, as.string = TRUE, forceDNAtolower = FALSE)
+
+ff210_2 = read.fasta(file210_2, as.string = TRUE, forceDNAtolower = FALSE)
+ff89_2 = read.fasta(file89_2, as.string = TRUE, forceDNAtolower = FALSE)
+ff88_2 = read.fasta(file88_2, as.string = TRUE, forceDNAtolower = FALSE)
+ff23_2 = read.fasta(file23_2, as.string = TRUE, forceDNAtolower = FALSE)
+```
+
+Number of bases in frame 0, frame 1 and frame 2 for X23-modified sequence 
+Frame 1 and 2 are missing 1 codon in each sequence. At `r length(ff)` sequences in this set, the number of bases should be `r length(ff)*3` less compared to frame 0.
+```{r echo=FALSE}
+sum(sapply(ff, nchar))
+sum(sapply(ff23_0, nchar))
+sum(sapply(ff23_1, nchar))
+sum(sapply(ff23_2, nchar))
+```
+This is the codon distribution for sequences in frame 0:
+```{r echo=FALSE}
+codons = codon.splitlist(ff)
+cu = codon.usage(codons)
+plot(cu, species = "Herpes - original sequence")
+
+# codons172_0 = codon.splitlist(ff172_0)
+# cu172_0 = codon.usage(codons172_0)
+# plot(cu172_0, species = "Herpes - X172 Frame 0")
+# 
+# codons173_0 = codon.splitlist(ff173_0)
+# cu173_0 = codon.usage(codons173_0)
+# plot(cu173_0, species = "Herpes - X173 Frame 0")
+
+codons23_0 = codon.splitlist(ff23_0)
+cu23_0 = codon.usage(codons23_0)
+plot(cu23_0, species = "Herpes - X23 Frame 0")
+```
+This is the codon distribution for sequences in frame 1:
+```{r echo=FALSE}
+codons191_1 = codon.splitlist(ff191_1)
+cu191_1 = codon.usage(codons191_1)
+plot(cu191_1, species = "Herpes - X191 Frame 1")
+
+codons42_1 = codon.splitlist(ff42_1)
+cu42_1 = codon.usage(codons42_1)
+plot(cu42_1, species = "Herpes - X42 Frame 1")
+
+codons126_1 = codon.splitlist(ff126_1)
+cu126_1 = codon.usage(codons126_1)
+plot(cu126_1, species = "Herpes - X126 Frame 1")
+
+codons23_1 = codon.splitlist(ff23_1)
+cu23_1 = codon.usage(codons23_1)
+plot(cu23_1, species = "Herpes - X23 Frame 1")
+```
+This is the codon distribution for sequences in frame 2:
+```{r echo=FALSE}
+codons210_2 = codon.splitlist(ff210_2)
+cu210_2 = codon.usage(codons210_2)
+plot(cu210_2, species = "Herpes - X210 Frame 2")
+
+codons89_2 = codon.splitlist(ff89_2)
+cu89_2 = codon.usage(codons89_2)
+plot(cu89_2, species = "Herpes - X89 Frame 2")
+
+codons88_2 = codon.splitlist(ff88_2)
+cu88_2 = codon.usage(codons88_2)
+plot(cu88_2, species = "Herpes - X88 Frame 2")
+
+codons23_2 = codon.splitlist(ff23_2)
+cu23_2 = codon.usage(codons23_2)
+plot(cu23_2, species = "Herpes - X23 Frame 2")
+```
+
+Code Usage for sequences in frame 0:
+```{r echo=FALSE}
+code23 = codes.c3[[23]]
+
+p = codes.usage(cu, code23)
+round(p, 2)
+
+# p172_0 = codes.usage(cu172_0, codes.c3[[172]])
+# round(p172_0, 2)
+# 
+# p173_0 = codes.usage(cu173_0, codes.c3[[173]])
+# round(p173_0, 2)
+
+p23_0 = codes.usage(cu23_0, code23)
+round(p23_0, 2)
+```
+
+Meine Tabelle:
+```{r echo=FALSE}
+ar = generateEmptyTable(64,64,CODONS)
+
+dnaf = readDNAStringSet(file)
+dnaf23_0 = readDNAStringSet(file23_0)
+
+for (i in 1:length(dnaf23_0)) {
+  outputMatrix_codons = codonCount(ar,dnaf[[i]], dnaf23_0[[i]])
+  ar = outputMatrix_codons
+}
+
+saveRDS(
+  object = outputMatrix_codons,
+  file = paste(
+    "output_matrixes_codons/codons_outputMatrix_",
+    seqLabel,
+    ".RDS",
+    sep = ""
+  )
+)
+```
+
+Excel table:
+```{r}
+write.xlsx(
+  outputMatrix_codons,
+  file = "output_matrixes_codons/codons_outputMatrix.xlsx",
+  sheetName = "Herpes",
+  col.names = TRUE,
+  row.names = TRUE,
+  append = TRUE
+)
+```
+
+Codons in this sequence set:
+```{r}
+ca = sum(codons_outputMatrix_Herpes)
+ca
+```
+
+Unchanged codons: 
+```{r}
+nc = sum(diag(codons_outputMatrix_Herpes))
+nc
+```
+
+Changed Codons
+```{r}
+cc = ca-nc
+cc
+```
+% codons changed
+```{r}
+ccp =cc/ca
+round(ccp,2)
+```
+Code usage approves:
+```{r}
+round(p23_0-p,2)
+```
+Amount of codons that could not be changed. Percent of all codons. 
+```{r}
+unc = unchangednonCCCodons(codons_outputMatrix_Herpes,codes.c3[[23]])
+unc
+round(unc/ca, 2)
+```
+
+Summary
+```{r}
+paste("Codons in set:", ca)
+paste("----- changed:", cc, "(", round(cc/ca,2),")")
+paste("----- not changed:", nc, "(", round(nc/ca,2),")")
+paste("----- not changed because no good substitute:", unc, "(", round(unc/ca,2),")", "| note: cu in original sequence:", round(p,2))
+paste("----- not changed because already part of circular code:", nc-unc, "(", round((nc-unc)/ca,2),")")
+
+```
+
+
+
+
+
+
+
+
+
