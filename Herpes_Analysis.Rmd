@@ -7,6 +7,7 @@ output: html_document
 library("seqinr")
 library("ggplot2")
 library("ccmotif") # Version 0.6.6
+source("Parameter.R")
 ```
 
 For Herpes following circular codes showed a high code usage in the unmodified sequence and have therefore been chosen to further look into:
@@ -54,6 +55,20 @@ ff210_2 = read.fasta(file210_2, as.string = TRUE, forceDNAtolower = FALSE)
 ff89_2 = read.fasta(file89_2, as.string = TRUE, forceDNAtolower = FALSE)
 ff88_2 = read.fasta(file88_2, as.string = TRUE, forceDNAtolower = FALSE)
 ff23_2 = read.fasta(file23_2, as.string = TRUE, forceDNAtolower = FALSE)
+
+rds172_0 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X172_frame_0.RDS")
+rds173_0 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X173_frame_0.RDS")
+rds23_0 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X23_frame_0.RDS")
+
+rds191_1 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X191_frame_1.RDS")
+rds42_1 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X42_frame_1.RDS")
+rds126_1 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X126_frame_1.RDS")
+rds23_1 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X23_frame_1.RDS")
+
+rds210_2 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X210_frame_2.RDS")
+rds89_2 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X89_frame_2.RDS")
+rds88_2 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X88_frame_2.RDS")
+rds23_2 <- readRDS("D:/Projekte/BA Circular Code/output_matrixes_codons/codons_outputMatrix_Herpes_X23_frame_2.RDS")
 ```
 
 Number of bases in frame 0, frame 1 and frame 2 for X23-modified sequence 
@@ -70,13 +85,13 @@ codons = codon.splitlist(ff)
 cu = codon.usage(codons)
 plot(cu, species = "Herpes - original sequence")
 
-# codons172_0 = codon.splitlist(ff172_0)
-# cu172_0 = codon.usage(codons172_0)
-# plot(cu172_0, species = "Herpes - X172 Frame 0")
-# 
-# codons173_0 = codon.splitlist(ff173_0)
-# cu173_0 = codon.usage(codons173_0)
-# plot(cu173_0, species = "Herpes - X173 Frame 0")
+codons172_0 = codon.splitlist(ff172_0)
+cu172_0 = codon.usage(codons172_0)
+plot(cu172_0, species = "Herpes - X172 Frame 0")
+
+codons173_0 = codon.splitlist(ff173_0)
+cu173_0 = codon.usage(codons173_0)
+plot(cu173_0, species = "Herpes - X173 Frame 0")
 
 codons23_0 = codon.splitlist(ff23_0)
 cu23_0 = codon.usage(codons23_0)
@@ -134,88 +149,127 @@ round(p, 2)
 
 p23_0 = codes.usage(cu23_0, code23)
 round(p23_0, 2)
+
+p23_1 = codes.usage(cu23_1, code23)
+round(p23_1, 2)
+
+p23_2 = codes.usage(cu23_2, code23)
+round(p23_2, 2)
 ```
 
-Meine Tabelle:
-```{r echo=FALSE}
-ar = generateEmptyTable(64,64,CODONS)
-
-dnaf = readDNAStringSet(file)
-dnaf23_0 = readDNAStringSet(file23_0)
-
-for (i in 1:length(dnaf23_0)) {
-  outputMatrix_codons = codonCount(ar,dnaf[[i]], dnaf23_0[[i]])
-  ar = outputMatrix_codons
-}
-
-saveRDS(
-  object = outputMatrix_codons,
-  file = paste(
-    "output_matrixes_codons/codons_outputMatrix_",
-    seqLabel,
-    ".RDS",
-    sep = ""
-  )
-)
-```
-
-Excel table:
+Codons in these sequences:
 ```{r}
-write.xlsx(
-  outputMatrix_codons,
-  file = "output_matrixes_codons/codons_outputMatrix.xlsx",
-  sheetName = "Herpes",
-  col.names = TRUE,
-  row.names = TRUE,
-  append = TRUE
-)
-```
+ca23_0 = sum(rds23_0)
+ca23_0
 
-Codons in this sequence set:
-```{r}
-ca = sum(codons_outputMatrix_Herpes)
-ca
+ca23_1 = sum(rds23_1)
+ca23_1
+
+ca23_2 = sum(rds23_2)
+ca23_2
 ```
 
 Unchanged codons: 
 ```{r}
-nc = sum(diag(codons_outputMatrix_Herpes))
-nc
+nc23_0 = sum(diag(rds23_0))
+nc23_0
+
+nc23_1 = sum(diag(rds23_1))
+nc23_1
+
+nc23_2 = sum(diag(rds23_2))
+nc23_2
 ```
 
-Changed Codons
+Changed Codons:
 ```{r}
-cc = ca-nc
-cc
+cc23_0 = ca23_0-nc23_0
+cc23_0
+
+cc23_1 = ca23_1-nc23_1
+cc23_1
+
+cc23_2 = ca23_2-nc23_2
+cc23_2
 ```
 % codons changed
 ```{r}
-ccp =cc/ca
-round(ccp,2)
+ccp23_0 =cc23_0/ca23_0
+round(ccp23_0,2)
+
+ccp23_1 =cc23_1/ca23_1
+round(ccp23_1,2)
+
+ccp23_2 =cc23_2/ca23_2
+round(ccp23_2,2)
 ```
-Code usage approves:
+Difference of cu in original sequence and code usage in modified sequence (should be equal to % codons changed):
 ```{r}
 round(p23_0-p,2)
+round(p23_1-p,2)
+round(p23_2-p,2)
 ```
 Amount of codons that could not be changed. Percent of all codons. 
 ```{r}
-unc = unchangednonCCCodons(codons_outputMatrix_Herpes,codes.c3[[23]])
-unc
-round(unc/ca, 2)
-```
+unc23_0 = unchangednonCCCodons(rds23_0,codes.c3[[23]])
+unc23_0
+round(unc23_0/ca23_0, 2)
 
-Summary
+unc23_1 = unchangednonCCCodons(rds23_1,codes.c3[[23]])
+unc23_1
+round(unc23_1/ca23_1, 2)
+
+unc23_2 = unchangednonCCCodons(rds23_2,codes.c3[[23]])
+unc23_2
+round(unc23_2/ca23_2, 2)
+```
+Rating for the modified sequences:
+Base 1 the same +4
+Base 2 the same +4
+Base 3 the same +2
+1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
+Base could not be substituted: -0,5
+
+Which leads to this score for following sequences:
 ```{r}
-paste("Codons in set:", ca)
-paste("----- changed:", cc, "(", round(cc/ca,2),")")
-paste("----- not changed:", nc, "(", round(nc/ca,2),")")
-paste("----- not changed because no good substitute:", unc, "(", round(unc/ca,2),")", "| note: cu in original sequence:", round(p,2))
-paste("----- not changed because already part of circular code:", nc-unc, "(", round((nc-unc)/ca,2),")")
+val23_0 = valueTable(rds23_0, code23)
+val23_0
 
+val23_1 = valueTable(rds23_1, code23)
+val23_1
+
+val23_2 = valueTable(rds23_2, code23)
+val23_2
 ```
 
+Summary for X23 frame 0:
+```{r}
+paste("Codons in set:", ca23_0)
+paste("----- changed:", cc23_0, "(", round(cc23_0/ca23_0,2),")")
+paste("----- not changed:", nc23_0, "(", round(nc23_0/ca23_0,2),")")
+paste("----- not changed because no good substitute:", unc23_0, "(", round(unc23_0/ca23_0,2),")")
+paste("----- not changed because already part of circular code:", nc23_0-unc23_0, "(", round((nc23_0-unc23_0)/ca23_0,2),")", "| note: code usage in original sequence:", round(p,2))
+paste("Score:",val23_0)
+```
+Summary for X23 frame 1:
+```{r}
+paste("Codons in set:", ca23_1)
+paste("----- changed:", cc23_1, "(", round(cc23_1/ca23_1,2),")")
+paste("----- not changed:", nc23_1, "(", round(nc23_1/ca23_1,2),")")
+paste("----- not changed because no good substitute:", unc23_1, "(", round(unc23_1/ca23_1,2),")")
+paste("----- not changed because already part of circular code:", nc23_1-unc23_1, "(", round((nc23_1-unc23_1)/ca23_1,2),")", "| note: code usage in original sequence:", round(p,2))
+paste("Score:",val23_1)
+```
 
-
+Summary for X23 frame 2:
+```{r}
+paste("Codons in set:", ca23_2)
+paste("----- changed:", cc23_2, "(", round(cc23_2/ca23_2,2),")")
+paste("----- not changed:", nc23_2, "(", round(nc23_2/ca23_2,2),")")
+paste("----- not changed because no good substitute:", unc23_2, "(", round(unc23_2/ca23_2,2),")")
+paste("----- not changed because already part of circular code:", nc23_2-unc23_2, "(", round((nc23_2-unc23_2)/ca23_2,2),")", "| note: code usage in original sequence:", round(p,2))
+paste("Score:",val23_2)
+```
 
 
 

@@ -25,7 +25,7 @@ codonCount = function(ar, seqA, seqB){
   codonsA = codons(seqA)
   codonsB = codons(seqB)
   
-  for (i in 1:length(codonsA)) {
+  for (i in 1:length(codonsB)) {
     tmpArray =  array(data = 0,dim = c(64,64),dimnames = list(CODONS,CODONS))
     tmpArray[toString(codonsA[[i]]),toString(codonsB[[i]])] = 1
     ar = ar+tmpArray
@@ -43,7 +43,7 @@ aminoCount = function(ar, seqA, seqB){
   aminoA = translate(seqA)
   aminoB = translate(seqB)
   
-  for (i in 1:length(aminoA)) {
+  for (i in 1:length(aminoB)) {
     
     tmpArray =  array(data = 0,dim = c(21,21),dimnames = list(AMINOACIDS,AMINOACIDS))
     tmpArray[toString(aminoA[i]),toString(aminoB[i])] = 1
@@ -59,7 +59,7 @@ baseCount = function(seqA, seqB){
   
   sum = 0
   
-  for (i in 1:length(seqA)) {
+  for (i in 1:length(seqB)) {
     if (seqA[i] != seqB[i]) {
       sum = sum +1
     }
