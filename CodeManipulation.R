@@ -85,7 +85,7 @@ aminoAcidSubstitution = function(codon, setX, threshold){
   data("BLOSUM62")
   xCodeAminoAcids = getAminoAcidsCodedByX(setX)
   
-  aminoAcid = translate(codon)
+  aminoAcid = Biostrings::translate(codon)
   bestAminoAcid = aminoAcid #best match is old aa until a better match is found
   
   for (i in 1:length(xCodeAminoAcids)) {
@@ -101,14 +101,14 @@ aminoAcidSubstitution = function(codon, setX, threshold){
 
 #' returns a list of amino acids which are coded by codons part of X
 #' @param setX circular code
-#' @return AAStringSet, unique
+#' @return AAStringSet, unique entries
 getAminoAcidsCodedByX = function(setX) {
   xCodes = strsplit(setX[[2]], split=" ")
   xCodeAminoAcids = vector("list", length(xCodes))
   
   for (i in 1:length(xCodes)) {
     xCodeDNA = DNAString(xCodes[[i]])
-    xCodeAminoAcids[[i]] = translate(xCodeDNA)
+    xCodeAminoAcids[[i]] = Biostrings::translate(xCodeDNA)
   }
   xCodeAminoAcids = unique(AAStringSet(xCodeAminoAcids))
   return(xCodeAminoAcids)
@@ -181,6 +181,8 @@ getCodesForAA = function(aminoAcid){
 #' @param seqSet DNAString
 changeReadingFrame = function(targetFrame, seq){
   
-    return(subseq(seq,start=targetFrame+1))
+  if( targetFrame < 0) stop("target frame cannot be lower than 0")
+  
+  return(subseq(seq,start=targetFrame+1))
 }
 

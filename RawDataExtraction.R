@@ -1,5 +1,10 @@
 library(Biostrings)
 
+# 64 codons
+CODONS = c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TAA", "TAG", "TGT", "TGC", "TGA", "TGG", "CTT","CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC" ,"GTA" ,"GTG", "GCT" ,"GCC" ,"GCA" ,"GCG" ,"GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG")
+# 20 amino acids + 1 *  for stop codons
+AMINOACIDS = c("A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","T","W","Y","V","*")
+
 #' generates 3D matrix with zeros
 #' @param dim1 number
 #' @param dim2 number
@@ -40,8 +45,8 @@ codonCount = function(ar, seqA, seqB){
 #' @return array of values
 aminoCount = function(ar, seqA, seqB){
   
-  aminoA = translate(seqA)
-  aminoB = translate(seqB)
+  aminoA = Biostrings::translate(seqA)
+  aminoB = Biostrings::translate(seqB)
   
   for (i in 1:length(aminoB)) {
     
@@ -51,52 +56,6 @@ aminoCount = function(ar, seqA, seqB){
   }
   return(ar)
 }
-
-#' Amount of changed bases in a sequence compared to another
-#' @param seqA original sequence
-#' @param seqB modified sequence
-baseCount = function(seqA, seqB){
-  
-  sum = 0
-  
-  for (i in 1:length(seqB)) {
-    if (seqA[i] != seqB[i]) {
-      sum = sum +1
-    }
-  }
-  return(sum)
-}
-
-#' creates a binary sequence depending on motif (=1) and non-motif(=0) codons
-#' @param seq dna sequence
-#' @param setX circular codes
-#' @return array cosisting of zeros and ones
-sequenceToBinary = function(seq, setX){
-  
-  binSeq = array()
-  
-  codon = codons(seq)
-  for (i in 1:length(codon)) {
-    if (partOfCircularCode(codon[[i]],setX)) {
-      binSeq[i] = 1
-    } else {
-      binSeq[i] = 0
-    }
-  }
-  return(binSeq)
-}
-
-#'
-#' @param binSeq array 
-# plotBinarySequence = function(binSeq){
-#   
-#   motifs = factor(binSeq)
-#   print(length(motifs))
-#   position_in_sequence = length(binSeq)
-#   print(position_in_sequence)
-#   
-#   cdplot(motifs ~ position_in_sequence) #TODO: Error
-# }
 
 
 
@@ -123,18 +82,31 @@ unchangednonCCCodons = function(table, codes) {
 
 
 #' assess how much a sequence has been changed by giving mutations scores
-#' +1 for point mutations
-#' +3 for changes of 1 or more basis but maintaining the amino acid
-#' +5 for the change of an amino acid 
+#' Rating for codons that did not need to be changed, because they already were part of the circular code: 10
+#' Rating for the modified sequences:
+#' Base 1 the same +4
+#' Base 2 the same +4
+#' Base 3 the same +2
+#' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
+#' Sum of both ratings is multiplied with the amount of circular codes in the new sequence (code usage). 
+#' Logarithm to center score around 0. Max. score is 1. Worst score is -1
 #' @param table equal sided table
 #' @param codes circular code
-valueTable = function(table, codes){
+#' @param cu code usage
+#' @return score between -1 and 1. Best is 1. 
+valueTable = function(table, codes, cu){
   
-  sum = 0
+  score = 0
+  total = sum(table)
+  dia = sum(diag(table))
   
   unc = unchangednonCCCodons(table, codes)
-  sum = -0.5*unc
   
+  sumCC = total-unc
+  ch = dia-unc
+  score = ch*10
+  
+
   dimensions = dim(table)
   dimNames = dimnames(table)
   dimNames1 = dimNames[[1]]
@@ -151,12 +123,16 @@ valueTable = function(table, codes){
       if (codon1 != codon2) { #ignore diagonal
         
         tmp = compareCodons(codon1,codon2)
-        sum = sum + tmp
+        score = score + tmp
       }
     }
   }
   
-  return(sum)
+  result = score/sumCC
+  result = result*cu
+  result = log(result,base = 10)
+  
+  return(result)
 }
 
 

@@ -19,7 +19,7 @@ main = function(seq, setX) {
     if (!partOfCircularCode(codonsOfSequence[[i]], setX)) {
       #not part of the Circular Code
       
-      aminoAcid = translate(codonsOfSequence[[i]])
+      aminoAcid = Biostrings::translate(codonsOfSequence[[i]])
       codonsForAA = getCodesForAA(aminoAcid)
       ccCodonsForAA = getCircularCodes(codonsForAA, setX)
       
@@ -31,7 +31,7 @@ main = function(seq, setX) {
       else {
         # there are no other codons part of X coding for the same amino acid, try to replace amino acid
         
-        oldAminoAcid = translate(codonsOfSequence[[i]])
+        oldAminoAcid = Biostrings::translate(codonsOfSequence[[i]])
         newAminoAcid = aminoAcidSubstitution(codonsOfSequence[[i]], setX, 0)
         
         if (newAminoAcid != oldAminoAcid) {
