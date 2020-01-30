@@ -123,3 +123,45 @@ Fehler:
 >ENA|AAA50224|AAA50224.1 Caenorhabditis elegans partial RNA polymerase II, second largest subunit --> "N","Y","H" usw. im Code
 
 
+
+
+Metrik: 
+
+Rating for the modified sequences:
+Base 1 the same +4
+Base 2 the same +4
+Base 3 the same +2
+1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
+Base could not be substituted: -0,5
+
+T = True, S = Swap, F = False
+
+10: T-T-T 
+9:  T-T-S
+8:  T-T-F
+7:  T-S-T // S-T-T
+6:  T-F-T // F-T-T // T-S-S // S-T-S
+
+
+
+
+AAC - AAA - TTT - GGG - CCC
+AAC - ACA - TTC - GGG - CCC
+
+0     6     9     -1    -1    =13/2 = 6,5
+
+
+
+100 gesamt
+30  cc    --> score 30 --> einzelnd 1
+40  ntr   --> score -40 ---> einzeln -1
+30  tr    --> score 210 --> einzeln ca. 9-6
+
+
+
+
+
+
+
+
+
