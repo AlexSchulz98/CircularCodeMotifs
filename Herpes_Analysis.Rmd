@@ -7,6 +7,8 @@ output: html_document
 library("seqinr")
 library("ggplot2")
 library("ccmotif") # Version 0.6.6
+library("Biostrings")
+library("knitr")
 source("Parameter.R")
 ```
 
@@ -134,27 +136,46 @@ cu23_2 = codon.usage(codons23_2)
 plot(cu23_2, species = "Herpes - X23 Frame 2")
 ```
 
-Code Usage for sequences in frame 0:
+Code Usage:
 ```{r echo=FALSE}
 code23 = codes.c3[[23]]
 
 p = codes.usage(cu, code23)
-round(p, 2)
+paste("x23 original:",round(p, 2))
 
-# p172_0 = codes.usage(cu172_0, codes.c3[[172]])
-# round(p172_0, 2)
-# 
-# p173_0 = codes.usage(cu173_0, codes.c3[[173]])
-# round(p173_0, 2)
+p172_0 = codes.usage(cu172_0, codes.c3[[172]])
+paste("x172 frame 0:",round(p172_0, 2)) 
+
+p173_0 = codes.usage(cu173_0, codes.c3[[173]])
+paste("x173 frame 0:",round(p173_0, 2)) 
 
 p23_0 = codes.usage(cu23_0, code23)
-round(p23_0, 2)
+paste("x23 frame 0:",round(p23_0, 2)) 
+
+p191_1 = codes.usage(cu191_1, codes.c3[[191]])
+paste("x191 frame 1:",round(p191_1, 2)) 
+
+p42_1 = codes.usage(cu42_1, codes.c3[[42]])
+paste("x42 frame 1:",round(p42_1, 2)) 
+
+p126_1 = codes.usage(cu126_1, codes.c3[[126]])
+paste("x126 frame 1:",round(p126_1, 2)) 
 
 p23_1 = codes.usage(cu23_1, code23)
-round(p23_1, 2)
+paste("x23 frame 1:",round(p23_1, 2)) 
+
+p210_2 = codes.usage(cu210_2, codes.c3[[210]])
+paste("x210 frame 2:",round(p210_2, 2)) 
+
+p89_2 = codes.usage(cu89_2, codes.c3[[89]])
+paste("x89 frame 2:",round(p89_2, 2)) 
+
+p88_2 = codes.usage(cu88_2, codes.c3[[88]])
+paste("x88 frame 2:",round(p88_2, 2)) 
 
 p23_2 = codes.usage(cu23_2, code23)
-round(p23_2, 2)
+paste("x23 frame 2:",round(p23_2, 2)) 
+
 ```
 
 Codons in these sequences:
@@ -162,8 +183,32 @@ Codons in these sequences:
 ca23_0 = sum(rds23_0)
 ca23_0
 
+ca172_0 = sum(rds172_0)
+ca172_0
+
+ca173_0 = sum(rds173_0)
+ca173_0
+
+ca191_1 = sum(rds191_1)
+ca191_1
+
+ca42_1 = sum(rds42_1)
+ca42_1
+
+ca126_1 = sum(rds126_1)
+ca126_1
+
 ca23_1 = sum(rds23_1)
 ca23_1
+
+ca210_2 = sum(rds210_2)
+ca210_2
+
+ca89_2 = sum(rds89_2)
+ca89_2
+
+ca88_2 = sum(rds88_2)
+ca88_2
 
 ca23_2 = sum(rds23_2)
 ca23_2
@@ -174,8 +219,19 @@ Unchanged codons:
 nc23_0 = sum(diag(rds23_0))
 nc23_0
 
+nc172_0 = sum(diag(rds172_0))
+nc173_0 = sum(diag(rds173_0))
+
+nc191_1 = sum(diag(rds191_1))
+nc42_1 = sum(diag(rds42_1))
+nc126_1 = sum(diag(rds126_1))
+
 nc23_1 = sum(diag(rds23_1))
 nc23_1
+
+nc210_2 = sum(diag(rds210_2))
+nc89_2 = sum(diag(rds89_2))
+nc88_2 = sum(diag(rds88_2))
 
 nc23_2 = sum(diag(rds23_2))
 nc23_2
@@ -186,8 +242,19 @@ Changed Codons:
 cc23_0 = ca23_0-nc23_0
 cc23_0
 
+cc172_0 = ca172_0-nc172_0
+cc173_0 = ca173_0-nc173_0
+
+cc191_1 = ca191_1-nc191_1
+cc42_1 = ca42_1-nc42_1
+cc126_1 = ca126_1-nc126_1
+
 cc23_1 = ca23_1-nc23_1
 cc23_1
+
+cc210_2 = ca210_2-nc210_2
+cc89_2 = ca89_2-nc89_2
+cc88_2 = ca88_2-nc88_2
 
 cc23_2 = ca23_2-nc23_2
 cc23_2
@@ -197,8 +264,19 @@ cc23_2
 ccp23_0 =cc23_0/ca23_0
 round(ccp23_0,2)
 
+ccp172_0 =cc172_0/ca172_0
+ccp173_0 =cc173_0/ca173_0
+
+ccp191_1 =cc191_1/ca191_1
+ccp42_1 =cc42_1/ca42_1
+ccp126_1 =cc126_1/ca126_1
+
 ccp23_1 =cc23_1/ca23_1
 round(ccp23_1,2)
+
+ccp210_2 =cc210_2/ca210_2
+ccp89_2 =cc89_2/ca89_2
+ccp88_2 =cc88_2/ca88_2
 
 ccp23_2 =cc23_2/ca23_2
 round(ccp23_2,2)
@@ -215,31 +293,57 @@ unc23_0 = unchangednonCCCodons(rds23_0,codes.c3[[23]])
 unc23_0
 round(unc23_0/ca23_0, 2)
 
+unc172_0 = unchangednonCCCodons(rds172_0,codes.c3[[172]])
+unc173_0 = unchangednonCCCodons(rds173_0,codes.c3[[173]])
+
+unc191_1 = unchangednonCCCodons(rds191_1,codes.c3[[191]])
+unc42_1 = unchangednonCCCodons(rds42_1,codes.c3[[42]])
+unc126_1 = unchangednonCCCodons(rds126_1,codes.c3[[126]])
+
 unc23_1 = unchangednonCCCodons(rds23_1,codes.c3[[23]])
 unc23_1
 round(unc23_1/ca23_1, 2)
+
+unc210_2 = unchangednonCCCodons(rds210_2,codes.c3[[210]])
+unc89_2 = unchangednonCCCodons(rds89_2,codes.c3[[89]])
+unc88_2 = unchangednonCCCodons(rds88_2,codes.c3[[88]])
 
 unc23_2 = unchangednonCCCodons(rds23_2,codes.c3[[23]])
 unc23_2
 round(unc23_2/ca23_2, 2)
 ```
+Rating for codons that did not need to be changed, because they already were part of the circular code:
+10
 Rating for the modified sequences:
 Base 1 the same +4
 Base 2 the same +4
 Base 3 the same +2
 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
-Base could not be substituted: -0,5
+
+Sum of both ratings is multiplied with the amount of circular codes in the new sequence (code usage). 
+Logarithm to center score around 0. Max. score is 1. Worst score is -1
 
 Which leads to this score for following sequences:
 ```{r}
-val23_0 = valueTable(rds23_0, code23)
-val23_0
+val23_0 = valueTable(rds23_0, code23,p23_0)
+round(val23_0,2)
 
-val23_1 = valueTable(rds23_1, code23)
-val23_1
+val172_0 = valueTable(rds172_0, codes.c3[[172]],p172_0)
+val173_0 = valueTable(rds173_0, codes.c3[[173]],p173_0)
 
-val23_2 = valueTable(rds23_2, code23)
-val23_2
+val191_1 = valueTable(rds191_1, codes.c3[[191]],p191_1)
+val42_1 = valueTable(rds42_1, codes.c3[[42]],p42_1)
+val126_1 = valueTable(rds126_1, codes.c3[[126]],p126_1)
+
+val23_1 = valueTable(rds23_1, code23,p23_1)
+round(val23_1,2)
+
+val210_2 = valueTable(rds210_2, codes.c3[[210]],p210_2)
+val89_2 = valueTable(rds89_2, codes.c3[[89]],p89_2)
+val88_2 = valueTable(rds88_2, codes.c3[[88]],p88_2)
+
+val23_2 = valueTable(rds23_2, code23,p23_2)
+round(val23_2,2)
 ```
 
 Summary for X23 frame 0:
@@ -249,7 +353,7 @@ paste("----- changed:", cc23_0, "(", round(cc23_0/ca23_0,2),")")
 paste("----- not changed:", nc23_0, "(", round(nc23_0/ca23_0,2),")")
 paste("----- not changed because no good substitute:", unc23_0, "(", round(unc23_0/ca23_0,2),")")
 paste("----- not changed because already part of circular code:", nc23_0-unc23_0, "(", round((nc23_0-unc23_0)/ca23_0,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",val23_0)
+paste("Score:",round(val23_0,2))
 ```
 Summary for X23 frame 1:
 ```{r}
@@ -258,7 +362,7 @@ paste("----- changed:", cc23_1, "(", round(cc23_1/ca23_1,2),")")
 paste("----- not changed:", nc23_1, "(", round(nc23_1/ca23_1,2),")")
 paste("----- not changed because no good substitute:", unc23_1, "(", round(unc23_1/ca23_1,2),")")
 paste("----- not changed because already part of circular code:", nc23_1-unc23_1, "(", round((nc23_1-unc23_1)/ca23_1,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",val23_1)
+paste("Score:",round(val23_1,2))
 ```
 
 Summary for X23 frame 2:
@@ -268,7 +372,54 @@ paste("----- changed:", cc23_2, "(", round(cc23_2/ca23_2,2),")")
 paste("----- not changed:", nc23_2, "(", round(nc23_2/ca23_2,2),")")
 paste("----- not changed because no good substitute:", unc23_2, "(", round(unc23_2/ca23_2,2),")")
 paste("----- not changed because already part of circular code:", nc23_2-unc23_2, "(", round((nc23_2-unc23_2)/ca23_2,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",val23_2)
+paste("Score:",round(val23_2,2))
+```
+
+
+Summary Herpes Virus: 
+```{r}
+changed = c(cc23_0,cc172_0,cc173_0,
+            cc191_1,cc42_1,cc126_1,cc23_1,
+            cc210_2,cc89_2,cc88_2,cc23_2)
+ch = c(round(cc23_0/ca23_0,2),round(cc172_0/ca172_0,2),round(cc173_0/ca173_0,2),
+       round(cc191_1/ca191_1,2),round(cc42_1/ca42_1,2),round(cc126_1/ca126_1,2),round(cc23_1/ca23_1,2),
+       round(cc210_2/ca210_2,2),round(cc89_2/ca89_2,2),round(cc88_2/ca88_2,2),round(cc23_2/ca23_2,2))
+not_changed = c(nc23_0, nc172_0, nc173_0,
+                nc191_1, nc42_1, nc126_1, nc23_1,
+                nc210_2, nc89_2, nc88_2, nc23_2)
+not_ch = c(round(nc23_0/ca23_0,2),round(nc172_0/ca172_0,2),round(nc173_0/ca173_0,2),
+           round(nc191_1/ca191_1,2),round(nc42_1/ca42_1,2),round(nc126_1/ca126_1,2),round(nc23_1/ca23_1,2),
+           round(nc210_2/ca210_2,2), round(nc89_2/ca89_2,2), round(nc88_2/ca88_2,2), round(nc23_2/ca23_2,2))
+not_possible = c(unc23_0,unc172_0,unc173_0,
+                 unc191_1,unc42_1,unc126_1,unc23_1,
+                 unc210_2,unc89_2,unc88_2,unc23_2)
+not_p = c(round(unc23_0/ca23_0,2),round(unc172_0/ca172_0,2),round(unc173_0/ca173_0,2),
+          round(unc191_1/ca191_1,2),round(unc42_1/ca42_1,2),round(unc126_1/ca126_1,2),round(unc23_1/ca23_1,2),
+          round(unc210_2/ca210_2,2),round(unc89_2/ca89_2,2),round(unc88_2/ca88_2,2),round(unc23_2/ca23_2,2))
+not_needed = c(nc23_0-unc23_0,nc172_0-unc172_0,nc173_0-unc173_0,
+               nc191_1-unc191_1,nc42_1-unc42_1,nc126_1-unc126_1,nc23_1-unc23_1,
+               nc210_2-unc210_2,nc89_2-unc89_2,nc88_2-unc88_2,nc23_2-unc23_2)
+not_n = c(round((nc23_0-unc23_0)/ca23_0,2),round((nc172_0-unc172_0)/ca172_0,2),round((nc173_0-unc173_0)/ca173_0,2),
+          round((nc191_1-unc191_1)/ca191_1,2),round((nc42_1-unc42_1)/ca42_1,2),round((nc126_1-unc126_1)/ca126_1,2),round((nc23_1-unc23_1)/ca23_1,2),
+          round((nc210_2-unc210_2)/ca210_2,2),round((nc89_2-unc89_2)/ca89_2,2),round((nc88_2-unc88_2)/ca88_2,2),round((nc23_2-unc23_2)/ca23_2,2))
+c_score = c(round(val23_0,2),round(val172_0,2),round(val173_0,2),
+            round(val191_1,2),round(val42_1,2),round(val126_1,2),round(val23_1,2),
+            round(val210_2,2),round(val89_2,2),round(val88_2,2),round(val23_2,2))
+a_score = c()
+score = c()
+
+rows = c("23_0","172_0","173_0",
+         "191_1","42_1","126_1","23_1",
+         "210_2","89_2","88_2","23_2")
+
+
+df = data.frame(changed,ch,not_changed,not_ch,not_possible,not_p,not_needed,not_n,c_score,
+                row.names = rows)
+
+kable(
+  df,
+  caption = paste("Summary for Herpes Virus x23 || original codon usage (x23):",round(p,2))
+)
 ```
 
 

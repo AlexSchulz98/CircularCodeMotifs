@@ -1,0 +1,74 @@
+55 gesamt
+
+20 cc codons (37%)
+25 nicht ?nderbar (45%)
+10 erfolgreich ge?ndert (18%)
+
+am Ende also 30 cc codons (55%) --> bewerten
+
+f?r cc: 10 			*20 (Anzahl)	
+f?r ch: (6+7+9+8+8+7+7+8+9+7)
+
+((276)/30)*0,55 = 5.06
+
+log(5.06) = 0,7
+
+------------------------------------
+
+40 cc codons (73%)
+
+10*30
++6+7+9+8+8+7+7+8+9+7
+=376/40 = 9,4
+9,4*0,73 = 6,7
+log (6,7) = 0,83
+------------------------------------
+
+T = True, S = Swap, F = False
+
+10: T-T-T 
+9:  T-T-S
+8:  T-T-F
+7:  T-S-T // S-T-T
+6:  T-F-T // F-T-T // T-S-S // S-T-S
+5:  T-S-F // S-T-F // F-T-S // T-F-S
+
+Unsprungscodon:   AAA
+
+10                AAA
+9                 AAG
+8             AAT / AAC
+7             AGA / GAA
+6       ATA / ACA / TAA / CAA / AGG / GAG
+5   AGT / AGC / GAT / GAC / TAG / CAG / ATG / ACG
+
+
+------------------------------------
+------------------------------------
+
+50 AA 
+
+40 gleichgeblieben
+    davon 20 weil cc        --> score berechnen aber wie, +10 oder nach matrix? Werden dann nicht zirkuläre codes mit "guten" ursprungs aminosäuren belohnt?
+    und   20 weil threshold --> wie oben
+
+10 verändert --> score zwischen 0 und ~4
+
+teilen durch (verändert + gleich aber cc)  
+
+Ergebis z.B. 5*0,8 = 4 --> log(4) = 0,6
+
+------------------
+
+zusammenbringen mit c_score:
+idee: (4+6,7) /2 und dann log ?
+
+
+
+
+
+
+
+
+
+
