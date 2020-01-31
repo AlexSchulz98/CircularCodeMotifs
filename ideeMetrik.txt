@@ -7,13 +7,26 @@
 am Ende also 30 cc codons (55%) --> bewerten
 
 f?r cc: 10 			*20 (Anzahl)	
-f?r ch: (6+7+9+8+8+7+7+8+9+7)
+f?r ch: (6+7+9+8+8+7+7+8+9+7)/Anzahl = 8/10 --> 0,8  #durch maximal wert 10 teilen
 
-((276)/30)*0,55 = 5.06
+((276)/30) = 9,2
+9,2*0,55 = 5.06
 
-log(5.06) = 0,7
+log(5.06) = 0,7 -->  lieber durch 10 teilen
+
+
+stufe 1: nur die änderungen betrachten
+stufe 2: in betracht der gesamt CU
+Stufe 3: aminosäure-Tausch
 
 ------------------------------------
+((276/30))/10 --> 
+
+
+
+auf original + auf 
+----------------
+
 
 40 cc codons (73%)
 
@@ -35,9 +48,9 @@ T = True, S = Swap, F = False
 
 Unsprungscodon:   AAA
 
-10                AAA
-9                 AAG
-8             AAT / AAC
+10                AAA         #4+4+2
+9                 AAG         #4+4+1
+8             AAT / AAC       #4+4+0
 7             AGA / GAA
 6       ATA / ACA / TAA / CAA / AGG / GAG
 5   AGT / AGC / GAT / GAC / TAG / CAG / ATG / ACG
@@ -62,6 +75,20 @@ Ergebis z.B. 5*0,8 = 4 --> log(4) = 0,6
 
 zusammenbringen mit c_score:
 idee: (4+6,7) /2 und dann log ?
+
+
+
+
+
+TODO: 
+
+- Metrik aufschreiben
+- Namen für ausgabescore und weiteres wie z.B end-codeusage etc
+- UPAC Codes entfernen und die letzten beiden druchlaufen lassen
+- Änderugnscore von Gesamt score trennen in tabelle
+- Vergleich zwischen Soll und Ist (Erwartungswert) --> evtl grafik dazu
+
+
 
 
 
