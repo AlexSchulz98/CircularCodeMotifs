@@ -81,30 +81,23 @@ unchangednonCCCodons = function(table, codes) {
 }
 
 
-#' assess how much a sequence has been changed by giving mutations scores
-#' Rating for codons that did not need to be changed, because they already were part of the circular code: 10
+#' asseses how much a sequence has been changed by giving mutations scores
 #' Rating for the modified sequences:
 #' Base 1 the same +4
 #' Base 2 the same +4
 #' Base 3 the same +2
 #' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
-#' Sum of both ratings is multiplied with the amount of circular codes in the new sequence (code usage). 
-#' Logarithm to center score around 0. Max. score is 1. Worst score is -1
-#' @param table equal sided table
-#' @param codes circular code
-#' @param cu code usage
-#' @return score between -1 and 1. Best is 1. 
-valueTable = function(table, codes, cu){
+#' Sum of this rating is divided by the number of codons to get the average
+#' because of the rating range from 0 to 10 the score is divided by 10 to get a normalized scale from 0 to 1
+#' @param table codon changes
+#' @return score between 0 and 1. 1=good/minor mutations. 
+getEditScore = function(table){
   
-  score = 0
-  total = sum(table)
-  dia = sum(diag(table))
+  score = 0 
   
-  unc = unchangednonCCCodons(table, codes)
-  
-  sumCC = total-unc
-  ch = dia-unc
-  score = ch*10
+  total = sum(table) # codons in this sequence
+  unc = sum(diag(table)) # unchanged codons
+  sumCC = total-unc # changed codons
   
 
   dimensions = dim(table)
@@ -123,18 +116,40 @@ valueTable = function(table, codes, cu){
       if (codon1 != codon2) { #ignore diagonal
         
         tmp = compareCodons(codon1,codon2)
+        tmp = tmp*table[codon1,codon2] # multiply score with amount of changes (which are stored in table)
         score = score + tmp
       }
     }
   }
   
-  result = score/sumCC
-  result = result*cu
-  result = log(result,base = 10)
+  result = score/sumCC # calc average (score is between 0-10)
+  result = result/10 # normalize to 0-1
   
   return(result)
 }
 
+#' determines the distance of a sequence to a perfect (full circular code) sequence
+#' @param table codon table
+#' @param editScore calculated edit score between 0 and 1
+#' @param code circular code used
+#' @return score between 0 and 1. 0=good/close to perfect sequence.
+getEditDistance = function(table, editScore, code){
+  
+  total = sum(table) # codons in this sequence
+  unc = sum(diag(table)) # unchanged codons
+  cc = total-unc # changed codons
+  ncp = unchangednonCCCodons(table,code) # no change possible
+  
+  sumCCandNCP = sumCC+ncp # non cc codons in the original sequence
+  
+  cc_p = sumCC/sumCCandNCP #percent that has been changed
+  ncp_p = ncp/sumCCandNCP #percent that could not be changed
+  
+  distance = ncp_p + cc_p*(1-editScore)
+  
+  return(distance)
+  
+}
 
 #' compares two codons and scores them
 #' Base 1 the same +4

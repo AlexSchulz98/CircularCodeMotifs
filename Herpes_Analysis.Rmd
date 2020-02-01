@@ -323,27 +323,42 @@ Base 3 the same +2
 Sum of both ratings is multiplied with the amount of circular codes in the new sequence (code usage). 
 Logarithm to center score around 0. Max. score is 1. Worst score is -1
 
-Which leads to this score for following sequences:
+Which leads to this edit score and edit distance for following sequences:
 ```{r}
-val23_0 = valueTable(rds23_0, code23,p23_0)
-round(val23_0,2)
+editScore23_0 = getEditScore(rds23_0)
+round(editScore23_0,4)
+editDistance23_0 = getEditDistance(rds23_0,editScore23_0,code23)
+round(editDistance23_0,2)
 
-val172_0 = valueTable(rds172_0, codes.c3[[172]],p172_0)
-val173_0 = valueTable(rds173_0, codes.c3[[173]],p173_0)
+editScore172_0 = getEditScore(rds172_0)
+editDistance172_0 = getEditDistance(rds172_0,editScore172_0,codes.c3[[172]])
+editScore173_0 = getEditScore(rds173_0)
+editDistance173_0 = getEditDistance(rds173_0,editScore173_0,codes.c3[[173]])
 
-val191_1 = valueTable(rds191_1, codes.c3[[191]],p191_1)
-val42_1 = valueTable(rds42_1, codes.c3[[42]],p42_1)
-val126_1 = valueTable(rds126_1, codes.c3[[126]],p126_1)
+editScore191_1 = getEditScore(rds191_1)
+editDistance191_1 = getEditDistance(rds191_1,editScore191_1,codes.c3[[191]])
+editScore42_1 = getEditScore(rds42_1)
+editDistance42_1 = getEditDistance(rds42_1,editScore42_1,codes.c3[[42]])
+editScore126_1 = getEditScore(rds126_1)
+editDistance126_1 = getEditDistance(rds126_1,editScore126_1,codes.c3[[126]])
 
-val23_1 = valueTable(rds23_1, code23,p23_1)
-round(val23_1,2)
+editScore23_1 = getEditScore(rds23_1)
+round(editScore23_1,4)
+editDistance23_1 = getEditDistance(rds23_1,editScore23_1,code23)
+round(editDistance23_1,2)
 
-val210_2 = valueTable(rds210_2, codes.c3[[210]],p210_2)
-val89_2 = valueTable(rds89_2, codes.c3[[89]],p89_2)
-val88_2 = valueTable(rds88_2, codes.c3[[88]],p88_2)
 
-val23_2 = valueTable(rds23_2, code23,p23_2)
-round(val23_2,2)
+editScore210_2 = getEditScore(rds210_2)
+editDistance210_2 = getEditDistance(rds210_2,editScore210_2,codes.c3[[210]])
+editScore89_2 = getEditScore(rds89_2)
+editDistance89_2 = getEditDistance(rds89_2,editScore89_2,codes.c3[[89]])
+editScore88_2 = getEditScore(rds88_2)
+editDistance88_2 = getEditDistance(rds88_2,editScore88_2,codes.c3[[88]])
+
+editScore23_2 = getEditScore(rds23_2)
+round(editScore23_2,4)
+editDistance23_2 = getEditDistance(rds23_2,editScore23_2,code23)
+round(editDistance23_2,2)
 ```
 
 Summary for X23 frame 0:
@@ -353,7 +368,7 @@ paste("----- changed:", cc23_0, "(", round(cc23_0/ca23_0,2),")")
 paste("----- not changed:", nc23_0, "(", round(nc23_0/ca23_0,2),")")
 paste("----- not changed because no good substitute:", unc23_0, "(", round(unc23_0/ca23_0,2),")")
 paste("----- not changed because already part of circular code:", nc23_0-unc23_0, "(", round((nc23_0-unc23_0)/ca23_0,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",round(val23_0,2))
+paste("Score:",round(editScore23_0,2))
 ```
 Summary for X23 frame 1:
 ```{r}
@@ -362,7 +377,7 @@ paste("----- changed:", cc23_1, "(", round(cc23_1/ca23_1,2),")")
 paste("----- not changed:", nc23_1, "(", round(nc23_1/ca23_1,2),")")
 paste("----- not changed because no good substitute:", unc23_1, "(", round(unc23_1/ca23_1,2),")")
 paste("----- not changed because already part of circular code:", nc23_1-unc23_1, "(", round((nc23_1-unc23_1)/ca23_1,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",round(val23_1,2))
+paste("Score:",round(editScore23_1,2))
 ```
 
 Summary for X23 frame 2:
@@ -372,7 +387,7 @@ paste("----- changed:", cc23_2, "(", round(cc23_2/ca23_2,2),")")
 paste("----- not changed:", nc23_2, "(", round(nc23_2/ca23_2,2),")")
 paste("----- not changed because no good substitute:", unc23_2, "(", round(unc23_2/ca23_2,2),")")
 paste("----- not changed because already part of circular code:", nc23_2-unc23_2, "(", round((nc23_2-unc23_2)/ca23_2,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",round(val23_2,2))
+paste("Score:",round(editScore23_2,2))
 ```
 
 
@@ -402,18 +417,19 @@ not_needed = c(nc23_0-unc23_0,nc172_0-unc172_0,nc173_0-unc173_0,
 not_n = c(round((nc23_0-unc23_0)/ca23_0,2),round((nc172_0-unc172_0)/ca172_0,2),round((nc173_0-unc173_0)/ca173_0,2),
           round((nc191_1-unc191_1)/ca191_1,2),round((nc42_1-unc42_1)/ca42_1,2),round((nc126_1-unc126_1)/ca126_1,2),round((nc23_1-unc23_1)/ca23_1,2),
           round((nc210_2-unc210_2)/ca210_2,2),round((nc89_2-unc89_2)/ca89_2,2),round((nc88_2-unc88_2)/ca88_2,2),round((nc23_2-unc23_2)/ca23_2,2))
-c_score = c(round(val23_0,2),round(val172_0,2),round(val173_0,2),
-            round(val191_1,2),round(val42_1,2),round(val126_1,2),round(val23_1,2),
-            round(val210_2,2),round(val89_2,2),round(val88_2,2),round(val23_2,2))
-a_score = c()
-score = c()
+editScore = c(round(editScore23_0,4),round(editScore172_0,4),round(editScore173_0,4),
+            round(editScore191_1,4),round(editScore42_1,4),round(editScore126_1,4),round(editScore23_1,4),
+            round(editScore210_2,4),round(editScore89_2,4),round(editScore88_2,4),round(editScore23_2,4))
+editDistance = c(round(editDistance23_0,2),round(editDistance172_0,2),round(editDistance173_0,2),
+            round(editDistance191_1,2),round(editDistance42_1,2),round(editDistance126_1,2),round(editDistance23_1,2),
+            round(editDistance210_2,2),round(editDistance89_2,2),round(editDistance88_2,2),round(editDistance23_2,2))
 
 rows = c("23_0","172_0","173_0",
          "191_1","42_1","126_1","23_1",
          "210_2","89_2","88_2","23_2")
 
 
-df = data.frame(changed,ch,not_changed,not_ch,not_possible,not_p,not_needed,not_n,c_score,
+df = data.frame(changed,ch,not_changed,not_ch,not_possible,not_p,not_needed,not_n,editScore,editDistance,
                 row.names = rows)
 
 kable(
