@@ -186,3 +186,57 @@ changeReadingFrame = function(targetFrame, seq){
   return(subseq(seq,start=targetFrame+1))
 }
 
+
+#'calculates how many of the given sequences contain IUPAC codes
+#'@param seqSet Set of sequences
+#'@param rangeStart e.g. 1
+#'@param rangeEnd e.g. 1000
+#'@return amount of sequences which contain IUPAC codes
+getIUAPCCodesCount = function(seqSet, rangeStart, rangeEnd){
+  sum = 0
+  
+  for (i in rangeStart:rangeEnd) {
+    skip = FALSE
+    tryCatch({
+      tmp = suppressWarnings(Biostrings::codons(seqSet[[i]]))
+    }, error=function(e){
+      skip <<- TRUE
+      sum <<- sum+1
+    }
+    )
+    if (skip == TRUE) {
+      next
+    }
+  }
+  return(sum)
+}
+
+
+#' deletes all sequences in a sequence Set which contain IUPAC codes
+#' @param seqSet sequence set
+#' @return new (probably shorter) sequence set
+deleteIUPACSequences = function(seqSet){
+  
+  newSeqSet = DNAStringSet()
+  j = 1
+  
+  for (i in 1:length(seqSet)) {
+    skip = FALSE
+    tryCatch({
+      tmp = suppressWarnings(Biostrings::codons(seqSet[[i]]))
+    }, error=function(e){
+      skip <<- TRUE
+    }
+    )
+    if (skip == TRUE) {
+      next
+    }
+    else {
+      newSeqSet[j] = seqSet[i]
+      j = j+1
+    }
+ 
+  }
+  return(newSeqSet)
+}
+

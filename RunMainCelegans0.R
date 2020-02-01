@@ -6,6 +6,9 @@ seqSet = readDNAStringSet("cds/celegans.fasta") # DNA (RNA) sequence set
 seqName = "Celegans" #for naming generated files
 circularCodes = c(23,24,122,171)
 
+seqSet = seqSet[1:1010]
+seqSet = deleteIUPACSequences(seqSet)
+
 for (i in 0) {
   start_time_frame <- Sys.time()
   
@@ -65,12 +68,6 @@ for (i in 0) {
   print(end_time_frame - start_time_frame)
   
 }
-
-# saveRDS(object = outputMatrix_codons, file = paste("output_matrixes_codons/codons_outputMatrix_",seqName,".RDS", sep = ""))
-# write.xlsx(outputMatrix_codons, file ="output_matrixes_codons/codons_outputMatrix.xlsx", sheetName = seqName,col.names = TRUE, row.names = TRUE, append = TRUE)
-# 
-# saveRDS(object = outputMatrix_aminos, file = paste("output_matrixes_aminos/aminos_outputMatrix_",seqName,".RDS", sep = ""))
-# write.xlsx(outputMatrix_aminos, file ="output_matrixes_aminos/aminos_outputMatrix.xlsx", sheetName = seqName,col.names = TRUE, row.names = TRUE, append = TRUE)
 
 end_time_global <- Sys.time()
 print("Finished")

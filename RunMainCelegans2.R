@@ -6,6 +6,9 @@ seqSet = readDNAStringSet("cds/celegans.fasta") # DNA (RNA) sequence set
 seqName = "Celegans" #for naming generated files
 circularCodes = c(193,192,88,23)
 
+seqSet = seqSet[1:1010]
+seqSet = deleteIUPACSequences(seqSet)
+
 for (i in 2) {
   start_time_frame <- Sys.time()
   
