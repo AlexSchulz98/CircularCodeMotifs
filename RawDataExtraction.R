@@ -137,15 +137,18 @@ getEditDistance = function(table, editScore, code){
   
   total = sum(table) # codons in this sequence
   unc = sum(diag(table)) # unchanged codons
+  
   cc = total-unc # changed codons
   ncp = unchangednonCCCodons(table,code) # no change possible
   
-  sumCCandNCP = sumCC+ncp # non cc codons in the original sequence
+  #sumCCandNCP = sumCC+ncp # non cc codons in the original sequence
   
-  cc_p = sumCC/sumCCandNCP #percent that has been changed
-  ncp_p = ncp/sumCCandNCP #percent that could not be changed
+  #cc_p = cc/sumCCandNCP #percent that has been changed
+  #ncp_p = ncp/sumCCandNCP #percent that could not be changed
+  cc_p = cc/total # percent that has been changed
+  ncp_p = ncp/total #percent that could not be changed
   
-  distance = ncp_p + cc_p*(1-editScore)
+  distance = cc_p*(1-editScore) + ncp_p 
   
   return(distance)
   
