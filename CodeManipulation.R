@@ -192,7 +192,7 @@ changeReadingFrame = function(targetFrame, seq){
 #'@param rangeStart e.g. 1
 #'@param rangeEnd e.g. 1000
 #'@return amount of sequences which contain IUPAC codes
-getIUAPCCodesCount = function(seqSet, rangeStart, rangeEnd){
+getIUPACCodesCount = function(seqSet, rangeStart, rangeEnd){
   sum = 0
   
   for (i in rangeStart:rangeEnd) {
