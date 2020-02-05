@@ -1,6 +1,9 @@
 ---
 title: "Herpes_Analysis"
-output: html_document
+author: "Alexander Schulz"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r include=FALSE}
@@ -14,31 +17,28 @@ source("Parameter.R")
 
 For Herpes following circular codes showed a high code usage in the unmodified sequence and have therefore been chosen to further look into:
 
-circular codes for frame 0 = 172,173,23 #X23 part of Top 3
+circular codes for frame 0 = 172,173,23 
 circular codes for frame 1 = 191,42,126,23
 circular codes for frame 2 = 210,89,88,23
 
 Note that circular code 23 is not part of the Top 3 in frame 1 and 2. But because of an overall good result regarding code usage in all tested organisms, it's part of the selection.
 ```{r echo=FALSE}
-# cid23 = 23 # code ID
-# cid1 = 117 # code ID
-# cid2 = 22 # code ID
 
 file ="cds/ena-herpes.fasta"
 
-file172_0 = "output_sequences/output_Herpes_X172_frame_0.fasta"
-file173_0 = "output_sequences/output_Herpes_X173_frame_0.fasta"
-file23_0 = "output_sequences/output_Herpes_X23_frame_0.fasta"
+file172_0 = "output_sequences/Herpes/output_Herpes_X172_frame_0.fasta"
+file173_0 = "output_sequences/Herpes/output_Herpes_X173_frame_0.fasta"
+file23_0 = "output_sequences/Herpes/output_Herpes_X23_frame_0.fasta"
 
-file191_1 = "output_sequences/output_Herpes_X191_frame_1.fasta"
-file42_1 = "output_sequences/output_Herpes_X42_frame_1.fasta"
-file126_1 = "output_sequences/output_Herpes_X126_frame_1.fasta"
-file23_1 = "output_sequences/output_Herpes_X23_frame_1.fasta"
+file191_1 = "output_sequences/Herpes/output_Herpes_X191_frame_1.fasta"
+file42_1 = "output_sequences/Herpes/output_Herpes_X42_frame_1.fasta"
+file126_1 = "output_sequences/Herpes/output_Herpes_X126_frame_1.fasta"
+file23_1 = "output_sequences/Herpes/output_Herpes_X23_frame_1.fasta"
 
-file210_2 = "output_sequences/output_Herpes_X210_frame_2.fasta"
-file89_2 = "output_sequences/output_Herpes_X89_frame_2.fasta"
-file88_2 = "output_sequences/output_Herpes_X88_frame_2.fasta"
-file23_2 = "output_sequences/output_Herpes_X23_frame_2.fasta"
+file210_2 = "output_sequences/Herpes/output_Herpes_X210_frame_2.fasta"
+file89_2 = "output_sequences/Herpes/output_Herpes_X89_frame_2.fasta"
+file88_2 = "output_sequences/Herpes/output_Herpes_X88_frame_2.fasta"
+file23_2 = "output_sequences/Herpes/output_Herpes_X23_frame_2.fasta"
 
 seqLabel = "Herpes"
 #seqLabel = paste("Herpes", cid, sep = "/")
@@ -281,12 +281,7 @@ ccp88_2 =cc88_2/ca88_2
 ccp23_2 =cc23_2/ca23_2
 round(ccp23_2,2)
 ```
-Difference of cu in original sequence and code usage in modified sequence (should be equal to % codons changed):
-```{r}
-round(p23_0-p,2)
-round(p23_1-p,2)
-round(p23_2-p,2)
-```
+
 Amount of codons that could not be changed. Percent of all codons. 
 ```{r}
 unc23_0 = unchangednonCCCodons(rds23_0,codes.c3[[23]])
@@ -312,18 +307,165 @@ unc23_2 = unchangednonCCCodons(rds23_2,codes.c3[[23]])
 unc23_2
 round(unc23_2/ca23_2, 2)
 ```
-Rating for codons that did not need to be changed, because they already were part of the circular code:
-10
-Rating for the modified sequences:
-Base 1 the same +4
-Base 2 the same +4
-Base 3 the same +2
-1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
 
-Sum of both ratings is multiplied with the amount of circular codes in the new sequence (code usage). 
-Logarithm to center score around 0. Max. score is 1. Worst score is -1
+Average motif length:
+```{r}
+ml23_0 = ccmotif.lengthslist(ff23_0, code23)
+summary(ml23_0$incode)
+ml172_0 = ccmotif.lengthslist(ff172_0, codes.c3[[172]])
+summary(ml172_0$incode)
+ml173_0 = ccmotif.lengthslist(ff173_0, codes.c3[[173]])
+summary(ml173_0$incode)
+```
 
-Which leads to this edit score and edit distance for following sequences:
+```{r}
+ml191_1 = ccmotif.lengthslist(ff191_1, codes.c3[[191]])
+summary(ml191_1$incode)
+ml42_1 = ccmotif.lengthslist(ff42_1, codes.c3[[42]])
+summary(ml42_1$incode)
+ml126_1 = ccmotif.lengthslist(ff126_1, codes.c3[[126]])
+summary(ml126_1$incode)
+ml23_1 = ccmotif.lengthslist(ff23_1, codes.c3[[23]])
+summary(ml23_1$incode)
+```
+
+```{r}
+ml210_2 = ccmotif.lengthslist(ff210_2, codes.c3[[210]])
+summary(ml210_2$incode)
+ml89_2 = ccmotif.lengthslist(ff89_2, codes.c3[[89]])
+summary(ml89_2$incode)
+ml88_2 = ccmotif.lengthslist(ff88_2, codes.c3[[88]])
+summary(ml88_2$incode)
+ml23_2 = ccmotif.lengthslist(ff23_2, codes.c3[[23]])
+summary(ml23_2$incode)
+```
+
+Average non-motif length:
+```{r echo=FALSE}
+summary(ml23_0$outcode)
+summary(ml172_0$outcode)
+summary(ml173_0$outcode)
+```
+
+```{r}
+summary(ml191_1$outcode)
+summary(ml42_1$outcode)
+summary(ml126_1$outcode)
+summary(ml23_1$outcode)
+```
+
+```{r}
+summary(ml210_2$outcode)
+summary(ml89_2$outcode)
+summary(ml88_2$outcode)
+summary(ml23_2$outcode)
+```
+
+Motif length distribution: theoretical distribution (red) copared with the sample (blue):
+```{r echo=FALSE}
+r23_0 = ccmotif.classes(ml23_0$incode, p23_0, K = 18)
+ccmotif.barplotDiff(r23_0$sample, r23_0$geom, codeid = "Herpes - X23 Frame 0")
+
+r172_0 = ccmotif.classes(ml172_0$incode, p172_0, K = 18)
+ccmotif.barplotDiff(r172_0$sample, r172_0$geom, codeid = "Herpes - X172 Frame 0")
+
+r173_0 = ccmotif.classes(ml173_0$incode, p173_0, K = 18)
+ccmotif.barplotDiff(r173_0$sample, r173_0$geom, codeid = "Herpes - X173 Frame 0")
+
+
+r191_1 = ccmotif.classes(ml191_1$incode, p191_1, K = 18)
+ccmotif.barplotDiff(r191_1$sample, r191_1$geom, codeid = "Herpes - X191 Frame 1")
+
+r42_1 = ccmotif.classes(ml42_1$incode, p42_1, K = 18)
+ccmotif.barplotDiff(r42_1$sample, r42_1$geom, codeid = "Herpes - X42 Frame 1")
+
+r126_1 = ccmotif.classes(ml126_1$incode, p126_1, K = 18)
+ccmotif.barplotDiff(r126_1$sample, r126_1$geom, codeid = "Herpes - X126 Frame 1")
+
+r23_1 = ccmotif.classes(ml23_1$incode, p23_1, K = 18)
+ccmotif.barplotDiff(r23_1$sample, r23_1$geom, codeid = "Herpes - X23 Frame 1")
+
+
+r210_2 = ccmotif.classes(ml210_2$incode, p210_2, K = 18)
+ccmotif.barplotDiff(r210_2$sample, r210_2$geom, codeid = "Herpes - X210 Frame 2")
+
+r89_2 = ccmotif.classes(ml89_2$incode, p89_2, K = 18)
+ccmotif.barplotDiff(r89_2$sample, r89_2$geom, codeid = "Herpes - X89 Frame 2")
+
+r88_2 = ccmotif.classes(ml88_2$incode, p88_2, K = 18)
+ccmotif.barplotDiff(r88_2$sample, r88_2$geom, codeid = "Herpes - X88 Frame 2")
+
+r23_2 = ccmotif.classes(ml23_2$incode, p23_2, K = 18)
+ccmotif.barplotDiff(r23_2$sample, r23_2$geom, codeid = "Herpes - X23 Frame 2")
+```
+
+Expected mean value of the motif length vs real mean value:
+```{r echo=FALSE}
+E23_0 = function(p23_0) 1 / (1 - p23_0)
+mmt23_0 = E23_0(p23_0)
+mm23_0 = mean(ml23_0$incode)
+round(c(sample = mm23_0, expected = mmt23_0), digits = 2)
+
+E172_0 = function(p172_0) 1 / (1 - p172_0)
+mmt172_0 = E172_0(p172_0)
+mm172_0 = mean(ml172_0$incode)
+round(c(sample = mm172_0, expected = mmt172_0), digits = 2)
+
+E173_0 = function(p173_0) 1 / (1 - p173_0)
+mmt173_0 = E173_0(p173_0)
+mm173_0 = mean(ml173_0$incode)
+round(c(sample = mm173_0, expected = mmt173_0), digits = 2)
+
+```
+
+```{r}
+
+E191_1 = function(p191_1) 1 / (1 - p191_1)
+mmt191_1 = E191_1(p191_1)
+mm191_1 = mean(ml191_1$incode)
+round(c(sample = mm191_1, expected = mmt191_1), digits = 2)
+
+E42_1 = function(p42_1) 1 / (1 - p42_1)
+mmt42_1 = E42_1(p42_1)
+mm42_1 = mean(ml42_1$incode)
+round(c(sample = mm42_1, expected = mmt42_1), digits = 2)
+
+E126_1 = function(p126_1) 1 / (1 - p126_1)
+mmt126_1 = E126_1(p126_1)
+mm126_1 = mean(ml126_1$incode)
+round(c(sample = mm126_1, expected = mmt126_1), digits = 2)
+
+E23_1 = function(p23_1) 1 / (1 - p23_1)
+mmt23_1 = E23_1(p23_1)
+mm23_1 = mean(ml23_1$incode)
+round(c(sample = mm23_1, expected = mmt23_1), digits = 2)
+
+```
+
+```{r}
+
+E210_2 = function(p210_2) 1 / (1 - p210_2)
+mmt210_2 = E210_2(p210_2)
+mm210_2 = mean(ml210_2$incode)
+round(c(sample = mm210_2, expected = mmt210_2), digits = 2)
+
+E89_2 = function(p89_2) 1 / (1 - p89_2)
+mmt89_2 = E89_2(p89_2)
+mm89_2 = mean(ml89_2$incode)
+round(c(sample = mm89_2, expected = mmt89_2), digits = 2)
+
+E88_2 = function(p88_2) 1 / (1 - p88_2)
+mmt88_2 = E88_2(p88_2)
+mm88_2 = mean(ml88_2$incode)
+round(c(sample = mm88_2, expected = mmt88_2), digits = 2)
+
+E23_2 = function(p23_2) 1 / (1 - p23_2)
+mmt23_2 = E23_2(p23_2)
+mm23_2 = mean(ml23_2$incode)
+round(c(sample = mm23_2, expected = mmt23_2), digits = 2)
+```
+
+Edit Score and Edit Distance:
 ```{r}
 editScore23_0 = getEditScore(rds23_0)
 round(editScore23_0,4)
@@ -361,36 +503,6 @@ editDistance23_2 = getEditDistance(rds23_2,editScore23_2,code23)
 round(editDistance23_2,2)
 ```
 
-Summary for X23 frame 0:
-```{r}
-paste("Codons in set:", ca23_0)
-paste("----- changed:", cc23_0, "(", round(cc23_0/ca23_0,2),")")
-paste("----- not changed:", nc23_0, "(", round(nc23_0/ca23_0,2),")")
-paste("----- not changed because no good substitute:", unc23_0, "(", round(unc23_0/ca23_0,2),")")
-paste("----- not changed because already part of circular code:", nc23_0-unc23_0, "(", round((nc23_0-unc23_0)/ca23_0,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",round(editScore23_0,2))
-```
-Summary for X23 frame 1:
-```{r}
-paste("Codons in set:", ca23_1)
-paste("----- changed:", cc23_1, "(", round(cc23_1/ca23_1,2),")")
-paste("----- not changed:", nc23_1, "(", round(nc23_1/ca23_1,2),")")
-paste("----- not changed because no good substitute:", unc23_1, "(", round(unc23_1/ca23_1,2),")")
-paste("----- not changed because already part of circular code:", nc23_1-unc23_1, "(", round((nc23_1-unc23_1)/ca23_1,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",round(editScore23_1,2))
-```
-
-Summary for X23 frame 2:
-```{r}
-paste("Codons in set:", ca23_2)
-paste("----- changed:", cc23_2, "(", round(cc23_2/ca23_2,2),")")
-paste("----- not changed:", nc23_2, "(", round(nc23_2/ca23_2,2),")")
-paste("----- not changed because no good substitute:", unc23_2, "(", round(unc23_2/ca23_2,2),")")
-paste("----- not changed because already part of circular code:", nc23_2-unc23_2, "(", round((nc23_2-unc23_2)/ca23_2,2),")", "| note: code usage in original sequence:", round(p,2))
-paste("Score:",round(editScore23_2,2))
-```
-
-
 Summary Herpes Virus: 
 ```{r}
 changed = c(cc23_0,cc172_0,cc173_0,
@@ -417,6 +529,7 @@ not_needed = c(nc23_0-unc23_0,nc172_0-unc172_0,nc173_0-unc173_0,
 not_n = c(round((nc23_0-unc23_0)/ca23_0,2),round((nc172_0-unc172_0)/ca172_0,2),round((nc173_0-unc173_0)/ca173_0,2),
           round((nc191_1-unc191_1)/ca191_1,2),round((nc42_1-unc42_1)/ca42_1,2),round((nc126_1-unc126_1)/ca126_1,2),round((nc23_1-unc23_1)/ca23_1,2),
           round((nc210_2-unc210_2)/ca210_2,2),round((nc89_2-unc89_2)/ca89_2,2),round((nc88_2-unc88_2)/ca88_2,2),round((nc23_2-unc23_2)/ca23_2,2))
+
 editScore = c(round(editScore23_0,4),round(editScore172_0,4),round(editScore173_0,4),
             round(editScore191_1,4),round(editScore42_1,4),round(editScore126_1,4),round(editScore23_1,4),
             round(editScore210_2,4),round(editScore89_2,4),round(editScore88_2,4),round(editScore23_2,4))
@@ -437,6 +550,24 @@ kable(
   caption = paste("Summary for Herpes Virus x23 || original codon usage (x23):",round(p,2))
 )
 ```
+
+Fill matrix with table:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,66 +1,71 @@
+source("Parameter.R")
+source("RawDataExtraction.R")
 
-# -----
-# for (i in 1:3) { #length(codes.c3)
-#   
-#   start_time_run <- Sys.time()
-#   
-#   fileName = paste("output_sequences/output_SarsVirus_X", i, ".fasta", sep ="")
-#   newSeq = readDNAStringSet(fileName)
-#   
-#   for (z in 1:length(seqSet)) {
-#     start_time_tables <- Sys.time()
-#     
-#     outputMatrix_codons = codonCount(codon_table, length(codes.c3), seqSet[[z]], newSeq[[z]], i)
-#     codon_table = outputMatrix_codons
-#     
-#     
-#     outputMatrix_aminos = aminoCount(amino_table, length(codes.c3), seqSet[[z]], newSeq[[z]], i)
-#     amino_table = outputMatrix_aminos
-#     
-#     end_time_tables <- Sys.time()
-#     
-#     print(paste("Done with set",z,"/",length(seqSet),"(X-Code:",i,")"))
-#     print(end_time_tables - start_time_tables)
-#     
-#   }
-#   
-#   end_time_run <- Sys.time()
-#   print(paste("X-Code",i,"finished"))
-#   print(end_time_run - start_time_run)
-# }
-# ----
+path = "D:/Projekte/BA Circular Code/output_sequences/EscherichiaColi/" #change here
+fastafile = list.files(path, pattern = "*.fasta") 
 
-# ###### Frameshift beachten! #######
-# dnaf = readDNAStringSet(file)
-# 
-# for (j in 1:pmin(length(dnaf), 1000)) {
-#   dnaf[[j]] = changeReadingFrame(1, dnaf[[j]])
-# }
+dnaf = readDNAStringSet("cds/Escherichia_coli.HUSEC2011CHR1.cds.all.fasta") #change here
 
-start_time_files <- Sys.time()
-
-ar = generateEmptyTable(64,64,CODONS)
-
-dnafmod = readDNAStringSet(file23_2) #change here
-seqName = "Herpes_X23_frame_2" #change here
-
-for (i in 1:length(dnafmod)) {
-  outputMatrix_codons = codonCount(ar,dnaf[[i]], dnafmod[[i]])
-  ar = outputMatrix_codons
+dnaf1 = dnaf
+for (j in 1:pmin(length(dnaf), 1000)) {
+  dnaf1[[j]] = changeReadingFrame(1, dnaf[[j]])
+}
+dnaf2 = dnaf
+for (j in 1:pmin(length(dnaf), 1000)) {
+  dnaf2[[j]] = changeReadingFrame(2, dnaf[[j]])
 }
 
-saveRDS(
-  object = outputMatrix_codons,
-  file = paste(
-    "output_matrixes_codons/codons_outputMatrix_",
-    seqName,
-    ".RDS",
-    sep = ""
-  )
-)
 
-end_time_files <- Sys.time()
-print(end_time_files - start_time_files)
+for (h in 1:length(fastafile)) {
+  
+  print(fastafile[h])
+  tmp = unlist(strsplit(fastafile[h],"_"))
+  seqName = tmp[1]
+  code = tmp[2]
+  frame = unlist(strsplit(tmp[3],".fasta"))
+  
+  ar = generateEmptyTable(64, 64, CODONS)
+  
+  dnafmod = readDNAStringSet(paste(path,fastafile[h],sep=""))
+  
+  if (as.numeric(frame) == 0) {
+    for (i in 1:length(dnafmod)) {
+      outputMatrix_codons = codonCount(ar, dnaf[[i]], dnafmod[[i]])
+      ar = outputMatrix_codons
+      print(paste("Done with sequence", i, "/",length(dnafmod)))
+    }
+  } else if (as.numeric(frame) == 1) {
+    for (i in 1:length(dnafmod)) {
+      outputMatrix_codons = codonCount(ar, dnaf1[[i]], dnafmod[[i]])
+      ar = outputMatrix_codons
+      print(paste("Done with sequence", i, "/",length(dnafmod)))
+    }
+  } else if (as.numeric(frame) == 2) {
+    for (i in 1:length(dnafmod)) {
+      outputMatrix_codons = codonCount(ar, dnaf2[[i]], dnafmod[[i]])
+      ar = outputMatrix_codons
+      print(paste("Done with sequence", i, "/",length(dnafmod)))
+    }
+  } else {
+    print("Error")
+  }
+  
+  saveRDS(
+    object = outputMatrix_codons,
+    file = paste(
+      "output_matrixes_codons/",
+      seqName,
+      "_",
+      code,
+      "_",
+      frame,
+      ".RDS",
+      sep = ""
+    )
+  )
+  
+}
+
 
 # write.xlsx(
 #   rds23_1,
@@ -73,50 +78,6 @@ print(end_time_files - start_time_files)
 #   row.names = TRUE,
 #   append = TRUE
 # )
-
-
-#----
-# # RDS codons
-# saveRDS(
-#   object = outputMatrix_codons,
-#   file = paste(
-#     "output_matrixes_codons/codons_outputMatrix_",
-#     seqName,
-#     ".RDS",
-#     sep = ""
-#   )
-# )
-# 
-# #RDS amino acids
-# saveRDS(
-#   object = outputMatrix_aminos,
-#   file = paste(
-#     "output_matrixes_aminos/aminos_outputMatrix_",
-#     seqName,
-#     ".RDS",
-#     sep = ""
-#   )
-# )
-
-# write.xlsx(
-#   outputMatrix_codons,
-#   file = "output_matrixes_codons/codons_outputMatrix.xlsx",
-#   sheetName = seqName,
-#   col.names = TRUE,
-#   row.names = TRUE,
-#   append = TRUE
-# )
-# 
-# write.xlsx(
-#   outputMatrix_aminos,
-#   file = "output_matrixes_aminos/aminos_outputMatrix.xlsx",
-#   sheetName = seqName,
-#   col.names = TRUE,
-#   row.names = TRUE,
-#   append = TRUE
-# )
-
-
 
 
 #Nützliche CCMotif Funktionen:
