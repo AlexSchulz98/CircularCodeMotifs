@@ -1,6 +1,6 @@
-# library(Biostrings)
-# library(ccmotif)
-#source("CodeManipulation.R")
+library(Biostrings)
+library(ccmotif)
+source("CodeManipulation.R")
 
 
 #' generates modified sequence

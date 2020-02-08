@@ -1,4 +1,4 @@
-#library(Biostrings)
+library(Biostrings)
 
 #' Check if codon is part of the circular codes
 #' @param codon xStringViews or String codon, single

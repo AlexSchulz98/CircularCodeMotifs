@@ -1,0 +1,121 @@
+---
+title: "StopCodonFreeCodes"
+author: "Alexander Schulz"
+date: "7 2 2020"
+output: html_document
+---
+
+```{r}
+library("ccmotif") # Version 0.6.6
+```
+
+
+DIESE DATEI IST MIT DEN BEIDEN SCRIPTS UNNÖTIG GEWORDEN
+
+Set files
+```{r}
+pathSeq = "../BA Circular Code/cds/" #Change here
+filenames = list.files(pathSeq, pattern = "*.fasta")
+```
+ONLY FRAME 0 !!
+```{r}
+
+df = data.frame(File=c(),
+                Code=c(),
+                CodeUsage=c())
+
+
+for (i in 1:length(filenames)) { 
+  
+  ff = read.fasta(paste(pathSeq,filenames[i],sep=""), as.string = TRUE, forceDNAtolower = FALSE)
+  
+  file = filenames[i]
+  print(file)
+  
+  codons = codon.splitlist(ff)
+  cu = codon.usage(codons)
+
+  for (h in 1:length(codes.c3)) {
+    
+    stop = codes.containsStop(codes.c3[[h]]$codons)
+    
+      if (stop == TRUE) {
+        
+        code = h
+        print(code)
+        
+        p = codes.usage(cu, codes.c3[[code]]) #Code Usage
+        
+        print(paste(code, p))
+        
+        #Fill data frame
+        tmp = data.frame(File=file,
+                  Code=code,
+                  CodeUsage=round(p,3))
+        df = rbind(df,tmp)
+
+      }
+  }
+}
+```
+
+Sort the data frame
+```{r}
+for (i in 1:length(filenames)) {
+  
+  file = filenames[i]
+  print(file)
+  
+  subFrame = df[df$File==file,]
+  subFrame = subFrame[order(-subFrame$CodeUsage),]
+  
+  saveRDS(
+    object = subFrame,
+    file = paste(
+      "CodeUsage/",
+      "CodeUsage",
+      "_",
+      file,
+      "_",
+      "NoStopCodon",
+      ".RDS",
+      sep = ""
+    )
+  )
+  
+}
+
+
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
