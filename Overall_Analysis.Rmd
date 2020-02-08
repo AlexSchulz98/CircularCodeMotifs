@@ -11,7 +11,8 @@ library("ggplot2")
 library("ccmotif") # Version 0.6.6
 library("Biostrings")
 library("knitr")
-source("Parameter.R")
+library("xlsx")
+source("RawDataExtraction.R")
 ```
 
 Change here:
@@ -27,12 +28,14 @@ Iterate through all files. Result is stored in data frame:
 ```{r echo=FALSE}
 df = data.frame(Organism=c(),
                 Code=c(),
+                HasStop=c(),
                 Frame=c(),
                 Code_Usage=c(),
                 Changed_Codons=c(),
                 Sample_MML=c(),
                 Expected_MML=c(),
                 Diff_MML=c(),
+                Max_ML=c(),
                 Edit_Score=c(),
                 Edit_Distance=c())
 
@@ -51,6 +54,10 @@ for (i in 1:length(filenames)) {
   print(organism)
   print(code)
   print(frame)
+  
+  #Code with Stop Codons?
+  stop = codes.containsStop(codes.c3[[as.numeric(code)]]$codons)
+  # TRUE == no stop codon in code   # False == contains stop codon (ccmotif 0.6.6)
   
   #Codon Distribution
   codons = codon.splitlist(ff)
@@ -88,7 +95,9 @@ for (i in 1:length(filenames)) {
   #Average motif length:
   ml = ccmotif.lengthslist(ff, codes.c3[[as.numeric(code)]])
   print("Incode:")
-  print(summary(ml$incode))
+  sum_ml_incode = summary(ml$incode)
+  print(sum_ml_incode)
+  max_ml = sum_ml_incode[[6]]
   print("Outcode:")
   print(summary(ml$outcode))
   
@@ -113,19 +122,21 @@ for (i in 1:length(filenames)) {
   #Fill data frame
   tmp = data.frame(Organism=organism,
                   Code=code,
+                  HasStop=!stop,
                   Frame=frame,
                   Code_Usage=round(p,2),
                   Changed_Codons=round(cc_p,2),
                   Sample_MML=round(mm,2),
                   Expected_MML=round(mmt,2),
-                  Diff_MML=round(mmt,2),
+                  Diff_MML=round(mmd,2),
+                  Max_ML=max_ml,
                   Edit_Score=round(editScore,3),
                   Edit_Distance=round(editDistance,2))
   
   df = rbind(df,tmp)
 }
 
-names(df) = c("Organism","Code","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Lenght","Expected Mean Motif Lenght","Diff","Edit Score","Edit Distance")
+names(df) = c("Organism","Code","Contains Stop-Codons?","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Lenght","Expected Mean Motif Lenght","Diff","Max. Motif Length","Edit Score","Edit Distance")
 
 ```
 
@@ -145,10 +156,9 @@ kable(
 ```
 
 
-
-
-
-#Nützliche CCMotif Funktionen:
-# ccmotif.scan.fasta --> Analysis of motif lengths in a list of fasta sequences (spuckt 3 datein aus)
-
+```{r}
+date = Sys.Date()
+write.xlsx(df, file = "Summary_Analysis.xlsx",
+      sheetName = toString(date), append = TRUE)
+```
 

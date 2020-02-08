@@ -12,11 +12,9 @@ start_time_global <- Sys.time()
 
 seqSet_input = readDNAStringSet("cds/ena-sars.fasta") # change here
 seqName = "SarsVirus" # change here          
-circularCodes = c(3,5) # change here
-frame = 0 # change here
+circularCodes = c(188,51,49) # change here
+frame = 1 # change here
 setLength = 1000 #change here
-
-seqSet_input = seqSet_input[10:11]
 
 seqSet = seqSet_input
   
@@ -46,13 +44,13 @@ seqSet = seqSet_input
         sequences = newSeq,
         names = paste("modified", names(seqSet[z])),
         file.out = paste(
-          "output_sequences/",
+          "output_sequences_new/",
           seqName,
           "_",
           ccNumber, 
           "_",
           frame,
-          "1.fasta",
+          ".fasta",
           sep = ""
         ),
         open = "a",
