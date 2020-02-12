@@ -58,6 +58,7 @@ for (i in 1:length(filenames)) {
   #Code with Stop Codons?
   stop = codes.containsStop(codes.c3[[as.numeric(code)]]$codons)
   # TRUE == no stop codon in code   # False == contains stop codon (ccmotif 0.6.6)
+  # !stop is printed
   
   #Codon Distribution
   codons = codon.splitlist(ff)
@@ -136,7 +137,7 @@ for (i in 1:length(filenames)) {
   df = rbind(df,tmp)
 }
 
-names(df) = c("Organism","Code","Contains Stop-Codons?","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Lenght","Expected Mean Motif Lenght","Diff","Max. Motif Length","Edit Score","Edit Distance")
+names(df) = c("Organism","Code","Stop-Codons in Code?","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Lenght","Expected Mean Motif Lenght","Diff","Max. Motif Length","Edit Score","Edit Distance")
 
 ```
 
@@ -151,14 +152,48 @@ kable(
 ```{r}
   saveRDS(
     object = df,
-    file = "Summary_Analysis.RDS"
+    file = "analysis_results/Summary_Analysis.RDS"
   )
 ```
 
-
+Complete data frame:
 ```{r}
 date = Sys.Date()
-write.xlsx(df, file = "Summary_Analysis.xlsx",
-      sheetName = toString(date), append = TRUE)
+write.xlsx(df, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "complete", append = TRUE)
+```
+
+Splitted by Organism
+```{r}
+df_Org = split(df, df$Organism)
+
+for (i in 1:length(df_Org)) {
+  org = names(df_Org[i])
+  
+    # saveRDS(
+    # object = df_Org[i],
+    # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
+
+    write.xlsx(df_Org[i], file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = org, append = TRUE)
+}
+
+```
+
+Split by organism and stop-codons in code:
+```{r}
+df_Org_Stop = split(df, list(df$Organism, df$`Stop-Codons in Code?`))
+
+for (i in 1:length(df_Org_Stop)) {
+  org_stop = names(df_Org_Stop[i])
+  
+    # saveRDS(
+    # object = df_Org[i],
+    # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
+
+    write.xlsx(df_Org_Stop[i], file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = org_stop, append = TRUE)
+}
+
 ```
 

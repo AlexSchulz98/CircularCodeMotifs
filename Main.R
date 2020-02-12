@@ -32,7 +32,7 @@ main = function(seq, setX) {
         # there are no other codons part of X coding for the same amino acid, try to replace amino acid
         
         oldAminoAcid = Biostrings::translate(codonsOfSequence[[i]])
-        newAminoAcid = aminoAcidSubstitution(codonsOfSequence[[i]], setX, 0)
+        newAminoAcid = aminoAcidSubstitution(codonsOfSequence[[i]], setX, 0) # threshhold = 0 --> move to top
         
         if (newAminoAcid != oldAminoAcid) {
           # new amino acid found

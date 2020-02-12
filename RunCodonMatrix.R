@@ -6,13 +6,13 @@ source("Parameter.R")
 #' Input: directory only with mutated fasta files of the original sequence
 #' reads in all files and generates a 64x64 for each
 
-path = "../BA Circular Code/output_sequences/Sars/" # change mutated sequence set here
+path = "../BA Circular Code/output_sequences_new/Rein/" # change mutated sequence set here
 fastafile = list.files(path, pattern = "*.fasta") 
 
-dnaf = readDNAStringSet("cds/ena-sars.fasta") #change original sequence set here
+dnaf = readDNAStringSet("cds/ena-ch-reinhardtii.fasta") #change original sequence set here
 
-#dnaf = dnaf[1:1010] # change here for deleting IUPAC Codes
-#dnaf = deleteIUPACSequences(dnaf)
+dnaf = dnaf[1:1009] # change here for deleting IUPAC Codes
+dnaf = deleteIUPACSequences(dnaf)
 
 dnaf1 = dnaf
 for (j in 1:pmin(length(dnaf), 1000)) {

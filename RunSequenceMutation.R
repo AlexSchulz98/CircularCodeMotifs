@@ -10,11 +10,14 @@ source("Main.R")
 
 start_time_global <- Sys.time()
 
-seqSet_input = readDNAStringSet("cds/ena-sars.fasta") # change here
-seqName = "SarsVirus" # change here          
-circularCodes = c(188,51,49) # change here
+seqSet_input = readDNAStringSet("cds/ena-ch-reinhardtii.fasta") # change here
+seqName = "Reinhardtii" # change here          
+circularCodes = c(194) # change here
 frame = 1 # change here
-setLength = 1000 #change here
+setLength = 1009 #change here
+
+seqSet_input = seqSet_input[1:1009]
+seqSet_input = deleteIUPACSequences(seqSet_input)
 
 seqSet = seqSet_input
   

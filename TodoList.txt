@@ -3,8 +3,7 @@ TODO:
 
 ##DATEN
 
-Code auf Stopp-Codon testen --> codes.containsStop(codes.c3[[23]]$codons)
---> Top 3 ohne Stopp codon -----------------------------------------------------------kann auf CUDA, wenn scripts ready
+neue sequenzen --> matrix --> auswertung
 
 
 ##SCHREIBEN
@@ -13,9 +12,8 @@ LaTeX ausarbeiten
 --> Metrik 
 --> Grundlagen 
 --> Ergebnisse --> Tabelle beschreiben
-4421 wertbereich, von mir definiert mit begr?ndung
 
-edit distance vorsilbe geben oder abgrenzen, Score "S" nennen, distanz "D"
+eigenbegriff! edit distance vorsilbe geben oder abgrenzen, Score "S" nennen, distanz "D"
 matrix mathematisch definieren
 
 
