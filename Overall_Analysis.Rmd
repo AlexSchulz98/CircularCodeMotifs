@@ -2,7 +2,9 @@
 title: "Overall Analysis"
 author: "Alexander Schulz"
 date: "4 2 2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r include=FALSE}
@@ -137,7 +139,7 @@ for (i in 1:length(filenames)) {
   df = rbind(df,tmp)
 }
 
-names(df) = c("Organism","Code","Stop-Codons in Code?","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Lenght","Expected Mean Motif Lenght","Diff","Max. Motif Length","Edit Score","Edit Distance")
+names(df) = c("Organism","Code","Stop-Codons in Code?","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Length","Expected Mean Motif Length","Diff. Sample & Exp. Motif Length","Max. Motif Length","Edit-Score","Edit-Distance")
 
 ```
 
@@ -158,42 +160,106 @@ kable(
 
 Complete data frame:
 ```{r}
-date = Sys.Date()
 write.xlsx(df, file = "analysis_results/Summary_Analysis.xlsx",
-      sheetName = "complete", append = TRUE)
+      sheetName = "Complete", append = FALSE)
 ```
 
 Splitted by Organism
 ```{r}
-df_Org = split(df, df$Organism)
-
-for (i in 1:length(df_Org)) {
-  org = names(df_Org[i])
-  
-    # saveRDS(
-    # object = df_Org[i],
-    # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
-
-    write.xlsx(df_Org[i], file = "analysis_results/Summary_Analysis.xlsx",
-      sheetName = org, append = TRUE)
-}
+# df_Org = split(df, df$Organism)
+# 
+# for (i in 1:length(df_Org)) {
+#   org = names(df_Org[i])
+#   
+#     # saveRDS(
+#     # object = df_Org[i],
+#     # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
+# 
+#     write.xlsx(df_Org[i], file = "analysis_results/Summary_Analysis.xlsx",
+#       sheetName = org, append = TRUE)
+# }
 
 ```
 
 Split by organism and stop-codons in code:
 ```{r}
-df_Org_Stop = split(df, list(df$Organism, df$`Stop-Codons in Code?`))
-
-for (i in 1:length(df_Org_Stop)) {
-  org_stop = names(df_Org_Stop[i])
-  
-    # saveRDS(
-    # object = df_Org[i],
-    # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
-
-    write.xlsx(df_Org_Stop[i], file = "analysis_results/Summary_Analysis.xlsx",
-      sheetName = org_stop, append = TRUE)
-}
+# df_Org_Stop = split(df, list(df$Organism, df$`Stop-Codons in Code?`))
+# 
+# for (i in 1:length(df_Org_Stop)) {
+#   org_stop = names(df_Org_Stop[i])
+#   
+#     # saveRDS(
+#     # object = df_Org[i],
+#     # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
+# 
+#     write.xlsx(df_Org_Stop[i], file = "analysis_results/Summary_Analysis.xlsx",
+#       sheetName = org_stop, append = TRUE)
+# }
 
 ```
+
+Sorted by achieved code usage:
+```{r}
+df_cu = df[order(-df$`Achieved Code Usage`),]
+
+write.xlsx(df_cu, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by Code Usage", append = TRUE)
+```
+
+Sorted by % codons changed
+```{r}
+df_change = df[order(-df$`% of Codons changed`),]
+
+write.xlsx(df_change, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by % changed", append = TRUE)
+```
+
+Sorted by difference between sample and expected motif length
+```{r}
+df_diff = df[order(-df$`Diff. Sample & Exp. Motif Length`),]
+
+write.xlsx(df_diff, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by Diff", append = TRUE)
+```
+
+Sorted by max motif length
+```{r}
+df_max = df[order(-df$`Max. Motif Length`),]
+
+write.xlsx(df_max, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by max Motif Length", append = TRUE)
+```
+
+Sorted by edit-score
+```{r}
+df_s = df[order(-df$`Edit-Score`),]
+
+write.xlsx(df_s, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by Edit-Score", append = TRUE)
+```
+
+Sorted by edit-score
+```{r}
+df_d = df[order(-df$`Edit-Distance`),]
+
+write.xlsx(df_d, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by Edit-Distance", append = TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
