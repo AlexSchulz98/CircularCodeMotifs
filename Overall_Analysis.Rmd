@@ -2,9 +2,7 @@
 title: "Overall Analysis"
 author: "Alexander Schulz"
 date: "4 2 2020"
-output:
-  pdf_document: default
-  html_document: default
+output: html_notebook
 ---
 
 ```{r include=FALSE}
@@ -32,14 +30,13 @@ df = data.frame(Organism=c(),
                 Code=c(),
                 HasStop=c(),
                 Frame=c(),
-                Code_Usage=c(),
                 Changed_Codons=c(),
-                Sample_MML=c(),
-                Expected_MML=c(),
-                Diff_MML=c(),
-                Max_ML=c(),
+                Code_Usage=c(),
                 Edit_Score=c(),
-                Edit_Distance=c())
+                Edit_Distance=c(),
+                Increase_MML=c(),
+                Max_ML=c()
+                )
 
 for (i in 1:length(filenames)) { 
   
@@ -100,7 +97,7 @@ for (i in 1:length(filenames)) {
   print("Incode:")
   sum_ml_incode = summary(ml$incode)
   print(sum_ml_incode)
-  max_ml = sum_ml_incode[[6]]
+  max_ml = sum_ml_incode[[6]] # max motif length
   print("Outcode:")
   print(summary(ml$outcode))
   
@@ -113,7 +110,8 @@ for (i in 1:length(filenames)) {
   mmt = E(p)
   mm = mean(ml$incode)
   print(round(c(sample = mm, expected = mmt), digits = 2))
-  mmd = mm-mmt
+  mmd = mm-mmt # difference
+  mmi = mmd/mmt # increase in %
   
   #Edit Score and Edit Distance:
   editScore = getEditScore(rds)
@@ -127,19 +125,18 @@ for (i in 1:length(filenames)) {
                   Code=code,
                   HasStop=!stop,
                   Frame=frame,
-                  Code_Usage=round(p,2),
-                  Changed_Codons=round(cc_p,2),
-                  Sample_MML=round(mm,2),
-                  Expected_MML=round(mmt,2),
-                  Diff_MML=round(mmd,2),
-                  Max_ML=max_ml,
+                  Changed_Codons=round(cc_p*100,2),
+                  Code_Usage=round(p*100,2),
                   Edit_Score=round(editScore,3),
-                  Edit_Distance=round(editDistance,2))
+                  Edit_Distance=round(editDistance,2),
+                  Increase_MML=round(mmi*100,2),
+                  Max_ML=max_ml)
+
   
   df = rbind(df,tmp)
 }
 
-names(df) = c("Organism","Code","Stop-Codons in Code?","Frame","Achieved Code Usage","% of Codons changed","Sample Mean Motif Length","Expected Mean Motif Length","Diff. Sample & Exp. Motif Length","Max. Motif Length","Edit-Score","Edit-Distance")
+names(df) = c("Organism","Code","Stop-Codons in Code?","Frame","Mutated Codons (in %)","Achieved Code Usage (in %)","Edit-Score","Edit-Distance","Increase in Mean Motif Length (in %)","Max. Motif Length")
 
 ```
 
@@ -164,72 +161,21 @@ write.xlsx(df, file = "analysis_results/Summary_Analysis.xlsx",
       sheetName = "Complete", append = FALSE)
 ```
 
-Splitted by Organism
+Sorted by mutated Codons
 ```{r}
-# df_Org = split(df, df$Organism)
-# 
-# for (i in 1:length(df_Org)) {
-#   org = names(df_Org[i])
-#   
-#     # saveRDS(
-#     # object = df_Org[i],
-#     # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
-# 
-#     write.xlsx(df_Org[i], file = "analysis_results/Summary_Analysis.xlsx",
-#       sheetName = org, append = TRUE)
-# }
+df_change = df[order(-df$`Mutated Codons (in %)`),]
 
-```
-
-Split by organism and stop-codons in code:
-```{r}
-# df_Org_Stop = split(df, list(df$Organism, df$`Stop-Codons in Code?`))
-# 
-# for (i in 1:length(df_Org_Stop)) {
-#   org_stop = names(df_Org_Stop[i])
-#   
-#     # saveRDS(
-#     # object = df_Org[i],
-#     # file = paste("analysis_results/",name,"_Analysis.RDS",sep=""))
-# 
-#     write.xlsx(df_Org_Stop[i], file = "analysis_results/Summary_Analysis.xlsx",
-#       sheetName = org_stop, append = TRUE)
-# }
-
+write.xlsx(df_change, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by Mutated Codons", append = TRUE)
 ```
 
 Sorted by achieved code usage:
 ```{r}
-df_cu = df[order(-df$`Achieved Code Usage`),]
+df_cu = df[order(-df$`Achieved Code Usage (in %)`),]
 
 write.xlsx(df_cu, file = "analysis_results/Summary_Analysis.xlsx",
       sheetName = "Sorted by Code Usage", append = TRUE)
 ```
-
-Sorted by % codons changed
-```{r}
-df_change = df[order(-df$`% of Codons changed`),]
-
-write.xlsx(df_change, file = "analysis_results/Summary_Analysis.xlsx",
-      sheetName = "Sorted by % changed", append = TRUE)
-```
-
-Sorted by difference between sample and expected motif length
-```{r}
-df_diff = df[order(-df$`Diff. Sample & Exp. Motif Length`),]
-
-write.xlsx(df_diff, file = "analysis_results/Summary_Analysis.xlsx",
-      sheetName = "Sorted by Diff", append = TRUE)
-```
-
-Sorted by max motif length
-```{r}
-df_max = df[order(-df$`Max. Motif Length`),]
-
-write.xlsx(df_max, file = "analysis_results/Summary_Analysis.xlsx",
-      sheetName = "Sorted by max Motif Length", append = TRUE)
-```
-
 Sorted by edit-score
 ```{r}
 df_s = df[order(-df$`Edit-Score`),]
@@ -245,6 +191,24 @@ df_d = df[order(-df$`Edit-Distance`),]
 write.xlsx(df_d, file = "analysis_results/Summary_Analysis.xlsx",
       sheetName = "Sorted by Edit-Distance", append = TRUE)
 ```
+
+Sorted by increase in motif length
+```{r}
+df_inc = df[order(-df$`Increase in Mean Motif Length (in %)`),]
+
+write.xlsx(df_inc, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by Increase MML", append = TRUE)
+```
+
+Sorted by max motif length
+```{r}
+df_max = df[order(-df$`Max. Motif Length`),]
+
+write.xlsx(df_max, file = "analysis_results/Summary_Analysis.xlsx",
+      sheetName = "Sorted by max Motif Length", append = TRUE)
+```
+
+
 
 
 
