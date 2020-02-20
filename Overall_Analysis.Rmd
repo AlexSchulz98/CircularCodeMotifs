@@ -38,6 +38,12 @@ df = data.frame(Organism=c(),
                 Max_ML=c()
                 )
 
+df_extra = data.frame(Organism=c(),
+                      Code=c(),
+                      HasStop=c(),
+                      Frame=c(),
+                      bio_Code_Usage=c())
+
 for (i in 1:length(filenames)) { 
   
   ff = read.fasta(paste(pathSeq,filenames[i],sep=""), as.string = TRUE, forceDNAtolower = FALSE)
@@ -134,9 +140,20 @@ for (i in 1:length(filenames)) {
 
   
   df = rbind(df,tmp)
+  
+  # Extra data
+  tmp2 = data.frame(Organism=organism,
+                  Code=code,
+                  HasStop=!stop,
+                  Frame=frame,
+                  bio_Code_Usage = round(ucc_p,2))
+  
+  df_extra = rbind(df_extra,tmp2)
 }
 
 names(df) = c("Organism","Code","Stop-Codons in Code?","Frame","Mutated Codons (in %)","Achieved Code Usage (in %)","Edit-Score","Edit-Distance","Increase in Mean Motif Length (in %)","Max. Motif Length")
+
+names(df_extra) = c("Organism","Code","Stop-Codons in Code?","Frame", "bio Code usage")
 
 ```
 
@@ -176,7 +193,7 @@ df_cu = df[order(-df$`Achieved Code Usage (in %)`),]
 write.xlsx(df_cu, file = "analysis_results/Summary_Analysis.xlsx",
       sheetName = "Sorted by Code Usage", append = TRUE)
 ```
-Sorted by edit-score
+Sorted by edit-score (S)
 ```{r}
 df_s = df[order(-df$`Edit-Score`),]
 
@@ -184,7 +201,7 @@ write.xlsx(df_s, file = "analysis_results/Summary_Analysis.xlsx",
       sheetName = "Sorted by Edit-Score", append = TRUE)
 ```
 
-Sorted by edit-score
+Sorted by edit-distance (D)
 ```{r}
 df_d = df[order(-df$`Edit-Distance`),]
 
@@ -208,15 +225,71 @@ write.xlsx(df_max, file = "analysis_results/Summary_Analysis.xlsx",
       sheetName = "Sorted by max Motif Length", append = TRUE)
 ```
 
+Durchschnittlicher Anteil an mutierten Codons über alle Organismen
+```{r}
+round(sum(df$`Mutated Codons (in %)`)/nrow(df),2) # alle Frames
 
+round(sum(df$`Mutated Codons (in %)`[which(df$Frame == 0)])/length(df$`Mutated Codons (in %)`[which(df$Frame == 0)]),2) # Frame 0
+round(sum(df$`Mutated Codons (in %)`[which(df$Frame == 1)])/length(df$`Mutated Codons (in %)`[which(df$Frame == 1)]),2) # Frame 0
+round(sum(df$`Mutated Codons (in %)`[which(df$Frame == 2)])/length(df$`Mutated Codons (in %)`[which(df$Frame == 2)]),2) # Frame 0
+```
+Durchschnittlicher Anteil der Code Usage vor den Mutationen
+```{r}
+round((sum(df_extra$`bio Code usage`[which (df_extra$Frame == 0)])/length(df_extra$`bio Code usage`[which(df$Frame == 0)]))*100,2) #Frame 0
+round((sum(df_extra$`bio Code usage`[which (df_extra$Frame == 1)])/length(df_extra$`bio Code usage`[which(df$Frame == 1)]))*100,2) #Frame 0
+round((sum(df_extra$`bio Code usage`[which (df_extra$Frame == 2)])/length(df_extra$`bio Code usage`[which(df$Frame == 2)]))*100,2) #Frame 0
+```
 
+Durschnittlich errreichte Code Usage
+```{r}
+round(sum(df$`Achieved Code Usage (in %)`)/nrow(df),2) # alle Frames
 
+round(sum(df$`Achieved Code Usage (in %)`[which(df$Frame == 0)])/length(df$`Achieved Code Usage (in %)`[which(df$Frame == 0)]),2) # Frame 0
+round(sum(df$`Achieved Code Usage (in %)`[which(df$Frame == 1)])/length(df$`Achieved Code Usage (in %)`[which(df$Frame == 1)]),2) # Frame 0
+round(sum(df$`Achieved Code Usage (in %)`[which(df$Frame == 2)])/length(df$`Achieved Code Usage (in %)`[which(df$Frame == 2)]),2) # Frame 0
+```
+Erreichte Code usage unterschieden zwischen Stopp und nicht-Stopp:
+```{r}
+round(sum(df$`Achieved Code Usage (in %)`[which(df$`Stop-Codons in Code?` == FALSE)])/length(df$`Achieved Code Usage (in %)`[which(df$`Stop-Codons in Code?` == FALSE)]),2)
 
+round(sum(df$`Achieved Code Usage (in %)`[which(df$`Stop-Codons in Code?` == TRUE)])/length(df$`Achieved Code Usage (in %)`[which(df$`Stop-Codons in Code?` == TRUE)]),2)
+```
 
+Durschnittlicher Edit-Score
+```{r}
+round(sum(df$`Edit-Score`)/nrow(df),2) # alle Frames
 
+round(sum(df$`Edit-Score`[which(df$Frame == 0)])/length(df$`Edit-Score`[which(df$Frame == 0)]),2) # Frame 0
+round(sum(df$`Edit-Score`[which(df$Frame == 1)])/length(df$`Edit-Score`[which(df$Frame == 1)]),2) # Frame 0
+round(sum(df$`Edit-Score`[which(df$Frame == 2)])/length(df$`Edit-Score`[which(df$Frame == 2)]),2) # Frame 0
+```
 
+Durschnittliche Edit-Distance
+```{r}
+round(sum(df$`Edit-Distance`)/nrow(df),2) # alle Frames
 
+round(sum(df$`Edit-Distance`[which(df$Frame == 0)])/length(df$`Edit-Distance`[which(df$Frame == 0)]),2) # Frame 0
+round(sum(df$`Edit-Distance`[which(df$Frame == 1)])/length(df$`Edit-Distance`[which(df$Frame == 1)]),2) # Frame 0
+round(sum(df$`Edit-Distance`[which(df$Frame == 2)])/length(df$`Edit-Distance`[which(df$Frame == 2)]),2) # Frame 0
+```
 
+Durschnittliche Motif-Length
+```{r}
+round(sum(df$`Increase in Mean Motif Length (in %)`)/nrow(df),2) # alle Frames
+
+round(sum(df$`Increase in Mean Motif Length (in %)`[which(df$Frame == 0)])/length(df$`Increase in Mean Motif Length (in %)`[which(df$Frame == 0)]),2) # Frame 0
+round(sum(df$`Increase in Mean Motif Length (in %)`[which(df$Frame == 1)])/length(df$`Increase in Mean Motif Length (in %)`[which(df$Frame == 1)]),2) # Frame 0
+round(sum(df$`Increase in Mean Motif Length (in %)`[which(df$Frame == 2)])/length(df$`Increase in Mean Motif Length (in %)`[which(df$Frame == 2)]),2) # Frame 0
+```
+
+Durschnittliche längstes Motif
+```{r}
+round(sum(df$`Max. Motif Length`)/nrow(df),0) # alle Frames
+
+round(sum(df$`Max. Motif Length`[which(df$Frame == 0)])/length(df$`Max. Motif Length`[which(df$Frame == 0)]),0) # Frame 0
+round(sum(df$`Max. Motif Length`[which(df$Frame == 1)])/length(df$`Max. Motif Length`[which(df$Frame == 1)]),0) # Frame 0
+round(sum(df$`Max. Motif Length`[which(df$Frame == 2)])/length(df$`Max. Motif Length`[which(df$Frame == 2)]),0) # Frame 0
+```
 
 
 
