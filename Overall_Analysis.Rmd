@@ -12,15 +12,15 @@ library("ccmotif") # Version 0.6.6
 library("Biostrings")
 library("knitr")
 library("xlsx")
-source("RawDataExtraction.R")
+source("Scripts/DataAnalysis.R")
 ```
 
 Change here:
 ```{r}
-pathSeq = "../BA Circular Code/output_sequences/"
+pathSeq = "../BA Circular Code/Workspace/"
 filenames = list.files(pathSeq, pattern = "*.fasta")
 
-pathMatrix = "../BA Circular Code/output_matrixes_codons/"
+pathMatrix = "../BA Circular Code/Workspace/"
 matrixnames = list.files(pathMatrix, pattern = "*.RDS")
 ```
 
@@ -168,13 +168,13 @@ kable(
 ```{r}
   saveRDS(
     object = df,
-    file = "analysis_results/Summary_Analysis.RDS"
+    file = "Workspace/Summary_Analysis.RDS"
   )
 ```
 
 Complete data frame:
 ```{r}
-write.xlsx(df, file = "analysis_results/Summary_Analysis.xlsx",
+write.xlsx(df, file = "Workspace/Summary_Analysis.xlsx",
       sheetName = "Complete", append = FALSE)
 ```
 
