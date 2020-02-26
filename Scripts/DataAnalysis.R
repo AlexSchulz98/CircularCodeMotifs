@@ -1,13 +1,25 @@
 library(Biostrings)
-source("CodeManipulation.R")
-source("Parameter.R")
+source('D:/Projekte/BA Circular Code/Scripts/Sequences.R', echo=TRUE)
+source('D:/Projekte/BA Circular Code/Scripts/Mutations.R', echo=TRUE)
 
-#' generates 3D matrix with zeros
+# To name rows and columns of matrix:
+# 64 codons
+CODONS = c("TTT", "TTC", "TTA", "TTG", "TCT", "TCC", "TCA", "TCG", "TAT", "TAC", "TAA", "TAG", "TGT", "TGC", "TGA", "TGG", "CTT","CTC", "CTA", "CTG", "CCT", "CCC", "CCA", "CCG", "CAT", "CAC", "CAA", "CAG", "CGT", "CGC", "CGA", "CGG", "ATT", "ATC", "ATA", "ATG", "ACT", "ACC", "ACA", "ACG", "AAT", "AAC", "AAA", "AAG", "AGT", "AGC", "AGA", "AGG", "GTT", "GTC" ,"GTA" ,"GTG", "GCT" ,"GCC" ,"GCA" ,"GCG" ,"GAT", "GAC", "GAA", "GAG", "GGT", "GGC", "GGA", "GGG")
+# 20 amino acids + 1 *  for stop codons
+AMINOACIDS = c("A","R","N","D","C","Q","E","G","H","I","L","K","M","F","P","S","T","W","Y","V","*")
+
+
+#' Generate 3D matrix with zeros
+#'
 #' @param dim1 number
 #' @param dim2 number
-#' @param dim3 number of different sequences
-#' @param dimnamesXY concat string names of axis x and y
-#' @return 3darray
+#' @param dimnamesXY vector String names
+#'
+#' @return array
+#' @export
+#'
+#' @examples
+#' generateEmptyTable(64, 64, CODONS)
 generateEmptyTable= function(dim1,dim2,dimnamesXY){
   
   ar = array(data = 0,
@@ -17,11 +29,21 @@ generateEmptyTable= function(dim1,dim2,dimnamesXY){
 return(ar)
 }
 
-#' fills table by counting how often codon A has been replaced with codon B
+
+#' Fill codon matrix
+#'
 #' @param ar matrix 64x64
-#' @param seqA DNAString from biological sequence
-#' @param seqB DNAString from modified sequence
-#' @return array of values
+#' @param seqA DNAString sequence
+#' @param seqB DNAString sequence
+#'
+#' @return matrix 64x64
+#' @export
+#'
+#' @examples
+#' ar = generateEmptyTable(64, 64, CODONS)
+#' seqA = DNAString("ATGATGATG")
+#' seqB = DNAString("ATGATGATG")
+#' codonCount(ar, seqA, seqB]
 codonCount = function(ar, seqA, seqB){
   
   codonsA = codons(seqA)
@@ -35,11 +57,16 @@ codonCount = function(ar, seqA, seqB){
   return(ar)
 }
 
-#' fills table by counting how often codon A has been replaced with codon B
+#' Fill amino matrix (deprecated)
+#'
 #' @param ar matrix 21x21
-#' @param seqA DNAString from biological sequence
-#' @param seqB DNAString from modified sequence
-#' @return array of values
+#' @param seqA DNAString sequence
+#' @param seqB DNAString sequence
+#'
+#' @return matrix 21x21
+#' @export
+#'
+#' @examples
 aminoCount = function(ar, seqA, seqB){
   
   aminoA = Biostrings::translate(seqA)
@@ -56,10 +83,16 @@ aminoCount = function(ar, seqA, seqB){
 
 
 
-#' Finds codons which could not be changed although they were not part of the circular code
-#' @param table codon table
-#' @param codes circular code
-#' @return amout of unchanged non-circular code codons
+#' Amount of codons change not possible (on diagonal but not part of x)
+#'
+#' @param table matrix 
+#' @param codes codes.code circular code
+#'
+#' @return number
+#' @export
+#'
+#' @examples
+#' unchangednonCCCodons(rds,codes.c3[[23]])
 unchangednonCCCodons = function(table, codes) {
   
   sum = 0
@@ -78,16 +111,15 @@ unchangednonCCCodons = function(table, codes) {
 }
 
 
-#' asseses how much a sequence has been changed by giving mutations scores
-#' Rating for the modified sequences:
-#' Base 1 the same +4
-#' Base 2 the same +4
-#' Base 3 the same +2
-#' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1
-#' Sum of this rating is divided by the number of codons to get the average
-#' because of the rating range from 0 to 10 the score is divided by 10 to get a normalized scale from 0 to 1
-#' @param table codon changes
-#' @return score between 0 and 1. 1=good/minor mutations. 
+#' Get Edit-Score by 4-4-2-1 Scheme
+#'
+#' @param table (filled) codon matrix 64x64
+#'
+#' @return score between 0 and 1
+#' @export
+#'
+#' @examples
+#' getEditScore(rds)
 getEditScore = function(table){
   
   score = 0 
@@ -125,11 +157,18 @@ getEditScore = function(table){
   return(result)
 }
 
-#' determines the distance of a sequence to a perfect (full circular code) sequence
-#' @param table codon table
-#' @param editScore calculated edit score between 0 and 1
-#' @param code circular code used
-#' @return score between 0 and 1. 0=good/close to perfect sequence.
+
+#' Get Edit_Distance
+#'
+#' @param table matrix 64x64
+#' @param editScore  edit score between 0 and 1
+#' @param code codes.code circular code
+#'
+#' @return score between 0 and 1
+#' @export
+#'
+#' @examples
+#' getEditDistance(rds,editScore,codes.c3[[23]])
 getEditDistance = function(table, editScore, code){
   
   total = sum(table) # codons in this sequence
@@ -138,10 +177,6 @@ getEditDistance = function(table, editScore, code){
   cc = total-unc # changed codons
   ncp = unchangednonCCCodons(table,code) # no change possible
   
-  #sumCCandNCP = sumCC+ncp # non cc codons in the original sequence
-  
-  #cc_p = cc/sumCCandNCP #percent that has been changed
-  #ncp_p = ncp/sumCCandNCP #percent that could not be changed
   cc_p = cc/total # percent that has been changed
   ncp_p = ncp/total #percent that could not be changed
   
@@ -151,11 +186,17 @@ getEditDistance = function(table, editScore, code){
   
 }
 
-#' compares two codons and scores them
-#' Base 1 the same +4
-#' Base 2 the same +4
-#' Base 3 the same +2
-#' 1/2/3 not the same, but purin/purin or pyrimidin/pyrimidin change +1 (amineChange function)
+
+#' Simple comparision with 4-4-2-1 scheme
+#'
+#' @param codon1 String Codon
+#' @param codon2 String Codon
+#'
+#' @return score (0-10)
+#' @export
+#'
+#' @examples
+#' compareCodons("AAA","AAT")
 compareCodons = function(codon1, codon2) {
   
   split1 = unlist(strsplit(codon1, ""))
@@ -184,18 +225,6 @@ compareCodons = function(codon1, codon2) {
   return(score)
 }
 
-
-
-#for (i in 1:HIERFEHLTWAS) {
-  #Änderung aus tabelle berechenen
-  #alles außerhalb der diagnole wert zuteilen
-  # je nach änderung
-   #aminostausch erkennung einbauen?
-#}
-
-#' Codon teil von X --> lassen?
-#' Codons nicht mutierbar --> -1 ?
-#' codons nach schema f bewerten (max 10 wird nie erreicht, 9 kann aber vorkommen, mittelwert 5?)
 
 
 

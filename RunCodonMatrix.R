@@ -1,24 +1,23 @@
 library(Biostrings)
-source("RawDataExtraction.R")
-source("CodeManipulation.R")
-source("Parameter.R")
+source("Scripts/DataAnalysis.R")
+source("Scripts/Sequences.R")
 
 #' Input: directory only with mutated fasta files of the original sequence
 #' reads in all files and generates a 64x64 for each
 
-path = "../BA Circular Code/output_sequences_new/Celegans/" # change mutated sequence set here
+path = "../BA Circular Code/Workspace/" # change here
 fastafile = list.files(path, pattern = "*.fasta") 
 
-dnaf = readDNAStringSet("cds/celegans.fasta") #change original sequence set here
+dnaf = readDNAStringSet("cds/ena-ch-reinhardtii.fasta") #change  here
 
-dnaf = dnaf[1:1010] # change here for deleting IUPAC Codes
-dnaf = deleteIUPACSequences(dnaf)
+#dnaf = dnaf[1:1010] # change here for deleting IUPAC Codes
+#dnaf = deleteIUPACSequences(dnaf)
 
-dnaf1 = dnaf
+dnaf1 = dnaf #Frame 1
 for (j in 1:pmin(length(dnaf), 1000)) {
   dnaf1[[j]] = changeReadingFrame(1, dnaf[[j]])
 }
-dnaf2 = dnaf
+dnaf2 = dnaf #Frame 2
 for (j in 1:pmin(length(dnaf), 1000)) {
   dnaf2[[j]] = changeReadingFrame(2, dnaf[[j]])
 }
@@ -61,7 +60,7 @@ for (h in 1:length(fastafile)) {
   saveRDS(
     object = outputMatrix_codons,
     file = paste(
-      "output_matrixes_codons/",
+      "Workspace/",
       seqName,
       "_",
       code,
