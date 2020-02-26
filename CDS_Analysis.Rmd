@@ -1,0 +1,78 @@
+---
+title: "CDS_Analysis"
+author: "Alexander Schulz"
+date: "21 2 2020"
+output: html_document
+---
+Analysis coding sequences of an organism by cds, codons and avg cds length
+
+```{r include=FALSE}
+library("seqinr")
+library("ccmotif") # Version 0.6.6
+library("Biostrings")
+source("Scripts/Sequences.R")
+library("xlsx")
+```
+
+Change here:
+```{r}
+pathSeq = "../BA Circular Code/cds/"
+filenames = list.files(pathSeq, pattern = "*.fasta")
+```
+
+```{r}
+df_cds = data.frame(Name=c(),
+                CDS=c(),
+                Codons=c(),
+                AvgCodons=c()
+                )
+
+for (i in 1:length(filenames)) { 
+  
+  dnaf = readDNAStringSet(paste(pathSeq,filenames[i],sep=""))
+  
+  file = filenames[i]
+  
+  cds = length(dnaf)
+  sample = pmin(cds,1000)
+  
+  dnaf = dnaf[1:pmin(cds,1000)] # deleting sequences with IUPAC Codes (reinhardtii, celegans)
+  dnaf = deleteIUPACSequences(dnaf)
+  
+  codons_in_seq = 0
+  
+  for (z in 1:length(dnaf)) {
+    
+    tmp_codons = codons(dnaf[[z]])
+    
+    codons_in_seq <<- codons_in_seq + length(tmp_codons)
+    
+  }
+  
+  avg_codons = codons_in_seq/sample
+
+
+    #Fill data frame
+  tmp = data.frame(Name=file,
+                CDS=paste(sample,"/",cds, sep = ""),
+                Codons=codons_in_seq,
+                AvgCodons=round(avg_codons,1)
+                )
+
+  df_cds = rbind(df_cds,tmp)
+  
+}
+```
+
+```{r}
+  saveRDS(
+    object = df_cds,
+    file = "analysis_results/CDS_Analysis.RDS"
+  )
+```
+
+Complete data frame:
+```{r}
+write.xlsx(df_cds, file = "analysis_results/CDS_Analysis.xlsx",
+      sheetName = "Sheet 1", append = FALSE)
+```
