@@ -1,5 +1,4 @@
-source("/Projekte/BA Circular Code/RawDataExtraction.R")
-source("/Projekte/BA Circular Code/CodeManipulation.R")
+source("/Projekte/BA Circular Code/Scripts/DataAnalysis.R")
 
 library(testthat)
 library(Biostrings)
@@ -69,6 +68,87 @@ test_that(
     expected = 20
     
     actual = unchangednonCCCodons(ar, code)
+    
+    expect_equal(expected, actual)
+  })
+
+
+test_that(
+  "get edit score function",
+  {
+    code = codes.c3[[23]]
+    ar = generateEmptyTable(64, 64, CODONS)
+    ar["TTT","TTT"] = 50 # ignored
+    ar["CCC","AAA"] = 10 # score 0*10
+    ar["ATG","ATC"] = 10 # score 8*10
+    # divided by 20
+    
+    expected = 0.4
+    actual = getEditScore(ar)
+    
+    expect_equal(expected, actual)
+  })
+
+test_that(
+  "get edit disctance function",
+  {
+    code = codes.c3[[23]]
+    ar = generateEmptyTable(64, 64, CODONS)
+    editscore = 0.4
+    ar["AAC","AAC"] = 80 # ignored
+    ar["GTG","GTG"] = 10 # 0.1
+    ar["ATG","ATC"] = 10 # 0.1*(1-0.6)
+    
+    expected = 0.16 # 0.1*(1-0.4)+0.1
+    actual = getEditDistance(ar, editscore, code)
+    
+    expect_equal(expected, actual)
+  })
+
+test_that(
+  "compare codons function - score 10",
+  {
+    codon1 = "AAA"
+    codon2 = "AAA"
+    
+    expected = 10
+    actual = compareCodons(codon1, codon2)
+    
+    expect_equal(expected, actual)
+  })
+
+test_that(
+  "compare codons function - score 9",
+  {
+    codon1 = "AAA"
+    codon2 = "AAG"
+    
+    expected = 9
+    actual = compareCodons(codon1, codon2)
+    
+    expect_equal(expected, actual)
+  })
+
+test_that(
+  "compare codons function - score 3",
+  {
+    codon1 = "AAA"
+    codon2 = "GGG"
+    
+    expected = 3
+    actual = compareCodons(codon1, codon2)
+    
+    expect_equal(expected, actual)
+  })
+
+test_that(
+  "compare codons function - score 0",
+  {
+    codon1 = "AAA"
+    codon2 = "TTT"
+    
+    expected = 0
+    actual = compareCodons(codon1, codon2)
     
     expect_equal(expected, actual)
   })
