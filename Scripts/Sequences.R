@@ -1,4 +1,5 @@
 library(Biostrings)
+source('D:/Projekte/BA Circular Code/Scripts/Mutations.R', echo=TRUE)
 
 #' Change Reading Frame (deletes first 1 or 2 bases)
 #'
