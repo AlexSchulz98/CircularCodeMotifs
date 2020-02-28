@@ -130,8 +130,8 @@ shiftCode = function(code, shift) {
 
 #' Check vector of codons if in code
 #'
-#' @param codons
-#' @param code
+#' @param codons vector of String codons
+#' @param code number
 #'
 #' @return vector with FALSE / TRUE
 #' @export
