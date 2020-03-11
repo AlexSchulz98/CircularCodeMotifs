@@ -1,6 +1,6 @@
 library(Biostrings)
-source('D:/Projekte/BA Circular Code/Scripts/Sequences.R', echo=TRUE)
-source('D:/Projekte/BA Circular Code/Scripts/Mutations.R', echo=TRUE)
+source('../Scripts/Sequences.R', echo=TRUE)
+source('../Scripts/Mutations.R', echo=TRUE)
 
 # To name rows and columns of matrix:
 # 64 codons
